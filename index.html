@@ -3,25 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planicchio IT - Slang Trainer</title>
+    <title>Planicchio IT</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
-        .premium-blur { filter: blur(6px); pointer-events: none; user-select: none; }
-        .loader { border-top-color: #3498db; animation: spinner 1.5s linear infinite; }
+        .premium-blur { filter: blur(6px); pointer-events: none; }
+        .loader { border-top-color: #f97316; animation: spinner 1.5s linear infinite; }
         @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* Estilo para o botão de áudio brilhar ao clicar */
+        .btn-audio:active { transform: scale(0.9); background-color: #ffedd5; }
     </style>
 </head>
-<body class="bg-gray-50 font-sans pb-10">
+<body class="bg-gray-50 pb-10">
 
-    <header class="bg-blue-600 text-white p-6 text-center shadow-lg sticky top-0 z-50">
-        <h1 class="text-2xl font-bold">🇮🇹 Planicchio IT</h1>
-        <p class="text-sm opacity-90">Impara lo Slang Americano</p>
+    <header class="bg-orange-500 text-white p-6 text-center shadow-lg sticky top-0 z-50">
+        <img src="https://i.ibb.co/zHjS4mbk/logo.png" class="h-20 mx-auto mb-2 rounded-full border-2 border-white shadow-md" alt="Planicchio Logo">
+        <h1 class="text-2xl font-bold italic tracking-tighter">Planicchio IT</h1>
     </header>
 
     <div id="loading" class="flex flex-col items-center justify-center mt-20">
         <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"></div>
-        <p class="text-gray-600">Caricamento slang...</p>
+        <p class="text-orange-600 font-bold">Caricamento slang...</p>
     </div>
 
     <main class="p-4 max-w-md mx-auto hidden" id="app-content">
@@ -30,58 +32,60 @@
 
     <script>
         const csv_url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT6-Ah6rq3hnBihlxVAzmsTD8rEF1rbGJu3__sBgm-DDyFWE_D7sxgJx3I3s55uiNl-qvP2x2wh0UD9/pub?output=csv';
-        const whatsapp_url = 'https://wa.me/393716755981?text=Ciao!%20Voglio%20sbloccare%20il%20corso%20completo%20di%20Planicchio';
+        const whatsapp_url = 'https://wa.me/393716755981?text=Ciao!%20Voglio%20sbloccare%20Premium';
 
         function init() {
-            Papa.parse(csv_url, {
-                download: true,
-                header: true,
-                complete: showInfo
-            });
+            Papa.parse(csv_url, { download: true, header: true, complete: showInfo });
         }
 
         function showInfo(results) {
-            const data = results.data;
             const listContainer = document.getElementById('slang-list');
-            
-            data.forEach((row) => {
+            results.data.forEach((row) => {
                 if (!row.English) return;
-
                 const isPremium = row.Status && row.Status.trim().toLowerCase() === 'premium';
                 const card = document.createElement('div');
-                card.className = "bg-white rounded-2xl shadow-sm p-5 mb-5 border border-gray-100 relative overflow-hidden";
-                
+                card.className = "bg-white rounded-3xl shadow-sm p-6 mb-5 border border-orange-50 relative overflow-hidden";
                 card.innerHTML = `
                     <div class="${isPremium ? 'premium-blur' : ''}">
                         <div class="flex justify-between items-start">
-                            <div>
-                                <h2 class="text-xl font-bold text-blue-600">${row.English}</h2>
-                                <p class="text-gray-500 italic text-sm mb-2">${row.Traduzione || ''}</p>
-                            </div>
-                            <button onclick="playAudio('${row.English}')" class="bg-blue-50 p-3 rounded-full text-blue-600">🔊</button>
+                            <h2 class="text-2xl font-extrabold text-orange-600 uppercase italic leading-none">${row.English}</h2>
+                            <button onclick="playAudio('${row.English}')" class="btn-audio bg-orange-100 p-3 rounded-full text-orange-600 transition-all">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                                </svg>
+                            </button>
                         </div>
-                        <p class="text-xs text-gray-400 mt-1">${row['Spiegazione AI'] || ''}</p>
-                        <p class="mt-3 text-gray-700 font-medium italic">"${row.Esempio || ''}"</p>
+                        <p class="text-gray-400 font-bold text-sm italic mt-1">${row.Traduzione || ''}</p>
+                        <div class="mt-4 p-3 bg-orange-50/50 rounded-xl border-l-4 border-orange-400">
+                           <p class="text-gray-700 text-sm font-medium">"${row.Esempio || ''}"</p>
+                        </div>
                     </div>
                     ${isPremium ? `
-                    <div class="absolute inset-0 flex flex-col items-center justify-center bg-white/50 backdrop-blur-[2px]">
-                        <span class="text-3xl mb-2">💎</span>
-                        <button onclick="window.location.href='${whatsapp_url}'" class="bg-yellow-500 text-white px-6 py-2 rounded-full font-bold shadow-md hover:scale-105 transition">
-                            Sblocca Premium
+                    <div class="absolute inset-0 flex flex-col items-center justify-center bg-white/60 backdrop-blur-[2px]">
+                        <button onclick="window.location.href='${whatsapp_url}'" class="bg-orange-600 text-white px-8 py-3 rounded-full font-black shadow-xl active:scale-95 transition">
+                            SBLOCCA PREMIUM 💎
                         </button>
-                    </div>
-                    ` : ''}
+                    </div>` : ''}
                 `;
                 listContainer.appendChild(card);
             });
-
             document.getElementById('loading').classList.add('hidden');
             document.getElementById('app-content').classList.remove('hidden');
         }
 
+        // FUNÇÃO DE ÁUDIO MELHORADA
         function playAudio(word) {
-            const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=en&client=tw-ob&q=${encodeURIComponent(word)}`;
-            new Audio(url).play();
+            // Se o áudio do Google falhar, ele usa o sintetizador nativo do celular (mais garantido)
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(word);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9; // Um pouco mais devagar para entenderem bem
+                window.speechSynthesis.speak(utterance);
+            } else {
+                const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=en&client=tw-ob&q=${encodeURIComponent(word)}`;
+                const audio = new Audio(url);
+                audio.play().catch(e => console.log("Erro ao tocar áudio:", e));
+            }
         }
 
         window.addEventListener('DOMContentLoaded', init);
