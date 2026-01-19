@@ -6,61 +6,47 @@
     <title>Planicchio 🐱</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #FFF5EB; font-family: sans-serif; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
-        
-        /* Splash Screen */
-        .splash-screen { position: fixed; inset: 0; background: #FF8C00; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; text-align: center; }
+        body { background-color: #FFF5EB; font-family: sans-serif; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        .splash { position: fixed; inset: 0; background: #FF8C00; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; text-align: center; }
         .hidden { display: none !important; }
-
-        /* Animação do Gato */
+        .page { display: none; padding: 20px; padding-bottom: 150px; }
+        .active-page { display: block !important; }
+        
+        /* Animação Gato */
         .gato-emoji { font-size: 50px; cursor: pointer; display: inline-block; transition: 0.3s; }
         .pulando { animation: jump 0.6s ease; }
-        @keyframes jump { 
-            0%, 100% { transform: translateY(0) scale(1); } 
-            50% { transform: translateY(-30px) scale(1.1) rotate(15deg); } 
-        }
+        @keyframes jump { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-25px) rotate(10deg); } }
 
-        /* Layout */
         .nav-bottom { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 15px; border-top: 2px solid #FFEDD5; z-index: 999; }
-        .nav-btn { display: flex; flex-direction: column; align-items: center; font-size: 10px; font-weight: bold; color: #FF8C00; border: none; background: none; outline: none; }
-        .page { display: none; padding: 20px; padding-bottom: 140px; }
-        .active-page { display: block !important; }
-
-        /* Balão de Fala */
+        .nav-btn { display: flex; flex-direction: column; align-items: center; font-size: 10px; font-weight: bold; color: #FF8C00; border: none; background: none; }
         .mascote-box { position: fixed; bottom: 85px; left: 20px; display: flex; align-items: center; gap: 8px; z-index: 998; }
         .balao { background: white; padding: 10px; border-radius: 15px; border: 2px solid #FF8C00; font-size: 11px; font-weight: bold; max-width: 140px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         
-        /* Botões de Opção */
-        .btn-opt { width: 100%; text-align: left; padding: 16px; margin-bottom: 12px; border: 2px solid #FFEDD5; border-radius: 20px; font-weight: bold; color: #FF8C00; background: white; transition: 0.2s; }
-        .btn-opt:active { background: #FF8C00; color: white; transform: scale(0.98); }
-        
+        .card { background: white; border-radius: 25px; padding: 20px; border: 2px solid #FF8C00; box-shadow: 0 5px 0 #FFEDD5; }
+        .btn-opt { width: 100%; text-align: left; padding: 16px; margin-bottom: 10px; border: 2px solid #FFEDD5; border-radius: 15px; font-weight: bold; color: #FF8C00; background: white; }
         .progress-bar { background: #E5E7EB; border-radius: 10px; height: 12px; overflow: hidden; margin: 10px 0; }
         #progress-fill { background: #FF8C00; width: 0%; height: 100%; transition: 0.5s; }
     </style>
 </head>
 <body>
 
-    <div id="splash" class="splash-screen">
+    <div id="splash" class="splash">
         <div class="gato-emoji pulando">🐱</div>
         <h1 class="text-3xl font-black mb-2 italic">PLANICCHIO</h1>
-        <div class="mb-6 px-4">
-            <p class="text-sm font-bold">Escolha o seu curso</p>
-            <p class="text-xs italic opacity-80">Scegli o teu corso / Choose your course</p>
-        </div>
-        
-        <div class="grid grid-cols-1 gap-3 w-72 px-4">
-            <button onclick="entrar('it-en')" class="bg-white text-orange-600 font-black py-3 rounded-xl shadow-lg border-b-4 border-orange-200 text-xs">ITALIANO ➔ ENGLISH 🇺🇸</button>
-            <button onclick="entrar('it-pt')" class="bg-white text-orange-600 font-black py-3 rounded-xl shadow-lg border-b-4 border-orange-200 text-xs">ITALIANO ➔ PORTUGUÊS 🇧🇷</button>
-            <button onclick="entrar('pt-it')" class="bg-white text-orange-600 font-black py-3 rounded-xl shadow-lg border-b-4 border-orange-200 text-xs">PORTUGUÊS ➔ ITALIANO 🇮🇹</button>
-            <button onclick="entrar('pt-en')" class="bg-white text-orange-600 font-black py-3 rounded-xl shadow-lg border-b-4 border-orange-200 text-xs">PORTUGUÊS ➔ ENGLISH 🇺🇸</button>
-            <button onclick="entrar('en-it')" class="bg-white text-orange-600 font-black py-3 rounded-xl shadow-lg border-b-4 border-orange-200 text-xs">ENGLISH ➔ ITALIANO 🇮🇹</button>
-            <button onclick="entrar('en-pt')" class="bg-white text-orange-600 font-black py-3 rounded-xl shadow-lg border-b-4 border-orange-200 text-xs">ENGLISH ➔ PORTUGUÊS 🇧🇷</button>
+        <p class="text-sm font-bold mb-6">Escolha o seu curso / <span class="italic">Scegli il tuo corso</span></p>
+        <div class="grid grid-cols-1 gap-2 w-72 px-4">
+            <button onclick="entrar('it-en')" class="bg-white text-orange-600 font-bold py-3 rounded-xl shadow-lg text-xs">ITALIANO ➔ ENGLISH 🇺🇸</button>
+            <button onclick="entrar('it-pt')" class="bg-white text-orange-600 font-bold py-3 rounded-xl shadow-lg text-xs">ITALIANO ➔ PORTUGUÊS 🇧🇷</button>
+            <button onclick="entrar('pt-it')" class="bg-white text-orange-600 font-bold py-3 rounded-xl shadow-lg text-xs">PORTUGUÊS ➔ ITALIANO 🇮🇹</button>
+            <button onclick="entrar('pt-en')" class="bg-white text-orange-600 font-bold py-3 rounded-xl shadow-lg text-xs">PORTUGUÊS ➔ ENGLISH 🇺🇸</button>
+            <button onclick="entrar('en-it')" class="bg-white text-orange-600 font-bold py-3 rounded-xl shadow-lg text-xs">ENGLISH ➔ ITALIANO 🇮🇹</button>
+            <button onclick="entrar('en-pt')" class="bg-white text-orange-600 font-bold py-3 rounded-xl shadow-lg text-xs">ENGLISH ➔ PORTUGUÊS 🇧🇷</button>
         </div>
     </div>
 
     <div id="app" class="hidden">
         <header class="p-4 bg-white sticky top-0 z-50 border-b-2 border-orange-50">
-            <div class="flex justify-between items-center text-[10px] font-black text-orange-600">
+            <div class="flex justify-between items-center text-[10px] font-black text-orange-600 uppercase">
                 <span id="txt-titulo">APRENDIZ 🐣</span>
                 <span>LVL <span id="txt-lvl">1</span></span>
             </div>
@@ -68,57 +54,85 @@
         </header>
 
         <div id="p-home" class="page active-page">
-            <div class="bg-white p-6 rounded-[30px] border-2 border-orange-500 shadow-xl">
+            <div class="card mb-4">
                 <p id="q-txt" class="font-bold text-gray-800 mb-6 text-center italic text-lg">Carregando...</p>
                 <div id="q-box"></div>
-                <button onclick="falarPergunta()" class="mt-4 w-full text-xs font-bold text-orange-400">🔊 OUVIR PERGUNTA</button>
+                <button onclick="ouvir()" class="mt-4 w-full text-[10px] font-black text-orange-400 uppercase tracking-widest">🔊 Ouvir / Ascolta</button>
             </div>
         </div>
 
         <div id="p-dic" class="page">
-            <h2 class="text-xl font-black text-orange-600 mb-4 uppercase">Dicionário de Gírias</h2>
-            <div id="lista-dic" class="space-y-4"></div>
+            <h2 class="text-xl font-black text-orange-600 mb-4 uppercase" id="t-dic">Dicionário</h2>
+            <div id="lista-dic" class="space-y-3"></div>
+        </div>
+
+        <div id="p-dicas" class="page">
+            <h2 class="text-xl font-black text-orange-600 mb-4 uppercase" id="t-dicas">Dicas & Cultura</h2>
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1543349689-9a4d426bee8e?w=400" class="rounded-xl mb-4 w-full">
+                <p class="text-sm text-gray-600" id="txt-curiosidade">Sabia que a Torre de Pisa demorou 199 anos para ser construída? Ela é torta por causa do solo!</p>
+            </div>
         </div>
 
         <div id="p-perfil" class="page text-center">
-            <div id="avatar-display" class="text-7xl mb-4">🐱</div>
-            <h2 id="user-name-display" class="text-2xl font-black text-orange-600 mb-6">Estudante</h2>
-            <div class="flex justify-center gap-4 mb-8">
-                <span class="text-3xl p-2 bg-white rounded-xl border" onclick="setAvatar('🐱')">🐱</span>
-                <span class="text-3xl p-2 bg-white rounded-xl border" onclick="setAvatar('🐶')">🐶</span>
-                <span class="text-3xl p-2 bg-white rounded-xl border" onclick="setAvatar('🐰')">🐰</span>
-                <span class="text-3xl p-2 bg-white rounded-xl border" onclick="setAvatar('🦊')">🦊</span>
+            <div id="avatar-display" class="text-7xl mb-2">🐱</div>
+            <input type="text" id="user-name" placeholder="Teu Nome" class="text-center font-black text-xl border-b-2 border-orange-100 outline-none mb-6 w-full bg-transparent" onchange="salvarNome()">
+            
+            <div class="grid grid-cols-4 gap-2 mb-8">
+                <button onclick="setAvatar('🐱')" class="bg-white p-2 rounded-xl border">🐱</button>
+                <button onclick="setAvatar('🐶')" class="bg-white p-2 rounded-xl border">🐶</button>
+                <button onclick="setAvatar('🐰')" class="bg-white p-2 rounded-xl border">🐰</button>
+                <button onclick="setAvatar('🦊')" class="bg-white p-2 rounded-xl border">🦊</button>
             </div>
-            <div class="bg-orange-100 p-6 rounded-2xl mb-4">
-                <p class="text-3xl font-black text-orange-600" id="txt-xp">0 XP</p>
-                <p class="text-xs font-bold text-orange-400 uppercase">Pontos acumulados</p>
+
+            <div class="bg-orange-100 p-4 rounded-2xl mb-4">
+                <p class="text-2xl font-black text-orange-600" id="txt-xp">0 XP</p>
+                <p class="text-[10px] font-bold text-orange-400">PONTOS TOTAIS</p>
             </div>
+
+            <button onclick="voltarSplash()" class="w-full bg-gray-200 text-gray-600 font-bold py-3 rounded-xl mb-3 text-xs uppercase">Trocar de Curso</button>
+            <button onclick="window.open('https://wa.me/393716755981')" class="w-full bg-green-500 text-white font-bold py-3 rounded-xl text-xs uppercase shadow-lg">Suporte VIP</button>
         </div>
 
         <div class="mascote-box">
             <div id="gato" class="gato-emoji" onclick="animarGato()">🐱</div>
-            <div id="balao" class="balao">Ciao! Vamos começar? ✨</div>
+            <div id="balao" class="balao">Ciao! 👋</div>
         </div>
 
         <nav class="nav-bottom">
             <button onclick="aba('home')" class="nav-btn">🏠<span id="n-home">HOME</span></button>
             <button onclick="aba('dic')" class="nav-btn">📖<span id="n-dic">DICIONÁRIO</span></button>
+            <button onclick="aba('dicas')" class="nav-btn">🌍<span id="n-dicas">DICAS</span></button>
             <button onclick="aba('perfil')" class="nav-btn">👤<span id="n-perfil">PERFIL</span></button>
         </nav>
     </div>
 
     <script>
+        const LINK_EX = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT6-Ah6rq3hnBihlxVAzmsTD8rEF1rbGJu3__sBgm-DDyFWE_D7sxgJx3I3s55uiNl-qvP2x2wh0UD9/pub?gid=633031910&single=true&output=csv';
+        const LINK_SL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT6-Ah6rq3hnBihlxVAzmsTD8rEF1rbGJu3__sBgm-DDyFWE_D7sxgJx3I3s55uiNl-qvP2x2wh0UD9/pub?gid=541320303&single=true&output=csv';
+
         let xp = parseInt(localStorage.getItem('p_xp')) || 0;
         let curso = "";
-        let questaoAtual = { q: "Como se diz 'Bom dia'?", a: "Buongiorno", b: "Ciao", c: "Prego", ok: "a" };
+        let exercicios = [];
+        let indexQ = 0;
 
         function entrar(id) {
             curso = id;
             document.getElementById('splash').classList.add('hidden');
             document.getElementById('app').classList.remove('hidden');
-            atualizarProgresso();
-            animarGato("Miau! Boa escolha! 🚀");
             traduzirInterface();
+            carregarDados();
+            atualizarProgresso();
+            
+            const salvoNome = localStorage.getItem('p_nome');
+            if(salvoNome) document.getElementById('user-name').value = salvoNome;
+            const salvoAvatar = localStorage.getItem('p_avatar');
+            if(salvoAvatar) setAvatar(salvoAvatar);
+        }
+
+        function voltarSplash() {
+            document.getElementById('splash').classList.remove('hidden');
+            document.getElementById('app').classList.add('hidden');
         }
 
         function aba(id) {
@@ -126,41 +140,90 @@
             document.getElementById('p-' + id).classList.add('active-page');
         }
 
-        function animarGato(msg) {
-            const gato = document.getElementById('gato');
-            gato.classList.add('pulando');
-            setTimeout(() => gato.classList.remove('pulando'), 600);
-            
-            if(msg) {
-                document.getElementById('balao').innerText = msg;
-            } else {
-                const frases = ["Miau! Você é fera!", "Já estudou hoje?", "O VIP tem muito mais!", "Tente falar em voz alta!"];
-                document.getElementById('balao').innerText = frases[Math.floor(Math.random()*frases.length)];
-            }
-        }
-
-        function falarPergunta() {
-            const msg = new SpeechSynthesisUtterance(document.getElementById('q-txt').innerText);
-            msg.lang = curso.startsWith('it') ? 'it-IT' : 'pt-BR';
-            window.speechSynthesis.speak(msg);
-        }
-
         function traduzirInterface() {
             const dic = {
-                'it-pt': { h: 'HOME', d: 'DIZIONARIO', p: 'PROFILO' },
-                'pt-it': { h: 'INÍCIO', d: 'DICIONÁRIO', p: 'PERFIL' }
+                'it-pt': { h: 'HOME', d: 'DIZIONARIO', i: 'CULTURA', p: 'PROFILO' },
+                'pt-it': { h: 'INÍCIO', d: 'DICIONÁRIO', i: 'DICAS', p: 'PERFIL' }
             };
             const t = dic[curso] || dic['it-pt'];
             document.getElementById('n-home').innerText = t.h;
             document.getElementById('n-dic').innerText = t.d;
+            document.getElementById('n-dicas').innerText = t.i;
             document.getElementById('n-perfil').innerText = t.p;
+            document.getElementById('t-dic').innerText = t.d;
+            document.getElementById('t-dicas').innerText = t.i;
         }
 
-        function setAvatar(e) {
-            document.getElementById('avatar-display').innerText = e;
+        async function carregarDados() {
+            try {
+                // Quiz
+                const r1 = await fetch(LINK_EX);
+                const t1 = await r1.text();
+                exercicios = t1.split(/\r?\n/).slice(1).map(r => {
+                    const c = r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                    return { q: clean(c[1]), a: clean(c[2]), b: clean(c[3]), c: clean(c[4]), ok: clean(c[5]).toLowerCase() };
+                }).filter(x => x.q);
+                renderQuestao();
+
+                // Gírias
+                const r2 = await fetch(LINK_SL);
+                const t2 = await r2.text();
+                const container = document.getElementById('lista-dic');
+                container.innerHTML = "";
+                t2.split(/\r?\n/).slice(1).forEach((r, i) => {
+                    const c = r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                    if(clean(c[2])) {
+                        const div = document.createElement('div');
+                        div.className = "bg-white p-4 rounded-xl border-l-4 border-orange-400 shadow-sm " + (i > 5 ? 'opacity-40' : '');
+                        div.innerHTML = `<h4 class="font-bold text-orange-600">${clean(c[2])}</h4><p class="text-xs text-gray-400 italic">${clean(c[3])}</p><p class="text-sm mt-1">${i > 5 ? '🔒 Bloqueado (VIP)' : clean(c[4])}</p>`;
+                        container.appendChild(div);
+                    }
+                });
+            } catch(e) {}
+        }
+
+        function renderQuestao() {
+            if(exercicios.length === 0) return;
+            const item = exercicios[indexQ % exercicios.length];
+            document.getElementById('q-txt').innerText = item.q;
+            const box = document.getElementById('q-box');
+            box.innerHTML = "";
+            ['a','b','c'].forEach(o => {
+                const btn = document.createElement('button');
+                btn.className = "btn-opt";
+                btn.innerText = item[o];
+                btn.onclick = () => {
+                    if(o === item.ok) {
+                        xp += 25; atualizarProgresso();
+                        btn.style.background = "#dcfce7";
+                        animarGato("Ottimo! +25 XP 🎉");
+                        setTimeout(() => { indexQ++; renderQuestao(); }, 1000);
+                    } else {
+                        btn.style.background = "#fee2e2";
+                    }
+                };
+                box.appendChild(btn);
+            });
+        }
+
+        function ouvir() {
+            const fala = new SpeechSynthesisUtterance(document.getElementById('q-txt').innerText);
+            fala.lang = curso.startsWith('it') ? 'it-IT' : 'pt-BR';
+            window.speechSynthesis.speak(fala);
+        }
+
+        function animarGato(m) {
+            const g = document.getElementById('gato');
+            g.classList.add('pulando');
+            setTimeout(() => g.classList.remove('pulando'), 600);
+            if(m) document.getElementById('balao').innerText = m;
+        }
+
+        function salvarNome() { localStorage.setItem('p_nome', document.getElementById('user-name').value); }
+        function setAvatar(e) { 
+            document.getElementById('avatar-display').innerText = e; 
             document.getElementById('gato').innerText = e;
             localStorage.setItem('p_avatar', e);
-            animarGato("Amei o novo visual!");
         }
 
         function atualizarProgresso() {
@@ -169,31 +232,11 @@
             const lvl = Math.floor(xp / 100) + 1;
             document.getElementById('txt-lvl').innerText = lvl;
             document.getElementById('progress-fill').style.width = (xp % 100) + "%";
-            
-            // Simulação de renderizar pergunta
-            document.getElementById('q-txt').innerText = questaoAtual.q;
-            const box = document.getElementById('q-box');
-            box.innerHTML = "";
-            ['a','b','c'].forEach(opt => {
-                const b = document.createElement('button');
-                b.className = "btn-opt";
-                b.innerText = questaoAtual[opt];
-                b.onclick = () => {
-                    if(opt === questaoAtual.ok) {
-                        xp += 25; atualizarProgresso();
-                        b.style.borderColor = "#22c55e";
-                        animarGato("Correto! +25 XP 🎉");
-                    } else {
-                        b.style.borderColor = "#ef4444";
-                    }
-                };
-                box.appendChild(b);
-            });
+            const tits = ["Aprendiz 🐣", "Viajante 🌍", "Explorador 🛶", "Cidadão 🏛️", "Mestre 👑"];
+            document.getElementById('txt-titulo').innerText = tits[Math.min(lvl-1, 4)];
         }
 
-        // Recuperar Avatar
-        const salvo = localStorage.getItem('p_avatar');
-        if(salvo) setAvatar(salvo);
+        function clean(t) { return t ? t.replace(/"/g, '').trim() : ""; }
     </script>
 </body>
 </html>
