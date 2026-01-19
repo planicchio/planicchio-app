@@ -6,7 +6,7 @@
     <title>Planicchio 🚀</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #FFF5EB; padding-bottom: 50px; }
+        body { background-color: #FFF5EB; padding-bottom: 50px; font-family: sans-serif; }
         .quiz-container {
             background: white; border: 3px solid #FF8C00; border-radius: 20px;
             padding: 20px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(255, 140, 0, 0.1);
@@ -17,15 +17,11 @@
             border-radius: 12px; font-weight: bold; text-align: left;
         }
         .btn-opcao:active { background: #FF8C00; color: white; }
-        
-        /* CARD DE GÍRIA */
         .card-slang {
             background: white; padding: 18px; border-radius: 15px;
             border-left: 6px solid #FF8C00; margin-bottom: 15px; 
             box-shadow: 0 2px 8px rgba(0,0,0,0.05); position: relative; overflow: hidden;
         }
-        
-        /* EFEITO BORRADO E SELO VIP */
         .slang-locked .blur-box { filter: blur(6px); opacity: 0.3; pointer-events: none; }
         .vip-badge {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -33,7 +29,6 @@
             font-weight: bold; font-size: 16px; z-index: 20; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             white-space: nowrap; border: 2px solid white;
         }
-
         .btn-upgrade {
             background: #FF8C00; color: white; padding: 18px; border-radius: 15px;
             font-weight: bold; display: block; text-align: center; text-decoration: none;
@@ -56,10 +51,7 @@
         </div>
 
         <h2 class="text-xl font-bold mb-4 text-orange-700 italic border-b-2 border-orange-200 pb-2">📚 Slang & Expressions</h2>
-        
-        <div id="slang-container" class="space-y-4">
-            <p class="text-center text-gray-400 italic">Caricamento dizionario...</p>
-        </div>
+        <div id="slang-container" class="space-y-4"></div>
     </div>
 
     <script>
@@ -71,18 +63,13 @@
         let exercicios = []; 
         let indexAtual = 0;
 
-        // Função de som simplificada para não travar o código
         function toca(url) {
-            try {
-                const a = new Audio(url);
-                a.play();
-            } catch(e) {}
+            try { new Audio(url).play(); } catch(e) {}
         }
 
         const clean = (t) => t ? t.replace(/"/g, '').trim() : "";
 
         async function carregarDados() {
-            // BUSCAR QUIZ
             try {
                 const res = await fetch(LINK_EX);
                 const text = await res.text();
@@ -91,9 +78,8 @@
                     return { pergunta: clean(c[1]), a: clean(c[2]), b: clean(c[3]), c: clean(c[4]), correta: clean(c[5]).toLowerCase(), explica: clean(c[6]) };
                 }).filter(i => i.pergunta !== "");
                 showQuestao();
-            } catch(e) { document.getElementById('pergunta-txt').innerText = "Errore quiz."; }
+            } catch(e) {}
 
-            // BUSCAR GÍRIAS
             try {
                 const resSl = await fetch(LINK_SL);
                 const dataSl = await resSl.text();
@@ -104,10 +90,11 @@
                 rows.forEach((row, i) => {
                     const c = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                     if (clean(c[2])) {
-                        const isLocked = i > 3; // Mostra 4 abertas, o resto borra
+                        // AQUI VOCÊ CONTROLA QUANTAS LIBERAR:
+                        const isLocked = i > 6; // i > 6 libera as primeiras 7 gírias.
+                        
                         const div = document.createElement('div');
                         div.className = `card-slang ${isLocked ? 'slang-locked' : ''}`;
-                        
                         div.innerHTML = `
                             ${isLocked ? '<div class="vip-badge">⭐ VIP ACCESS</div>' : ''}
                             <div class="blur-box">
@@ -126,18 +113,12 @@
                     }
                 });
                 container.innerHTML += `<a href="https://wa.me/${fone}?text=${msg}" class="btn-upgrade">SBLOCCA TUTTO IL DIZIONARIO ➔</a>`;
-            } catch(e) { document.getElementById('slang-container').innerHTML = "Errore gírie."; }
+            } catch(e) {}
         }
 
         function showQuestao() {
             if (indexAtual >= 2) {
-                document.getElementById('quiz-area').innerHTML = `
-                    <div class="text-center py-4">
-                        <div class="text-4xl mb-2">🔓</div>
-                        <h2 class="text-xl font-bold text-gray-800">Vuoi continuare?</h2>
-                        <p class="text-xs text-gray-500 mb-4">Passa al VIP per sbloccare tutti gli esercizi.</p>
-                        <a href="https://wa.me/${fone}?text=${msg}" class="btn-upgrade text-sm">DIVENTA VIP ORA</a>
-                    </div>`;
+                document.getElementById('quiz-area').innerHTML = `<div class="text-center py-4"><div class="text-4xl mb-2">🔓</div><h2 class="text-xl font-bold text-gray-800">Vuoi continuare?</h2><p class="text-xs text-gray-500 mb-4">Passa al VIP per sbloccare tutti gli esercizi.</p><a href="https://wa.me/${fone}?text=${msg}" class="btn-upgrade text-sm">DIVENTA VIP ORA</a></div>`;
                 return;
             }
             const item = exercicios[indexAtual];
@@ -145,11 +126,9 @@
             const area = document.getElementById('opcoes-area');
             area.innerHTML = '';
             document.getElementById('feedback-area').classList.add('hidden');
-
             ['a', 'b', 'c'].forEach(l => {
                 const btn = document.createElement('button');
-                btn.className = 'btn-opcao';
-                btn.innerText = item[l];
+                btn.className = 'btn-opcao'; btn.innerText = item[l];
                 btn.onclick = () => {
                     document.getElementById('feedback-area').classList.remove('hidden');
                     if (l === item.correta) {
@@ -165,9 +144,7 @@
                 area.appendChild(btn);
             });
         }
-
         function proximaQuestao() { indexAtual++; showQuestao(); }
-        
         carregarDados();
     </script>
 </body>
