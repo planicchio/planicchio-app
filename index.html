@@ -6,93 +6,102 @@
     <title>Planicchio 🐱</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #FFF5EB; font-family: sans-serif; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; overflow: hidden; }
-        .splash { position: fixed; inset: 0; background: #FF8C00; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; text-align: center; }
+        body { background-color: #FFF5EB; font-family: sans-serif; margin: 0; padding: 0; overflow: hidden; -webkit-tap-highlight-color: transparent; }
+        .splash { position: fixed; inset: 0; background: #FF8C00; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; text-align: center; }
         .page { display: none; padding: 20px; padding-bottom: 180px; height: 100vh; overflow-y: auto; }
         .active-page { display: block !important; }
         .hidden { display: none !important; }
 
-        /* Estilo dos Cards */
-        .card { background: white; border-radius: 25px; padding: 20px; border: 2px solid #FF8C00; box-shadow: 0 5px 0 #FFEDD5; margin-bottom: 15px; }
-        .vip-blur { filter: blur(5px); opacity: 0.3; pointer-events: none; user-select: none; }
-        
         /* Mascote */
-        .mascote-box { position: fixed; bottom: 90px; left: 20px; display: flex; align-items: center; z-index: 900; }
-        .gato { font-size: 50px; cursor: pointer; transition: 0.3s; }
-        .balao { background: white; padding: 10px; border-radius: 15px; border: 2px solid #FF8C00; font-size: 11px; font-weight: bold; max-width: 140px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-left: 10px; }
-        .anim-pulo { animation: pulo 0.5s ease; }
-        @keyframes pulo { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-25px); } }
-
-        /* Nav */
-        .nav-bottom { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 15px; border-top: 3px solid #FFEDD5; z-index: 1000; }
-        .nav-btn { display: flex; flex-direction: column; align-items: center; font-size: 10px; font-weight: 900; color: #FF8C00; text-decoration: none; border: none; background: none; }
+        .mascote-box { position: fixed; bottom: 90px; left: 20px; display: flex; align-items: center; z-index: 999; }
+        .gato { font-size: 55px; cursor: pointer; transition: 0.3s; }
+        .balao { background: white; padding: 12px; border-radius: 20px; border: 3px solid #FF8C00; font-size: 11px; font-weight: bold; max-width: 150px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); color: #333; margin-left: 10px; position: relative; }
+        .balao::before { content: ''; position: absolute; left: -8px; top: 15px; border-style: solid; border-width: 8px 10px 8px 0; border-color: transparent white transparent transparent; }
         
-        .btn-check { display: flex; align-items: center; gap: 10px; background: white; padding: 10px; border-radius: 15px; border: 1px solid #FFEDD5; margin-bottom: 8px; font-size: 11px; width: 100%; font-weight: bold; }
-        input[type="checkbox"] { width: 18px; height: 18px; accent-color: #22c55e; }
+        .card { background: white; border-radius: 28px; padding: 22px; border: 2px solid #FF8C00; box-shadow: 0 5px 0 #FFEDD5; margin-bottom: 15px; }
+        .vip-blur { filter: blur(5px); opacity: 0.3; pointer-events: none; }
+        
+        .nav-bottom { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 15px; border-top: 3px solid #FFEDD5; z-index: 1000; }
+        .nav-btn { display: flex; flex-direction: column; align-items: center; font-size: 10px; font-weight: 900; color: #FF8C00; background: none; border: none; }
+        
+        .btn-check { display: flex; align-items: center; gap: 12px; background: white; padding: 12px; border-radius: 18px; border: 1px solid #FFEDD5; margin-bottom: 8px; font-size: 12px; font-weight: bold; width: 100%; }
+        input[type="checkbox"] { width: 20px; height: 20px; accent-color: #22c55e; }
+        
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        .bounce { animation: bounce 0.6s ease; }
     </style>
 </head>
 <body>
 
     <div id="splash" class="splash">
-        <div class="gato anim-pulo" style="font-size: 80px;">🐱</div>
-        <h1 class="text-4xl font-black italic mb-2">PLANICCHIO</h1>
-        <p class="text-sm font-bold mb-8">Escolha seu curso / Scegli il tuo corso</p>
+        <div class="gato bounce" style="font-size: 80px;">🐱</div>
+        <h1 class="text-4xl font-black italic mb-2 tracking-tighter">PLANICCHIO</h1>
         
-        <div class="flex flex-col gap-3 w-72">
-            <button onclick="escolher('it-pt')" class="bg-white text-orange-600 font-black py-4 rounded-2xl shadow-xl uppercase text-xs">Italiano ➔ Português</button>
-            <button onclick="escolher('pt-it')" class="bg-white text-orange-600 font-black py-4 rounded-2xl shadow-xl uppercase text-xs">Português ➔ Italiano</button>
-            <button onclick="escolher('it-en')" class="bg-yellow-400 text-orange-900 font-black py-4 rounded-2xl shadow-xl uppercase text-xs ring-4 ring-white">⭐ Italiano ➔ English</button>
+        <div class="mb-8 space-y-1">
+            <p class="text-sm font-bold uppercase">Escolha seu curso</p>
+            <p class="text-xs italic opacity-90">Scegli il tuo corso</p>
+            <p class="text-[10px] opacity-70 uppercase">Choose your course</p>
+        </div>
+        
+        <div class="flex flex-col gap-3 w-72 px-4">
+            <button onclick="entrar('it-en')" class="bg-yellow-400 text-orange-900 font-black py-5 rounded-2xl shadow-2xl uppercase text-xs ring-4 ring-white">⭐ Italiano ➔ English</button>
+            
+            <button onclick="entrar('it-pt')" class="bg-white text-orange-600 font-bold py-3 rounded-xl shadow-md text-xs uppercase">Italiano ➔ Português</button>
+            <button onclick="entrar('pt-it')" class="bg-white text-orange-600 font-bold py-3 rounded-xl shadow-md text-xs uppercase">Português ➔ Italiano</button>
+            <button onclick="entrar('pt-en')" class="bg-white text-orange-600 font-bold py-3 rounded-xl shadow-md text-xs uppercase">Português ➔ English</button>
         </div>
     </div>
 
     <div id="app" class="hidden">
         <header class="p-4 bg-white sticky top-0 z-50 border-b-2 border-orange-100 flex justify-between items-center">
-            <span id="ui-rank" class="font-black text-orange-600 text-[10px] uppercase">Aprendiz 🐣</span>
+            <span id="ui-rank" class="font-black text-orange-600 text-[10px]">APRENDIZ 🐣</span>
             <div class="flex items-center gap-2">
                 <span class="text-[10px] font-bold">LVL <span id="ui-lvl">1</span></span>
-                <div class="w-20 bg-gray-100 h-2 rounded-full overflow-hidden"><div id="ui-bar" class="bg-orange-500 h-full w-0"></div></div>
+                <div class="w-20 bg-gray-100 h-2 rounded-full overflow-hidden border"><div id="ui-bar" class="bg-orange-500 h-full w-0 transition-all"></div></div>
             </div>
         </header>
 
         <div id="p-home" class="page active-page">
-            <div class="bg-orange-100 p-4 rounded-[25px] mb-6 border border-orange-200">
-                <h3 id="t-mis-d" class="text-[9px] font-black text-orange-600 mb-3 uppercase tracking-tighter">Missões Diárias</h3>
-                <div class="btn-check"><input type="checkbox" onchange="ganharXP(15)"> <span id="m-d1">Completar 1 Quiz</span></div>
-                <div class="btn-check"><input type="checkbox" onchange="ganharXP(15)"> <span id="m-d2">Ouvir 1 Gíria</span></div>
-                <div class="btn-check"><input type="checkbox" onchange="ganharXP(15)"> <span id="m-d3">Mudar o nome</span></div>
+            <div class="bg-orange-100 p-4 rounded-[30px] mb-6 border-2 border-orange-200">
+                <h3 id="t-mis-d" class="text-[10px] font-black text-orange-600 mb-3 uppercase italic">☀️ Missões Diárias</h3>
+                <div class="btn-check"><input type="checkbox" onchange="addXP(15)"> <span id="m-d1">Resolver Quiz</span></div>
+                <div class="btn-check"><input type="checkbox" onchange="addXP(15)"> <span id="m-d2">Ouvir Pronúncia</span></div>
+                <div class="btn-check"><input type="checkbox" onchange="addXP(15)"> <span id="m-d3">Mudar Avatar</span></div>
             </div>
 
             <div class="card text-center">
-                <p id="q-txt" class="font-bold text-xl mb-6 italic text-gray-800">Carregando quiz...</p>
+                <p id="q-txt" class="font-bold text-xl mb-8 italic text-gray-800">...</p>
                 <div id="q-box" class="space-y-3"></div>
-                <button onclick="falarQuiz()" class="mt-8 text-[10px] font-black text-orange-400 uppercase">🔊 <span id="b-ouvir">Ouvir Pergunta</span></button>
+                <button onclick="falar(document.getElementById('q-txt').innerText)" class="mt-8 text-[10px] font-black text-orange-400 uppercase tracking-widest">
+                    🔊 <span id="b-ouvir">OUVIR</span>
+                </button>
             </div>
         </div>
 
         <div id="p-dic" class="page">
             <h2 id="t-dic" class="text-2xl font-black text-orange-600 mb-6">DICIONÁRIO</h2>
-            <div id="lista-dic" class="space-y-4"></div>
+            <div id="ui-lista-dic" class="space-y-4"></div>
         </div>
 
         <div id="p-perfil" class="page text-center">
-            <div id="ui-avatar" class="text-8xl mb-4 bg-white p-4 rounded-full inline-block shadow-sm">🐱</div>
-            <input type="text" id="ui-nome" onchange="salvarNome()" class="text-center font-black text-2xl border-b-2 border-orange-100 w-full mb-8 bg-transparent outline-none" placeholder="Teu Nome">
+            <div id="ui-avatar" class="text-8xl mb-4 p-4 bg-white rounded-full inline-block">🐱</div>
+            <input type="text" id="ui-nome" onchange="salvarNome()" class="text-center font-black text-2xl border-b-2 border-orange-200 w-full mb-8 bg-transparent outline-none" placeholder="Teu Nome">
             
-            <div class="bg-white p-4 rounded-2xl mb-6 border text-left">
-                <h3 id="t-mis-s" class="text-[9px] font-black text-blue-500 mb-3 uppercase italic">🏆 Missões Semanais</h3>
+            <div class="bg-white p-5 rounded-[30px] mb-6 border-2 border-blue-100 text-left">
+                <h3 id="t-mis-s" class="text-[10px] font-black text-blue-500 mb-4 uppercase italic">🏆 Missões Semanais</h3>
                 <div class="btn-check"><input type="checkbox" class="ms-check"> <span id="m-s1">Nível 5</span></div>
-                <div class="btn-check"><input type="checkbox" class="ms-check"> <span id="m-s2">7 dias de ofensiva</span></div>
-                <div class="btn-check"><input type="checkbox" class="ms-check"> <span id="m-s3">Dicionário todo lido</span></div>
-                <div class="btn-check"><input type="checkbox" class="ms-check"> <span id="m-s4">Falar no WhatsApp</span></div>
-                <div class="btn-check"><input type="checkbox" class="ms-check"> <span id="m-s5">Indicar Planicchio</span></div>
-                <button id="btn-bonus" onclick="bonusXp()" class="hidden w-full mt-4 bg-blue-500 text-white py-3 rounded-xl font-black text-xs">RESGATAR +500 XP 🎁</button>
+                <div class="btn-check"><input type="checkbox" class="ms-check"> <span id="m-s2">7 Dias seguidos</span></div>
+                <div class="btn-check"><input type="checkbox" class="ms-check"> <span id="m-s3">Dicionário lido</span></div>
+                <div class="btn-check"><input type="checkbox" class="ms-check"> <span id="m-s4">Suporte WhatsApp</span></div>
+                <div class="btn-check"><input type="checkbox" class="ms-check"> <span id="m-s5">Indicar Amigo</span></div>
+                <button id="btn-recompensa" onclick="bonusXP()" class="hidden w-full mt-4 bg-blue-500 text-white py-4 rounded-2xl font-black text-xs shadow-lg">RESGATAR +500 XP 🎁</button>
             </div>
             
-            <button onclick="location.reload()" class="w-full py-4 bg-gray-100 rounded-2xl font-black text-gray-400 text-[10px] uppercase">Trocar Idioma</button>
+            <button onclick="location.reload()" class="w-full py-4 bg-gray-100 rounded-2xl font-black text-gray-400 text-[10px] uppercase">Trocar de Idioma</button>
         </div>
 
         <div class="mascote-box">
-            <div id="gato-img" class="gato" onclick="reagir()">🐱</div>
+            <div id="gato-img" class="gato" onclick="animarGato()">🐱</div>
             <div id="balao" class="balao">Ciao! 👋</div>
         </div>
 
@@ -104,28 +113,29 @@
     </div>
 
     <script>
-        const SHEETS_QUIZ = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT6-Ah6rq3hnBihlxVAzmsTD8rEF1rbGJu3__sBgm-DDyFWE_D7sxgJx3I3s55uiNl-qvP2x2wh0UD9/pub?gid=633031910&single=true&output=csv';
-        const SHEETS_DIC = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT6-Ah6rq3hnBihlxVAzmsTD8rEF1rbGJu3__sBgm-DDyFWE_D7sxgJx3I3s55uiNl-qvP2x2wh0UD9/pub?gid=541320303&single=true&output=csv';
+        const S_QUIZ = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT6-Ah6rq3hnBihlxVAzmsTD8rEF1rbGJu3__sBgm-DDyFWE_D7sxgJx3I3s55uiNl-qvP2x2wh0UD9/pub?gid=633031910&single=true&output=csv';
+        const S_DIC = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT6-Ah6rq3hnBihlxVAzmsTD8rEF1rbGJu3__sBgm-DDyFWE_D7sxgJx3I3s55uiNl-qvP2x2wh0UD9/pub?gid=541320303&single=true&output=csv';
 
-        const TRADUCOES = {
-            'pt': { h:'INÍCIO', d:'DICIONÁRIO', p:'PERFIL', ouv:'OUVIR TEXTO', md:'MISSÕES DIÁRIAS', ms:'MISSÕES SEMANAIS', r:'APRENDIZ 🐣' },
+        const TEXTOS = {
+            'pt': { h:'INÍCIO', d:'DICIONÁRIO', p:'PERFIL', ouv:'OUVIR', md:'MISSÕES DIÁRIAS', ms:'MISSÕES SEMANAIS', r:'APRENDIZ 🐣' },
             'it': { h:'INIZIO', d:'DIZIONARIO', p:'PROFILO', ouv:'ASCOLTA', md:'MISSIONI DIARIE', ms:'MISSIONI SETTIMANALI', r:'APPRENDISTA 🐣' },
             'en': { h:'HOME', d:'DICTIONARY', p:'PROFILE', ouv:'LISTEN', md:'DAILY MISSIONS', ms:'WEEKLY MISSIONS', r:'LEARNER 🐣' }
         };
 
         let xp = parseInt(localStorage.getItem('p_xp')) || 0;
         let curso = "";
-        let quizz = [];
+        let baseQuiz = [];
         let indexQ = 0;
 
-        function escolher(id) {
+        function entrar(id) {
             curso = id;
             document.getElementById('splash').classList.add('hidden');
             document.getElementById('app').classList.remove('hidden');
             
-            // Forçar Tradução
-            const lang = id.split('-')[0];
-            const t = TRADUCOES[lang] || TRADUCOES['pt'];
+            // Traduz interface conforme o idioma nativo (parte 1 do id)
+            const nativa = id.split('-')[0];
+            const t = TEXTOS[nativa] || TEXTOS['pt'];
+            
             document.getElementById('n-home').innerText = t.h;
             document.getElementById('n-dic').innerText = t.d;
             document.getElementById('n-perfil').innerText = t.p;
@@ -135,35 +145,112 @@
             document.getElementById('t-mis-s').innerText = t.ms;
             document.getElementById('ui-rank').innerText = t.r;
 
-            carregarDados();
-            atualizarBarra();
+            carregarSheets();
+            atualizarProgresso();
             document.getElementById('ui-nome').value = localStorage.getItem('p_nome') || "";
         }
 
-        async function carregarDados() {
+        async function carregarSheets() {
             try {
-                const [rQ, rD] = await Promise.all([fetch(SHEETS_QUIZ), fetch(SHEETS_DIC)]);
+                const [rQ, rD] = await Promise.all([fetch(S_QUIZ), fetch(S_DIC)]);
                 const tQ = await rQ.text();
                 const tD = await rD.text();
 
-                quizz = tQ.split(/\r?\n/).slice(1).map(l => {
+                baseQuiz = tQ.split(/\r?\n/).slice(1).map(l => {
                     const c = l.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                     return { q:limpar(c[1]), a:limpar(c[2]), b:limpar(c[3]), c:limpar(c[4]), ok:limpar(c[5]).toLowerCase() };
                 }).filter(x => x.q);
-                renderQuestao();
+                proximaQuestao();
 
-                const dContainer = document.getElementById('lista-dic');
-                dContainer.innerHTML = "";
+                const dicBox = document.getElementById('ui-lista-dic');
+                dicBox.innerHTML = "";
                 tD.split(/\r?\n/).slice(1).forEach((l, i) => {
                     const c = l.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                     if(!limpar(c[2])) return;
-                    const vip = i > 9;
+                    const vip = i > 10;
                     const card = document.createElement('div');
                     card.className = "card relative overflow-hidden";
                     card.innerHTML = `
                         <div class="${vip ? 'vip-blur' : ''}">
-                            <div class="flex justify-between items-center">
+                            <div class="flex justify-between items-center mb-1">
                                 <b class="text-orange-600 text-lg">${limpar(c[2])}</b>
-                                <button onclick="falarTexto('${limpar(c[2])}')" class="text-xl">🔊</button>
+                                <button onclick="falar('${limpar(c[2])}')" class="text-xl">🔊</button>
                             </div>
-                            <p class="text-[10px] text-gray-400 italic mb-1">${limpar(
+                            <p class="text-[10px] text-gray-400 italic mb-2">${limpar(c[3])}</p>
+                            <p class="text-sm font-bold text-gray-700">${limpar(c[4])}</p>
+                            ${limpar(c[5]) ? `<div class="mt-3 p-3 bg-orange-50 rounded-xl text-xs italic text-orange-900 border border-orange-100">Ex: "${limpar(c[5])}"</div>` : ''}
+                        </div>
+                        ${vip ? '<div class="absolute inset-0 flex items-center justify-center font-black text-red-500 text-xs">🔒 CONTEÚDO VIP</div>' : ''}
+                    `;
+                    dicBox.appendChild(card);
+                });
+            } catch(e) { console.error("Erro dados"); }
+        }
+
+        function proximaQuestao() {
+            if(!baseQuiz.length) return;
+            const item = baseQuiz[indexQ % baseQuiz.length];
+            document.getElementById('q-txt').innerText = item.q;
+            const box = document.getElementById('q-box');
+            box.innerHTML = "";
+            ['a','b','c'].forEach(opt => {
+                const b = document.createElement('button');
+                b.className = "w-full text-left p-4 border-2 border-orange-100 rounded-2xl font-bold text-orange-600 bg-white active:scale-95 transition-all";
+                b.innerText = item[opt];
+                b.onclick = () => {
+                    if(opt === item.ok) {
+                        addXP(25); b.style.borderColor = "#22c55e"; b.style.background = "#f0fdf4";
+                        animarGato("Ottimo! +25 XP 🎉");
+                        setTimeout(() => { indexQ++; proximaQuestao(); }, 1000);
+                    } else { b.style.borderColor = "#ef4444"; b.style.background = "#fef2f2"; }
+                };
+                box.appendChild(b);
+            });
+        }
+
+        function aba(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
+            document.getElementById('p-' + id).classList.add('active-page');
+            animarGato();
+        }
+
+        function addXP(n) { xp += n; atualizarProgresso(); }
+        function atualizarProgresso() {
+            localStorage.setItem('p_xp', xp);
+            document.getElementById('ui-lvl').innerText = Math.floor(xp / 100) + 1;
+            document.getElementById('ui-bar').style.width = (xp % 100) + "%";
+        }
+
+        function animarGato(msg) {
+            const g = document.getElementById('gato-img');
+            g.classList.add('bounce');
+            setTimeout(() => g.classList.remove('bounce'), 600);
+            if(msg) document.getElementById('balao').innerText = msg;
+        }
+
+        function falar(t) {
+            const f = new SpeechSynthesisUtterance(t);
+            const dst = curso.split('-')[1];
+            f.lang = dst === 'it' ? 'it-IT' : (dst === 'en' ? 'en-US' : 'pt-BR');
+            window.speechSynthesis.speak(f);
+        }
+
+        function salvarNome() { localStorage.setItem('p_nome', document.getElementById('ui-nome').value); animarGato("Nome salvo! 🐱"); }
+        function limpar(t) { return t ? t.replace(/"/g, '').trim() : ""; }
+
+        // Missões Semanais logic
+        document.querySelectorAll('.ms-check').forEach(c => {
+            c.onchange = () => {
+                const n = document.querySelectorAll('.ms-check:checked').length;
+                if(n === 5) document.getElementById('btn-recompensa').classList.remove('hidden');
+            }
+        });
+
+        function bonusXP() {
+            addXP(500);
+            document.getElementById('btn-recompensa').classList.add('hidden');
+            animarGato("RECOMPENSA DE 500 XP! 👑");
+        }
+    </script>
+</body>
+</html>
