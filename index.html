@@ -6,36 +6,40 @@
     <title>Planicchio 🐱</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #FFF5EB; font-family: sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
+        body { background-color: #FFF5EB; font-family: sans-serif; margin: 0; padding: 0; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
         .splash { position: fixed; inset: 0; background: #FF8C00; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; }
         .hidden { display: none !important; }
-        .page { display: none; padding: 20px; padding-bottom: 160px; }
+        .page { display: none; padding: 20px; padding-bottom: 180px; animation: slideUp 0.3s ease; }
         .active-page { display: block !important; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         
-        /* Mascote e Balão */
-        .mascote-box { position: fixed; bottom: 85px; left: 20px; display: flex; align-items: center; gap: 8px; z-index: 998; transition: 0.3s; }
-        .gato { font-size: 50px; cursor: pointer; transition: 0.3s; display: inline-block; }
-        .pulando { animation: jump 0.6s ease; }
-        @keyframes jump { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-20px) scale(1.1); } }
-        .balao { background: white; padding: 12px; border-radius: 18px; border: 2px solid #FF8C00; font-size: 11px; font-weight: bold; max-width: 150px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); color: #333; position: relative; }
-        .balao::after { content: ''; position: absolute; left: -10px; top: 15px; border-style: solid; border-width: 10px 10px 10px 0; border-color: transparent white transparent transparent; }
+        /* Mascote e Fala */
+        .mascote-box { position: fixed; bottom: 85px; left: 20px; display: flex; align-items: center; gap: 10px; z-index: 998; }
+        .gato { font-size: 55px; cursor: pointer; transition: 0.3s; display: inline-block; }
+        .pulando { animation: jump 0.6s cubic-bezier(0.36, 0, 0.66, -0.56); }
+        @keyframes jump { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-35px) scale(1.1); } }
+        .balao { background: white; padding: 12px 16px; border-radius: 20px; border: 3px solid #FF8C00; font-size: 11px; font-weight: bold; max-width: 160px; box-shadow: 0 6px 15px rgba(0,0,0,0.1); color: #333; }
 
-        /* Estilo VIP e Cards */
-        .card { background: white; border-radius: 25px; padding: 20px; border: 2px solid #FF8C00; }
-        .vip-blur { filter: blur(5px); opacity: 0.5; pointer-events: none; }
-        .btn-opt { width: 100%; text-align: left; padding: 18px; margin-bottom: 12px; border: 2px solid #FFEDD5; border-radius: 20px; font-weight: bold; color: #FF8C00; background: white; transition: 0.2s; }
-        .btn-opt:active { transform: scale(0.96); background: #FFF5EB; }
+        /* Estilos de Interface */
+        .card { background: white; border-radius: 28px; padding: 22px; border: 2px solid #FF8C00; box-shadow: 0 4px 0 #FFEDD5; }
+        .vip-blur { filter: blur(6px); opacity: 0.4; pointer-events: none; }
+        .btn-opt { width: 100%; text-align: left; padding: 18px; margin-bottom: 12px; border: 2px solid #FFEDD5; border-radius: 20px; font-weight: 800; color: #FF8C00; background: white; transition: 0.2s; }
+        .btn-opt:active { transform: scale(0.95); background: #FF8C00; color: white; }
         
-        .nav-bottom { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 15px; border-top: 2px solid #FFEDD5; z-index: 999; }
-        .nav-btn { display: flex; flex-direction: column; align-items: center; font-size: 10px; font-weight: bold; color: #FF8C00; }
+        .nav-bottom { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 15px; border-top: 3px solid #FFEDD5; z-index: 999; }
+        .nav-btn { display: flex; flex-direction: column; align-items: center; font-size: 10px; font-weight: 900; color: #FF8C00; text-transform: uppercase; }
+        
+        /* Missões */
+        .missao-item { display: flex; items-center; gap: 10px; background: white; padding: 10px; border-radius: 15px; margin-bottom: 8px; border: 1px solid #FFEDD5; font-size: 11px; font-weight: bold; }
+        input[type="checkbox"] { width: 18px; height: 18px; accent-color: #22c55e; }
     </style>
 </head>
 <body>
 
-    <div id="splash" class="splash">
+    <div id="splash" class="splash text-center">
         <div class="gato pulando">🐱</div>
-        <h1 class="text-4xl font-black mb-1 italic">PLANICCHIO</h1>
-        <p id="splash-msg" class="text-sm font-bold mb-8">Scegli o teu corso</p>
+        <h1 class="text-4xl font-black mb-1 italic tracking-tighter">PLANICCHIO</h1>
+        <p class="text-sm font-bold mb-8">Escolha seu curso / Scegli il tuo corso</p>
         
         <div class="grid grid-cols-1 gap-3 w-72 px-4">
             <button onclick="iniciar('it-en')" class="bg-yellow-400 text-orange-900 font-black py-4 rounded-2xl shadow-xl ring-4 ring-white uppercase text-xs">⭐ Italiano ➔ English</button>
@@ -49,55 +53,71 @@
 
     <div id="app" class="hidden">
         <header class="p-4 bg-white sticky top-0 z-50 border-b-2 border-orange-50">
-            <div class="flex justify-between items-center text-[10px] font-black text-orange-600 uppercase">
-                <span id="ui-rank">APRENDIZ 🐣</span>
+            <div class="flex justify-between items-center text-[11px] font-black text-orange-600">
+                <span id="ui-rank">RANK</span>
                 <span>LVL <span id="ui-lvl">1</span></span>
             </div>
-            <div class="w-full bg-gray-100 h-3 rounded-full mt-2 overflow-hidden">
-                <div id="ui-bar" class="bg-orange-500 h-full transition-all" style="width: 0%"></div>
+            <div class="w-full bg-gray-100 h-3 rounded-full mt-2 overflow-hidden border border-gray-200">
+                <div id="ui-bar" class="bg-orange-500 h-full transition-all duration-500" style="width: 0%"></div>
             </div>
         </header>
 
         <div id="p-home" class="page active-page">
-            <div class="bg-orange-50 p-4 rounded-3xl mb-6 border-2 border-orange-100">
-                <h3 id="ui-missao-tit" class="text-[10px] font-black text-orange-600 uppercase mb-3">Missões Diárias</h3>
-                <div class="space-y-2">
-                    <div class="flex items-center gap-2 bg-white p-2 rounded-xl text-[10px] font-bold text-gray-600">
-                        <input type="checkbox" class="w-4 h-4 accent-green-500"> <span id="m1">Fazer 3 Quizzes</span>
-                    </div>
-                    <div class="flex items-center gap-2 bg-white p-2 rounded-xl text-[10px] font-bold text-gray-600">
-                        <input type="checkbox" class="w-4 h-4 accent-green-500"> <span id="m2">Ouvir uma pronúncia</span>
-                    </div>
+            <div class="bg-orange-100 p-4 rounded-[30px] mb-6 border-2 border-orange-200">
+                <h3 id="tit-missao-d" class="text-[10px] font-black text-orange-600 uppercase mb-3 flex items-center gap-2">☀️ MISSÕES DIÁRIAS</h3>
+                <div id="lista-missoes-d">
+                    <div class="missao-item"> <input type="checkbox" onchange="addXP(10)"> <span id="md1">Fazer 3 Quizzes</span> </div>
+                    <div class="missao-item"> <input type="checkbox" onchange="addXP(10)"> <span id="md2">Ouvir uma gíria</span> </div>
+                    <div class="missao-item"> <input type="checkbox" onchange="addXP(10)"> <span id="md3">Trocar o Avatar</span> </div>
                 </div>
             </div>
 
             <div class="card">
-                <p id="ui-pergunta" class="font-bold text-gray-800 mb-6 text-center text-xl italic">...</p>
+                <p id="ui-pergunta" class="font-bold text-gray-800 mb-8 text-center text-xl italic leading-tight">...</p>
                 <div id="ui-opcoes" class="space-y-3"></div>
-                <button onclick="ouvir()" class="mt-6 w-full text-[10px] font-black text-orange-400 flex justify-center items-center gap-2">
-                    <span class="text-lg">🔊</span> <span id="ui-btn-ouvir">OUVIR TEXTO</span>
+                <button onclick="ouvir()" class="mt-8 w-full py-2 text-[10px] font-black text-orange-400 border-t border-orange-50 pt-4 uppercase">
+                   🔊 <span id="btn-ouvir">Ouvir / Ascolta</span>
                 </button>
             </div>
         </div>
 
         <div id="p-dic" class="page">
-            <h2 id="ui-dic-tit" class="text-2xl font-black text-orange-600 mb-6">DICIONÁRIO</h2>
+            <h2 id="tit-dic" class="text-2xl font-black text-orange-600 mb-6 uppercase">Dicionário</h2>
             <div id="ui-lista-dic" class="space-y-4"></div>
         </div>
 
+        <div id="p-dicas" class="page">
+            <h2 id="tit-dicas" class="text-2xl font-black text-orange-600 mb-6 uppercase">Dicas e Cultura</h2>
+            <div class="card mb-4">
+                <img src="https://images.unsplash.com/photo-1543349689-9a4d426bee8e?w=400" class="rounded-2xl mb-4 w-full h-48 object-cover">
+                <p id="dica-txt" class="text-sm font-medium text-gray-700 leading-relaxed">Carregando dicas...</p>
+            </div>
+        </div>
+
         <div id="p-perfil" class="page text-center">
-            <div id="ui-avatar" class="text-8xl mb-4">🐱</div>
-            <input type="text" id="ui-nome" class="text-center font-black text-2xl bg-transparent outline-none border-b-2 border-orange-200 w-full mb-8" placeholder="...">
+            <div id="ui-avatar" class="text-8xl mb-4 p-4 bg-white rounded-full inline-block shadow-inner">🐱</div>
+            <input type="text" id="ui-nome" class="text-center font-black text-2xl bg-transparent outline-none border-b-2 border-orange-200 w-full mb-6" placeholder="Nome">
             
-            <div class="grid grid-cols-4 gap-3 mb-10">
-                <button onclick="mudarAvatar('🐱')" class="bg-white p-3 rounded-2xl border shadow-sm text-2xl">🐱</button>
-                <button onclick="mudarAvatar('🐶')" class="bg-white p-3 rounded-2xl border shadow-sm text-2xl">🐶</button>
-                <button onclick="mudarAvatar('🦊')" class="bg-white p-3 rounded-2xl border shadow-sm text-2xl">🦊</button>
-                <button onclick="mudarAvatar('🦁')" class="bg-white p-3 rounded-2xl border shadow-sm text-2xl">🦁</button>
+            <div class="flex justify-center gap-2 mb-8">
+                <button onclick="mudarAvatar('🐱')" class="bg-white p-3 rounded-2xl border-2 border-orange-50 text-2xl">🐱</button>
+                <button onclick="mudarAvatar('🐶')" class="bg-white p-3 rounded-2xl border-2 border-orange-50 text-2xl">🐶</button>
+                <button onclick="mudarAvatar('🐰')" class="bg-white p-3 rounded-2xl border-2 border-orange-50 text-2xl">🐰</button>
+                <button onclick="mudarAvatar('🦊')" class="bg-white p-3 rounded-2xl border-2 border-orange-50 text-2xl">🦊</button>
             </div>
 
-            <button onclick="location.reload()" class="w-full py-4 bg-gray-100 rounded-2xl font-black text-gray-400 text-xs uppercase mb-4" id="ui-btn-trocar">Trocar de Curso</button>
-            <button onclick="window.open('https://wa.me/393716755981')" class="w-full py-4 bg-green-500 rounded-2xl font-black text-white text-xs uppercase shadow-lg" id="ui-btn-vip">Suporte VIP</button>
+            <div class="bg-white p-4 rounded-3xl mb-6 border-2 border-blue-100 text-left">
+                <h3 id="tit-missao-s" class="text-[10px] font-black text-blue-500 uppercase mb-3 italic">🏆 Missões Semanais</h3>
+                <div class="grid grid-cols-1 gap-2">
+                   <div class="missao-item"> <input type="checkbox"> <span id="ms1">Chegar ao Nível 5</span> </div>
+                   <div class="missao-item"> <input type="checkbox"> <span id="ms2">Praticar todos os dias</span> </div>
+                   <div class="missao-item"> <input type="checkbox"> <span id="ms3">Completar o Dicionário</span> </div>
+                   <div class="missao-item"> <input type="checkbox"> <span id="ms4">Falar com suporte</span> </div>
+                   <div class="missao-item"> <input type="checkbox"> <span id="ms5">Convidar amigo</span> </div>
+                </div>
+            </div>
+
+            <button onclick="location.reload()" class="w-full py-4 bg-gray-100 rounded-2xl font-black text-gray-400 text-xs uppercase mb-4" id="btn-trocar">Trocar de Curso</button>
+            <button onclick="window.open('https://wa.me/393716755981')" class="w-full py-4 bg-green-500 rounded-2xl font-black text-white text-xs uppercase shadow-lg">WhatsApp Suporte</button>
         </div>
 
         <div class="mascote-box">
@@ -106,9 +126,10 @@
         </div>
 
         <nav class="nav-bottom">
-            <button onclick="aba('home')" class="nav-btn">🏠<span id="n-home">HOME</span></button>
-            <button onclick="aba('dic')" class="nav-btn">📖<span id="n-dic">DICIONÁRIO</span></button>
-            <button onclick="aba('perfil')" class="nav-btn">👤<span id="n-perfil">PERFIL</span></button>
+            <button onclick="aba('home')" class="nav-btn">🏠<span id="n-home">Home</span></button>
+            <button onclick="aba('dic')" class="nav-btn">📖<span id="n-dic">Dicionário</span></button>
+            <button onclick="aba('dicas')" class="nav-btn">🌍<span id="n-dicas">Dicas</span></button>
+            <button onclick="aba('perfil')" class="nav-btn">👤<span id="n-perfil">Perfil</span></button>
         </nav>
     </div>
 
@@ -118,87 +139,89 @@
             dic: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT6-Ah6rq3hnBihlxVAzmsTD8rEF1rbGJu3__sBgm-DDyFWE_D7sxgJx3I3s55uiNl-qvP2x2wh0UD9/pub?gid=541320303&single=true&output=csv'
         };
 
-        const TRADUCOES = {
-            'it': { home: 'HOME', dic: 'DIZIONARIO', perfil: 'PROFILO', ouvir: 'ASCOLTA', trocar: 'CAMBIA CORSO', missao: 'MISSIONI DIARIE', m1: 'Fai 3 Quiz', m2: 'Ascolta pronuncia', rank: 'APPRENDISTA 🐣' },
-            'pt': { home: 'INÍCIO', dic: 'DICIONÁRIO', perfil: 'PERFIL', ouvir: 'OUVIR TEXTO', trocar: 'TROCAR DE CURSO', missao: 'MISSÕES DIÁRIAS', m1: 'Fazer 3 Quizzes', m2: 'Ouvir pronúncia', rank: 'APRENDIZ 🐣' },
-            'en': { home: 'HOME', dic: 'DICTIONARY', perfil: 'PROFILE', ouvir: 'LISTEN', trocar: 'CHANGE COURSE', missao: 'DAILY MISSIONS', m1: 'Do 3 Quizzes', m2: 'Listen pronunciation', rank: 'LEARNER 🐣' }
+        const TRAD = {
+            'pt': { h: 'Início', d: 'Dicionário', p: 'Perfil', dc: 'Dicas', ouv: 'Ouvir Texto', tr: 'Trocar Curso', md: 'Missões Diárias', ms: 'Missões Semanais', r: 'Aprendiz 🐣' },
+            'it': { h: 'Inizio', d: 'Dizionario', p: 'Profilo', dc: 'Curiosità', ouv: 'Ascolta', tr: 'Cambia Corso', md: 'Missioni Diarie', ms: 'Missioni Settimanali', r: 'Apprendista 🐣' },
+            'en': { h: 'Home', d: 'Dictionary', p: 'Profile', dc: 'Tips', ouv: 'Listen', tr: 'Change Course', md: 'Daily Missions', ms: 'Weekly Missions', r: 'Learner 🐣' }
         };
 
         let xp = parseInt(localStorage.getItem('p_xp')) || 0;
         let curso = "";
-        let langDestino = "it"; // Linguagem que o usuário quer aprender
         let dadosQuiz = [];
         let indexQ = 0;
 
         function iniciar(id) {
             curso = id;
-            langDestino = id.split('-')[1]; // Ex: it-pt -> destino é pt
             document.getElementById('splash').classList.add('hidden');
             document.getElementById('app').classList.remove('hidden');
             
-            aplicarTraducoesInterface();
+            aplicarTraducoes();
             carregarTudo();
             atualizarProgresso();
             
-            // Recuperar Perfil
             document.getElementById('ui-nome').value = localStorage.getItem('p_nome') || "Estudante";
             mudarAvatar(localStorage.getItem('p_avatar') || '🐱');
-            
-            // Loop de fala automática do gato
-            setInterval(falaAutomatica, 10000);
+            setInterval(falaAutomatica, 12000);
         }
 
-        function aplicarTraducoesInterface() {
-            // Se o destino for 'pt', a interface deve ser em PT. Se for 'it', interface em IT.
-            const langInterface = curso.split('-')[0]; // Idioma nativo do usuário
-            const t = TRADUCOES[langInterface] || TRADUCOES['pt'];
+        function aplicarTraducoes() {
+            const lang = curso.split('-')[0]; // Nativo do usuário
+            const t = TRAD[lang] || TRAD['pt'];
             
-            document.getElementById('n-home').innerText = t.home;
-            document.getElementById('n-dic').innerText = t.dic;
-            document.getElementById('n-perfil').innerText = t.perfil;
-            document.getElementById('ui-btn-ouvir').innerText = t.ouvir;
-            document.getElementById('ui-btn-trocar').innerText = t.trocar;
-            document.getElementById('ui-missao-tit').innerText = t.missao;
-            document.getElementById('m1').innerText = t.m1;
-            document.getElementById('m2').innerText = t.m2;
-            document.getElementById('ui-dic-tit').innerText = t.dic;
-            document.getElementById('ui-rank').innerText = t.rank;
+            document.getElementById('n-home').innerText = t.h;
+            document.getElementById('n-dic').innerText = t.d;
+            document.getElementById('n-dicas').innerText = t.dc;
+            document.getElementById('n-perfil').innerText = t.p;
+            document.getElementById('tit-dic').innerText = t.d;
+            document.getElementById('tit-dicas').innerText = t.dc;
+            document.getElementById('btn-ouvir').innerText = t.ouv;
+            document.getElementById('btn-trocar').innerText = t.tr;
+            document.getElementById('tit-missao-d').innerText = "☀️ " + t.md;
+            document.getElementById('tit-missao-s').innerText = "🏆 " + t.ms;
+            document.getElementById('ui-rank').innerText = t.r;
+
+            // Dica específica por curso
+            const dicas = {
+                'it': "A Torre de Pisa demorou 199 anos para ser concluída!",
+                'en': "A Estátua da Liberdade foi um presente da França para os EUA!",
+                'pt': "O Brasil é o único país da América que fala Português!"
+            };
+            document.getElementById('dica-txt').innerText = dicas[curso.split('-')[1]] || dicas['it'];
         }
 
         async function carregarTudo() {
             try {
-                // Carregar Quiz
-                const r1 = await fetch(SHEETS.quiz);
-                const t1 = await r1.text();
-                dadosQuiz = t1.split(/\r?\n/).slice(1).map(line => {
-                    const c = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                const [rQuiz, rDic] = await Promise.all([fetch(SHEETS.quiz), fetch(SHEETS.dic)]);
+                const tQuiz = await rQuiz.text();
+                const tDic = await rDic.text();
+
+                dadosQuiz = tQuiz.split(/\r?\n/).slice(1).map(l => {
+                    const c = l.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                     return { q: clean(c[1]), a: clean(c[2]), b: clean(c[3]), c: clean(c[4]), ok: clean(c[5]).toLowerCase() };
                 }).filter(x => x.q);
                 renderQuestao();
 
-                // Carregar Dicionário
-                const r2 = await fetch(SHEETS.dic);
-                const t2 = await r2.text();
                 const container = document.getElementById('ui-lista-dic');
                 container.innerHTML = "";
-                t2.split(/\r?\n/).slice(1).forEach((line, i) => {
-                    const c = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                tDic.split(/\r?\n/).slice(1).forEach((l, i) => {
+                    const c = l.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                     if(!clean(c[2])) return;
-                    const vip = i > 5;
-                    const item = document.createElement('div');
-                    item.className = `card relative overflow-hidden ${vip ? '' : 'border-orange-200'}`;
-                    item.innerHTML = `
+                    const vip = i > 9; // 10 primeiros grátis
+                    const div = document.createElement('div');
+                    div.className = `card relative overflow-hidden`;
+                    div.innerHTML = `
                         <div class="${vip ? 'vip-blur' : ''}">
-                            <div class="flex justify-between">
-                                <b class="text-orange-600">${clean(c[2])}</b>
-                                <button onclick="ouvirTexto('${clean(c[2])}')">🔊</button>
+                            <div class="flex justify-between items-center mb-1">
+                                <b class="text-orange-600 text-lg">${clean(c[2])}</b>
+                                <button onclick="ouvirTexto('${clean(c[2])}')" class="text-xl">🔊</button>
                             </div>
-                            <p class="text-[10px] text-gray-400 italic">${clean(c[3])}</p>
-                            <p class="text-sm mt-1">${clean(c[4])}</p>
+                            <p class="text-[10px] text-gray-400 italic mb-2">${clean(c[3])}</p>
+                            <p class="text-sm font-bold text-gray-700">${clean(c[4])}</p>
+                            ${clean(c[5]) ? `<p class="mt-2 p-2 bg-orange-50 rounded-lg text-xs italic text-orange-800">"${clean(c[5])}"</p>` : ''}
                         </div>
-                        ${vip ? '<div class="absolute inset-0 flex items-center justify-center font-black text-red-500 text-[10px]">🔒 CONTEÚDO VIP</div>' : ''}
+                        ${vip ? '<div class="absolute inset-0 flex items-center justify-center bg-white/40 backdrop-blur-sm"><span class="bg-red-500 text-white px-3 py-1 rounded-full text-[10px] font-black shadow-lg">🔒 VIP</span></div>' : ''}
                     `;
-                    container.appendChild(item);
+                    container.appendChild(div);
                 });
             } catch(e) { console.error(e); }
         }
@@ -215,13 +238,15 @@
                 btn.innerText = item[opt];
                 btn.onclick = () => {
                     if(opt === item.ok) {
-                        xp += 25; atualizarProgresso();
-                        btn.style.borderColor = "#22c55e";
+                        addXP(25);
+                        btn.style.background = "#22c55e";
+                        btn.style.color = "white";
                         reagir("Bravissimo! +25 XP 🎉");
                         setTimeout(() => { indexQ++; renderQuestao(); }, 1000);
                     } else {
-                        btn.style.borderColor = "#ef4444";
-                        reagir("Ops! Tente de novo. 🧐");
+                        btn.style.background = "#ef4444";
+                        btn.style.color = "white";
+                        reagir("Ops! Tente outra. 🧐");
                     }
                 };
                 box.appendChild(btn);
@@ -236,7 +261,7 @@
         }
 
         function falaAutomatica() {
-            const frases = ["Você já viu o dicionário hoje?", "O VIP tem áudios exclusivos!", "Miau! Vamos praticar?", "Estou adorando seu progresso!"];
+            const frases = ["Dica: gírias ajudam a soar nativo!", "Fez suas missões de hoje?", "O VIP tem gírias secretas!", "Praticar 5min todo dia é o segredo!"];
             document.getElementById('ui-balao').innerText = frases[Math.floor(Math.random()*frases.length)];
         }
 
@@ -249,25 +274,27 @@
         function aba(id) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
             document.getElementById('p-' + id).classList.add('active-page');
+            reagir();
         }
 
-        function ouvir() { ouvirTexto(document.getElementById('ui-pergunta').innerText); }
-        
-        function ouvirTexto(t) {
-            const f = new SpeechSynthesisUtterance(t);
-            // Fala no idioma que o aluno está APRENDENDO
-            f.lang = langDestino === 'it' ? 'it-IT' : (langDestino === 'en' ? 'en-US' : 'pt-BR');
-            window.speechSynthesis.speak(f);
-        }
+        function addXP(n) { xp += n; atualizarProgresso(); }
 
         function atualizarProgresso() {
             localStorage.setItem('p_xp', xp);
-            document.getElementById('ui-lvl').innerText = Math.floor(xp / 100) + 1;
+            const lvl = Math.floor(xp / 100) + 1;
+            document.getElementById('ui-lvl').innerText = lvl;
             document.getElementById('ui-bar').style.width = (xp % 100) + "%";
         }
 
+        function ouvir() { ouvirTexto(document.getElementById('ui-pergunta').innerText); }
+        function ouvirTexto(t) {
+            const f = new SpeechSynthesisUtterance(t);
+            const destino = curso.split('-')[1];
+            f.lang = destino === 'it' ? 'it-IT' : (destino === 'en' ? 'en-US' : 'pt-BR');
+            window.speechSynthesis.speak(f);
+        }
+
         function clean(t) { return t ? t.replace(/"/g, '').trim() : ""; }
-        
         document.getElementById('ui-nome').onchange = (e) => localStorage.setItem('p_nome', e.target.value);
     </script>
 </body>
