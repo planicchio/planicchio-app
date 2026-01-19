@@ -1,32 +1,24 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Planicchio 🐱</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #FFF5EB; font-family: sans-serif; margin: 0; padding: 0; overflow: hidden; -webkit-tap-highlight-color: transparent; }
+        body { background-color: #FFF5EB; font-family: sans-serif; margin: 0; overflow: hidden; -webkit-tap-highlight-color: transparent; }
         .splash { position: fixed; inset: 0; background: #FF8C00; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; text-align: center; }
         .page { display: none; padding: 20px; padding-bottom: 180px; height: 100vh; overflow-y: auto; }
         .active-page { display: block !important; }
         .hidden { display: none !important; }
-
-        /* Mascote */
-        .mascote-box { position: fixed; bottom: 90px; left: 20px; display: flex; align-items: center; z-index: 999; }
-        .gato { font-size: 55px; cursor: pointer; transition: 0.3s; }
-        .balao { background: white; padding: 12px; border-radius: 20px; border: 3px solid #FF8C00; font-size: 11px; font-weight: bold; max-width: 150px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); color: #333; margin-left: 10px; position: relative; }
-        .balao::before { content: ''; position: absolute; left: -8px; top: 15px; border-style: solid; border-width: 8px 10px 8px 0; border-color: transparent white transparent transparent; }
-        
         .card { background: white; border-radius: 28px; padding: 22px; border: 2px solid #FF8C00; box-shadow: 0 5px 0 #FFEDD5; margin-bottom: 15px; }
         .vip-blur { filter: blur(5px); opacity: 0.3; pointer-events: none; }
-        
         .nav-bottom { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 15px; border-top: 3px solid #FFEDD5; z-index: 1000; }
         .nav-btn { display: flex; flex-direction: column; align-items: center; font-size: 10px; font-weight: 900; color: #FF8C00; background: none; border: none; }
-        
-        .btn-check { display: flex; align-items: center; gap: 12px; background: white; padding: 12px; border-radius: 18px; border: 1px solid #FFEDD5; margin-bottom: 8px; font-size: 12px; font-weight: bold; width: 100%; }
+        .btn-check { display: flex; align-items: center; gap: 12px; background: white; padding: 12px; border-radius: 18px; border: 1px solid #FFEDD5; margin-bottom: 8px; font-size: 12px; font-weight: bold; width: 100%; text-align: left; }
         input[type="checkbox"] { width: 20px; height: 20px; accent-color: #22c55e; }
-        
+        .gato { font-size: 55px; cursor: pointer; transition: 0.3s; }
+        .balao { background: white; padding: 12px; border-radius: 20px; border: 3px solid #FF8C00; font-size: 11px; font-weight: bold; max-width: 150px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); color: #333; margin-left: 10px; }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
         .bounce { animation: bounce 0.6s ease; }
     </style>
@@ -35,69 +27,60 @@
 
     <div id="splash" class="splash">
         <div class="gato bounce" style="font-size: 80px;">🐱</div>
-        <h1 class="text-4xl font-black italic mb-2 tracking-tighter">PLANICCHIO</h1>
-        
+        <h1 class="text-4xl font-black italic mb-2">PLANICCHIO</h1>
         <div class="mb-8 space-y-1">
-            <p class="text-sm font-bold uppercase">Escolha seu curso</p>
-            <p class="text-xs italic opacity-90">Scegli il tuo corso</p>
-            <p class="text-[10px] opacity-70 uppercase">Choose your course</p>
+            <p class="text-sm font-bold">SCEGLI IL TUO CORSO</p>
+            <p class="text-xs opacity-80">ESCOLHA SEU CURSO</p>
+            <p class="text-[10px] opacity-60 uppercase">CHOOSE YOUR COURSE</p>
         </div>
-        
         <div class="flex flex-col gap-3 w-72 px-4">
             <button onclick="entrar('it-en')" class="bg-yellow-400 text-orange-900 font-black py-5 rounded-2xl shadow-2xl uppercase text-xs ring-4 ring-white">⭐ Italiano ➔ English</button>
-            
-            <button onclick="entrar('it-pt')" class="bg-white text-orange-600 font-bold py-3 rounded-xl shadow-md text-xs uppercase">Italiano ➔ Português</button>
-            <button onclick="entrar('pt-it')" class="bg-white text-orange-600 font-bold py-3 rounded-xl shadow-md text-xs uppercase">Português ➔ Italiano</button>
-            <button onclick="entrar('pt-en')" class="bg-white text-orange-600 font-bold py-3 rounded-xl shadow-md text-xs uppercase">Português ➔ English</button>
+            <button onclick="entrar('pt-it')" class="bg-white text-orange-600 font-bold py-3 rounded-xl text-xs uppercase">Português ➔ Italiano</button>
+            <button onclick="entrar('it-pt')" class="bg-white text-orange-600 font-bold py-3 rounded-xl text-xs uppercase">Italiano ➔ Português</button>
         </div>
     </div>
 
     <div id="app" class="hidden">
         <header class="p-4 bg-white sticky top-0 z-50 border-b-2 border-orange-100 flex justify-between items-center">
-            <span id="ui-rank" class="font-black text-orange-600 text-[10px]">APRENDIZ 🐣</span>
+            <span id="txt-rank" class="font-black text-orange-600 text-[10px]">APPRENDISTA 🐣</span>
             <div class="flex items-center gap-2">
                 <span class="text-[10px] font-bold">LVL <span id="ui-lvl">1</span></span>
-                <div class="w-20 bg-gray-100 h-2 rounded-full overflow-hidden border"><div id="ui-bar" class="bg-orange-500 h-full w-0 transition-all"></div></div>
+                <div class="w-20 bg-gray-100 h-2 rounded-full overflow-hidden border"><div id="ui-bar" class="bg-orange-500 h-full w-0"></div></div>
             </div>
         </header>
 
         <div id="p-home" class="page active-page">
             <div class="bg-orange-100 p-4 rounded-[30px] mb-6 border-2 border-orange-200">
-                <h3 id="t-mis-d" class="text-[10px] font-black text-orange-600 mb-3 uppercase italic">☀️ Missões Diárias</h3>
-                <div class="btn-check"><input type="checkbox" onchange="addXP(15)"> <span id="m-d1">Resolver Quiz</span></div>
-                <div class="btn-check"><input type="checkbox" onchange="addXP(15)"> <span id="m-d2">Ouvir Pronúncia</span></div>
-                <div class="btn-check"><input type="checkbox" onchange="addXP(15)"> <span id="m-d3">Mudar Avatar</span></div>
+                <h3 id="txt-mis-d-tit" class="text-[10px] font-black text-orange-600 mb-3 uppercase">MISSIONI DIARIE</h3>
+                <div class="btn-check"><input type="checkbox" onchange="addXP(15)"> <span id="txt-md1">Fare Quiz</span></div>
+                <div class="btn-check"><input type="checkbox" onchange="addXP(15)"> <span id="txt-md2">Ascolta Pronuncia</span></div>
+                <div class="btn-check"><input type="checkbox" onchange="addXP(15)"> <span id="txt-md3">Cambia Nome</span></div>
             </div>
-
             <div class="card text-center">
-                <p id="q-txt" class="font-bold text-xl mb-8 italic text-gray-800">...</p>
+                <p id="q-txt" class="font-bold text-xl mb-8 italic text-gray-800">Caricamento...</p>
                 <div id="q-box" class="space-y-3"></div>
-                <button onclick="falar(document.getElementById('q-txt').innerText)" class="mt-8 text-[10px] font-black text-orange-400 uppercase tracking-widest">
-                    🔊 <span id="b-ouvir">OUVIR</span>
-                </button>
+                <button onclick="falar(document.getElementById('q-txt').innerText)" class="mt-8 text-[10px] font-black text-orange-400 uppercase">🔊 <span id="txt-btn-ouvir">ASCOLTA</span></button>
             </div>
         </div>
 
         <div id="p-dic" class="page">
-            <h2 id="t-dic" class="text-2xl font-black text-orange-600 mb-6">DICIONÁRIO</h2>
+            <h2 id="txt-dic-tit" class="text-2xl font-black text-orange-600 mb-6 uppercase">DIZIONARIO</h2>
             <div id="ui-lista-dic" class="space-y-4"></div>
         </div>
 
         <div id="p-perfil" class="page text-center">
-            <div id="ui-avatar" class="text-8xl mb-4 p-4 bg-white rounded-full inline-block">🐱</div>
-            <input type="text" id="ui-nome" onchange="salvarNome()" class="text-center font-black text-2xl border-b-2 border-orange-200 w-full mb-8 bg-transparent outline-none" placeholder="Teu Nome">
-            
+            <div id="ui-avatar" class="text-7xl mb-4 p-4 bg-white rounded-full inline-block">🐱</div>
+            <input type="text" id="ui-nome" onchange="salvarNome()" class="text-center font-black text-2xl border-b-2 border-orange-200 w-full mb-8 bg-transparent outline-none">
             <div class="bg-white p-5 rounded-[30px] mb-6 border-2 border-blue-100 text-left">
-                <h3 id="t-mis-s" class="text-[10px] font-black text-blue-500 mb-4 uppercase italic">🏆 Missões Semanais</h3>
-                <div class="btn-check"><input type="checkbox" class="ms-check"> <span id="m-s1">Nível 5</span></div>
-                <div class="btn-check"><input type="checkbox" class="ms-check"> <span id="m-s2">7 Dias seguidos</span></div>
-                <div class="btn-check"><input type="checkbox" class="ms-check"> <span id="m-s3">Dicionário lido</span></div>
-                <div class="btn-check"><input type="checkbox" class="ms-check"> <span id="m-s4">Suporte WhatsApp</span></div>
-                <div class="btn-check"><input type="checkbox" class="ms-check"> <span id="m-s5">Indicar Amigo</span></div>
-                <button id="btn-recompensa" onclick="bonusXP()" class="hidden w-full mt-4 bg-blue-500 text-white py-4 rounded-2xl font-black text-xs shadow-lg">RESGATAR +500 XP 🎁</button>
+                <h3 id="txt-mis-s-tit" class="text-[10px] font-black text-blue-500 mb-4 uppercase">MISSIONI SETTIMANALI</h3>
+                <div class="btn-check"><input type="checkbox" class="ms-check"> <span id="txt-ms1">Livello 5</span></div>
+                <div class="btn-check"><input type="checkbox" class="ms-check"> <span id="txt-ms2">7 Giorni di fila</span></div>
+                <div class="btn-check"><input type="checkbox" class="ms-check"> <span id="txt-ms3">Leggi Dizionario</span></div>
+                <div class="btn-check"><input type="checkbox" class="ms-check"> <span id="txt-ms4">Supporto WhatsApp</span></div>
+                <div class="btn-check"><input type="checkbox" class="ms-check"> <span id="txt-ms5">Invita un Amico</span></div>
+                <button id="btn-recompensa" onclick="bonusXP()" class="hidden w-full mt-4 bg-blue-500 text-white py-4 rounded-2xl font-black text-xs shadow-lg">RISCATTA +500 XP 🎁</button>
             </div>
-            
-            <button onclick="location.reload()" class="w-full py-4 bg-gray-100 rounded-2xl font-black text-gray-400 text-[10px] uppercase">Trocar de Idioma</button>
+            <button onclick="location.reload()" class="w-full py-4 bg-gray-100 rounded-2xl font-black text-gray-400 text-[10px] uppercase" id="txt-btn-trocar">CAMBIA CORSO</button>
         </div>
 
         <div class="mascote-box">
@@ -106,9 +89,9 @@
         </div>
 
         <nav class="nav-bottom">
-            <button onclick="aba('home')" class="nav-btn">🏠<span id="n-home">Home</span></button>
-            <button onclick="aba('dic')" class="nav-btn">📖<span id="n-dic">Dic</span></button>
-            <button onclick="aba('perfil')" class="nav-btn">👤<span id="n-perfil">Perfil</span></button>
+            <button onclick="aba('home')" class="nav-btn">🏠<span id="n-home">HOME</span></button>
+            <button onclick="aba('dic')" class="nav-btn">📖<span id="n-dic">DIZ</span></button>
+            <button onclick="aba('perfil')" class="nav-btn">👤<span id="n-perfil">PROFILO</span></button>
         </nav>
     </div>
 
@@ -116,10 +99,9 @@
         const S_QUIZ = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT6-Ah6rq3hnBihlxVAzmsTD8rEF1rbGJu3__sBgm-DDyFWE_D7sxgJx3I3s55uiNl-qvP2x2wh0UD9/pub?gid=633031910&single=true&output=csv';
         const S_DIC = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT6-Ah6rq3hnBihlxVAzmsTD8rEF1rbGJu3__sBgm-DDyFWE_D7sxgJx3I3s55uiNl-qvP2x2wh0UD9/pub?gid=541320303&single=true&output=csv';
 
-        const TEXTOS = {
-            'pt': { h:'INÍCIO', d:'DICIONÁRIO', p:'PERFIL', ouv:'OUVIR', md:'MISSÕES DIÁRIAS', ms:'MISSÕES SEMANAIS', r:'APRENDIZ 🐣' },
-            'it': { h:'INIZIO', d:'DIZIONARIO', p:'PROFILO', ouv:'ASCOLTA', md:'MISSIONI DIARIE', ms:'MISSIONI SETTIMANALI', r:'APPRENDISTA 🐣' },
-            'en': { h:'HOME', d:'DICTIONARY', p:'PROFILE', ouv:'LISTEN', md:'DAILY MISSIONS', ms:'WEEKLY MISSIONS', r:'LEARNER 🐣' }
+        const TRAD = {
+            'it': { rank: 'APPRENDISTA 🐣', mdT: 'MISSIONI DIARIE', md1: 'Fare Quiz', md2: 'Ascolta Pronuncia', md3: 'Cambia Nome', dicT: 'DIZIONARIO', ouv: 'ASCOLTA', msT: 'MISSIONI SETTIMANALI', ms1: 'Livello 5', ms2: '7 Giorni di fila', ms3: 'Leggi Dizionario', ms4: 'Supporto WhatsApp', ms5: 'Invita un Amico', tr: 'CAMBIA CORSO', bonus: 'RISCATTA +500 XP 🎁', nH: 'HOME', nD: 'DIZ', nP: 'PROFILO', load: 'Caricamento...' },
+            'pt': { rank: 'APRENDIZ 🐣', mdT: 'MISSÕES DIÁRIAS', md1: 'Fazer Quiz', md2: 'Ouvir Pronúncia', md3: 'Mudar Nome', dicT: 'DICIONÁRIO', ouv: 'OUVIR', msT: 'MISSÕES SEMANAIS', ms1: 'Nível 5', ms2: '7 Dias de Fogo', ms3: 'Ler Dicionário', ms4: 'WhatsApp Suporte', ms5: 'Indicar Amigo', tr: 'TROCAR CURSO', bonus: 'RESGATAR +500 XP 🎁', nH: 'INÍCIO', nD: 'DIC', nP: 'PERFIL', load: 'Carregando...' }
         };
 
         let xp = parseInt(localStorage.getItem('p_xp')) || 0;
@@ -129,28 +111,39 @@
 
         function entrar(id) {
             curso = id;
+            const lang = id.split('-')[0];
+            const t = TRAD[lang] || TRAD['it'];
+
+            // APLICA TRADUÇÃO EM CADA ELEMENTO
+            document.getElementById('txt-rank').innerText = t.rank;
+            document.getElementById('txt-mis-d-tit').innerText = t.mdT;
+            document.getElementById('txt-md1').innerText = t.md1;
+            document.getElementById('txt-md2').innerText = t.md2;
+            document.getElementById('txt-md3').innerText = t.md3;
+            document.getElementById('txt-dic-tit').innerText = t.dicT;
+            document.getElementById('txt-btn-ouvir').innerText = t.ouv;
+            document.getElementById('txt-mis-s-tit').innerText = t.msT;
+            document.getElementById('txt-ms1').innerText = t.ms1;
+            document.getElementById('txt-ms2').innerText = t.ms2;
+            document.getElementById('txt-ms3').innerText = t.ms3;
+            document.getElementById('txt-ms4').innerText = t.ms4;
+            document.getElementById('txt-ms5').innerText = t.ms5;
+            document.getElementById('btn-recompensa').innerText = t.bonus;
+            document.getElementById('txt-btn-trocar').innerText = t.tr;
+            document.getElementById('n-home').innerText = t.nH;
+            document.getElementById('n-dic').innerText = t.nD;
+            document.getElementById('n-perfil').innerText = t.nP;
+            document.getElementById('q-txt').innerText = t.load;
+
             document.getElementById('splash').classList.add('hidden');
             document.getElementById('app').classList.remove('hidden');
             
-            // Traduz interface conforme o idioma nativo (parte 1 do id)
-            const nativa = id.split('-')[0];
-            const t = TEXTOS[nativa] || TEXTOS['pt'];
-            
-            document.getElementById('n-home').innerText = t.h;
-            document.getElementById('n-dic').innerText = t.d;
-            document.getElementById('n-perfil').innerText = t.p;
-            document.getElementById('t-dic').innerText = t.d;
-            document.getElementById('b-ouvir').innerText = t.ouv;
-            document.getElementById('t-mis-d').innerText = t.md;
-            document.getElementById('t-mis-s').innerText = t.ms;
-            document.getElementById('ui-rank').innerText = t.r;
-
-            carregarSheets();
+            carregarConteudo();
             atualizarProgresso();
-            document.getElementById('ui-nome').value = localStorage.getItem('p_nome') || "";
+            document.getElementById('ui-nome').value = localStorage.getItem('p_nome') || "Studente";
         }
 
-        async function carregarSheets() {
+        async function carregarConteudo() {
             try {
                 const [rQ, rD] = await Promise.all([fetch(S_QUIZ), fetch(S_DIC)]);
                 const tQ = await rQ.text();
@@ -158,51 +151,37 @@
 
                 baseQuiz = tQ.split(/\r?\n/).slice(1).map(l => {
                     const c = l.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                    return { q:limpar(c[1]), a:limpar(c[2]), b:limpar(c[3]), c:limpar(c[4]), ok:limpar(c[5]).toLowerCase() };
+                    return { q:lim(c[1]), a:lim(c[2]), b:lim(c[3]), c:lim(c[4]), ok:lim(c[5]).toLowerCase() };
                 }).filter(x => x.q);
-                proximaQuestao();
+                proximaQ();
 
-                const dicBox = document.getElementById('ui-lista-dic');
-                dicBox.innerHTML = "";
+                const box = document.getElementById('ui-lista-dic');
+                box.innerHTML = "";
                 tD.split(/\r?\n/).slice(1).forEach((l, i) => {
                     const c = l.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                    if(!limpar(c[2])) return;
+                    if(!lim(c[2])) return;
                     const vip = i > 10;
                     const card = document.createElement('div');
                     card.className = "card relative overflow-hidden";
-                    card.innerHTML = `
-                        <div class="${vip ? 'vip-blur' : ''}">
-                            <div class="flex justify-between items-center mb-1">
-                                <b class="text-orange-600 text-lg">${limpar(c[2])}</b>
-                                <button onclick="falar('${limpar(c[2])}')" class="text-xl">🔊</button>
-                            </div>
-                            <p class="text-[10px] text-gray-400 italic mb-2">${limpar(c[3])}</p>
-                            <p class="text-sm font-bold text-gray-700">${limpar(c[4])}</p>
-                            ${limpar(c[5]) ? `<div class="mt-3 p-3 bg-orange-50 rounded-xl text-xs italic text-orange-900 border border-orange-100">Ex: "${limpar(c[5])}"</div>` : ''}
-                        </div>
-                        ${vip ? '<div class="absolute inset-0 flex items-center justify-center font-black text-red-500 text-xs">🔒 CONTEÚDO VIP</div>' : ''}
-                    `;
-                    dicBox.appendChild(card);
+                    card.innerHTML = `<div class="${vip ? 'vip-blur' : ''}"><div class="flex justify-between items-center"><b>${lim(c[2])}</b><button onclick="falar('${lim(c[2])}')">🔊</button></div><p class="text-[10px] text-gray-400 italic">${lim(c[3])}</p><p class="text-sm font-bold mt-1">${lim(c[4])}</p>${lim(c[5]) ? `<div class="mt-2 p-2 bg-orange-50 rounded-lg text-xs italic">Ex: "${lim(c[5])}"</div>`:''}</div>${vip?'<div class="absolute inset-0 flex items-center justify-center font-black text-red-500 text-xs">🔒 VIP</div>':''}`;
+                    box.appendChild(card);
                 });
-            } catch(e) { console.error("Erro dados"); }
+            } catch(e) { console.error(e); }
         }
 
-        function proximaQuestao() {
+        function proximaQ() {
             if(!baseQuiz.length) return;
             const item = baseQuiz[indexQ % baseQuiz.length];
             document.getElementById('q-txt').innerText = item.q;
             const box = document.getElementById('q-box');
             box.innerHTML = "";
-            ['a','b','c'].forEach(opt => {
+            ['a','b','c'].forEach(o => {
                 const b = document.createElement('button');
-                b.className = "w-full text-left p-4 border-2 border-orange-100 rounded-2xl font-bold text-orange-600 bg-white active:scale-95 transition-all";
-                b.innerText = item[opt];
+                b.className = "btn-check justify-between";
+                b.innerHTML = `<span>${item[o]}</span>`;
                 b.onclick = () => {
-                    if(opt === item.ok) {
-                        addXP(25); b.style.borderColor = "#22c55e"; b.style.background = "#f0fdf4";
-                        animarGato("Ottimo! +25 XP 🎉");
-                        setTimeout(() => { indexQ++; proximaQuestao(); }, 1000);
-                    } else { b.style.borderColor = "#ef4444"; b.style.background = "#fef2f2"; }
+                    if(o === item.ok) { addXP(25); b.style.borderColor = "#22c55e"; animarGato("Bravissimo! +25 XP"); setTimeout(() => { indexQ++; proximaQ(); }, 800); }
+                    else { b.style.borderColor = "#ef4444"; }
                 };
                 box.appendChild(b);
             });
@@ -217,8 +196,8 @@
         function addXP(n) { xp += n; atualizarProgresso(); }
         function atualizarProgresso() {
             localStorage.setItem('p_xp', xp);
-            document.getElementById('ui-lvl').innerText = Math.floor(xp / 100) + 1;
-            document.getElementById('ui-bar').style.width = (xp % 100) + "%";
+            document.getElementById('ui-lvl').innerText = Math.floor(xp/100)+1;
+            document.getElementById('ui-bar').style.width = (xp%100)+"%";
         }
 
         function animarGato(msg) {
@@ -235,22 +214,14 @@
             window.speechSynthesis.speak(f);
         }
 
-        function salvarNome() { localStorage.setItem('p_nome', document.getElementById('ui-nome').value); animarGato("Nome salvo! 🐱"); }
-        function limpar(t) { return t ? t.replace(/"/g, '').trim() : ""; }
-
-        // Missões Semanais logic
+        function salvarNome() { localStorage.setItem('p_nome', document.getElementById('ui-nome').value); animarGato("Salvato! 🐱"); }
+        function lim(t) { return t ? t.replace(/"/g, '').trim() : ""; }
+        
         document.querySelectorAll('.ms-check').forEach(c => {
-            c.onchange = () => {
-                const n = document.querySelectorAll('.ms-check:checked').length;
-                if(n === 5) document.getElementById('btn-recompensa').classList.remove('hidden');
-            }
+            c.onchange = () => { if(document.querySelectorAll('.ms-check:checked').length === 5) document.getElementById('btn-recompensa').classList.remove('hidden'); }
         });
 
-        function bonusXP() {
-            addXP(500);
-            document.getElementById('btn-recompensa').classList.add('hidden');
-            animarGato("RECOMPENSA DE 500 XP! 👑");
-        }
+        function bonusXP() { addXP(500); document.getElementById('btn-recompensa').classList.add('hidden'); animarGato("RECOMPENSA! 👑"); }
     </script>
 </body>
 </html>
