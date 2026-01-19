@@ -6,7 +6,7 @@
     <title>Planicchio 🚀</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #FFF5EB; padding-bottom: 50px; }
+        body { background-color: #FFF5EB; padding-bottom: 100px; }
         .quiz-container {
             background: white; border: 3px solid #FF8C00; border-radius: 20px;
             padding: 20px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(255, 140, 0, 0.2);
@@ -25,7 +25,6 @@
             background: white; padding: 20px; border-radius: 15px;
             border-left: 5px solid #FF8C00; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
-        /* BOTÃO DE UPGRADE */
         .btn-upgrade {
             background: #FF8C00; color: white; padding: 18px;
             border-radius: 15px; font-weight: bold; display: block;
@@ -59,7 +58,9 @@
 
         <hr class="border-orange-200 my-8">
         <h2 class="text-xl font-bold mb-4 text-orange-700 italic">📚 Slang & Expressions</h2>
-        <div id="slang-container" class="space-y-4"></div>
+        <div id="slang-container" class="space-y-4">
+            <p class="text-center text-gray-400">Caricamento...</p>
+        </div>
     </div>
 
     <script>
@@ -68,9 +69,17 @@
 
         let exercicios = [];
         let indexAtual = 0;
-        const LIMITE = 2; // Número de exercícios grátis
+        const LIMITE = 2;
 
         const clean = (t) => t ? t.replace(/"/g, '').trim() : "";
+
+        // Funções de Som
+        function tocaSom(tipo) {
+            const audio = new Audio(tipo === 'certo' 
+                ? 'https://www.soundjay.com/buttons/sounds/button-37.mp3' 
+                : 'https://www.soundjay.com/buttons/sounds/button-10.mp3');
+            audio.play().catch(() => {});
+        }
 
         async function init() {
             try {
@@ -85,19 +94,25 @@
                         correta: clean(c[5]).toLowerCase(), explica: clean(c[6])
                     };
                 }).filter(i => i.pergunta !== "");
-
                 showQuestao();
 
-                // Carregar Slang
+                // Carregar Slang Completo (Igual ao VIP)
                 const resSl = await fetch(LINK_SL);
                 const dataSl = await resSl.text();
                 const container = document.getElementById('slang-container');
+                container.innerHTML = "";
+                
                 dataSl.split(/\r?\n/).slice(1).forEach(row => {
                     const c = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                     if (clean(c[2])) {
                         const div = document.createElement('div');
                         div.className = "card-slang";
-                        div.innerHTML = `<h3 class="text-xl font-bold text-orange-600">${clean(c[2])}</h3><p class="text-sm text-gray-700">${clean(c[4])}</p>`;
+                        div.innerHTML = `
+                            <h3 class="text-xl font-bold text-orange-600">${clean(c[2])}</h3>
+                            <p class="text-gray-500 italic mb-1">${clean(c[3])}</p>
+                            <p class="text-sm text-gray-700">${clean(c[4])}</p>
+                            <div class="mt-2 text-xs bg-orange-50 p-2 rounded"><strong>Example:</strong> ${clean(c[5])}</div>
+                        `;
                         container.appendChild(div);
                     }
                 });
@@ -109,7 +124,6 @@
                 mostrarBloqueio();
                 return;
             }
-
             const item = exercicios[indexAtual];
             document.getElementById('pergunta-txt').innerText = item.pergunta;
             const area = document.getElementById('opcoes-area');
@@ -125,9 +139,11 @@
                     const txt = document.getElementById('feedback-txt');
                     feedback.classList.remove('hidden');
                     if (l === item.correta) {
+                        tocaSom('certo');
                         txt.innerHTML = "✅ <b>Bravo!</b> " + item.explica;
                         txt.className = "text-orange-600 font-bold mb-3";
                     } else {
+                        tocaSom('errado');
                         txt.innerHTML = "❌ <b>Sbagliato!</b> Era la " + item.correta.toUpperCase();
                         txt.className = "text-red-500 font-bold mb-3";
                     }
@@ -137,16 +153,14 @@
         }
 
         function mostrarBloqueio() {
-            // Mensagem do WhatsApp em italiano
             const msg = encodeURIComponent("Ciao Planicchio! Ho finito gli esercizi gratuiti e vorrei sbloccare l'accesso VIP. Come posso fare?");
             const fone = "393716755981";
-
             document.getElementById('quiz-area').innerHTML = `
                 <div class="text-center py-4">
                     <p class="text-5xl mb-4">🔓</p>
                     <h2 class="text-2xl font-bold text-gray-800 mb-2">Vuoi continuare?</h2>
-                    <p class="text-gray-600 mb-6">Hai completato i 2 esercizi gratuiti di oggi. Passa al <b>VIP</b> per avere esercizi illimitati e contenuti esclusivi!</p>
-                    <a href="https://wa.me/${fone}?text=${msg}" class="btn-upgrade">VOGLIO DIVENTARE VIP 🚀</a>
+                    <p class="text-gray-600 mb-6">Hai completato i 2 esercizi gratuiti di oggi. Passa al <b>VIP</b> per avere esercizi illimitati!</p>
+                    <a href="https://wa.me/${fone}?text=${msg}" class="btn-upgrade">DIVENTA VIP ORA 🚀</a>
                 </div>
             `;
         }
@@ -155,7 +169,6 @@
             indexAtual++;
             showQuestao();
         }
-
         init();
     </script>
 </body>
