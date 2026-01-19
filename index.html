@@ -6,7 +6,7 @@
     <title>Planicchio 🚀</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #FFF5EB; padding-bottom: 50px; font-family: sans-serif; }
+        body { background-color: #FFF5EB; padding-bottom: 50px; }
         .quiz-container {
             background: white; border: 3px solid #FF8C00; border-radius: 20px;
             padding: 20px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(255, 140, 0, 0.1);
@@ -14,23 +14,24 @@
         .btn-opcao {
             display: block; width: 100%; background: #fff; color: #FF8C00;
             border: 2px solid #FF8C00; padding: 12px; margin: 10px 0;
-            border-radius: 12px; font-weight: bold; transition: 0.2s; text-align: left;
+            border-radius: 12px; font-weight: bold; text-align: left;
         }
         .btn-opcao:active { background: #FF8C00; color: white; }
         
+        /* CARD DE GÍRIA */
         .card-slang {
             background: white; padding: 18px; border-radius: 15px;
             border-left: 6px solid #FF8C00; margin-bottom: 15px; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05); position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05); position: relative; overflow: hidden;
         }
         
-        /* Efeito Borrado com Selo VIP */
-        .slang-locked { overflow: hidden; }
-        .slang-locked .content-to-blur { filter: blur(6px); opacity: 0.3; pointer-events: none; }
+        /* EFEITO BORRADO E SELO VIP */
+        .slang-locked .blur-box { filter: blur(6px); opacity: 0.3; pointer-events: none; }
         .vip-badge {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: #FF8C00; color: white; padding: 5px 15px; border-radius: 20px;
-            font-weight: bold; font-size: 14px; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            background: #FF8C00; color: white; padding: 8px 20px; border-radius: 50px;
+            font-weight: bold; font-size: 16px; z-index: 20; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            white-space: nowrap; border: 2px solid white;
         }
 
         .btn-upgrade {
@@ -38,27 +39,27 @@
             font-weight: bold; display: block; text-align: center; text-decoration: none;
             box-shadow: 0 4px 15px rgba(255,140,0,0.4); margin-top: 20px;
         }
-        .btn-audio { cursor: pointer; display: inline-block; margin-left: 8px; }
     </style>
 </head>
 <body class="p-5">
 
     <div class="max-w-md mx-auto">
-        <h1 class="text-3xl font-black text-center mb-8 text-orange-600 uppercase tracking-tighter">Planicchio <span class="text-gray-800">Free</span></h1>
+        <h1 class="text-3xl font-black text-center mb-8 text-orange-600 uppercase tracking-tighter italic">Planicchio <span class="text-gray-800">Free</span></h1>
 
         <div id="quiz-area" class="quiz-container">
-            <div id="quiz-content">
-                <p id="pergunta-txt" class="font-bold text-lg mb-4 text-gray-800 italic">Caricamento...</p>
-                <div id="opcoes-area"></div>
-                <div id="feedback-area" class="hidden mt-4 p-4 rounded-xl bg-orange-50 border-l-4 border-orange-500">
-                    <p id="feedback-txt" class="mb-3 text-sm"></p>
-                    <button onclick="proximaQuestao()" class="w-full bg-orange-500 text-white font-bold py-3 rounded-lg">Prossimo ➔</button>
-                </div>
+            <p id="pergunta-txt" class="font-bold text-lg mb-4 text-gray-800 italic">Caricamento...</p>
+            <div id="opcoes-area"></div>
+            <div id="feedback-area" class="hidden mt-4 p-4 rounded-xl bg-orange-50 border-l-4 border-orange-500">
+                <p id="feedback-txt" class="mb-3 text-sm"></p>
+                <button onclick="proximaQuestao()" class="w-full bg-orange-500 text-white font-bold py-3 rounded-lg">Prossimo ➔</button>
             </div>
         </div>
 
         <h2 class="text-xl font-bold mb-4 text-orange-700 italic border-b-2 border-orange-200 pb-2">📚 Slang & Expressions</h2>
-        <div id="slang-container" class="space-y-4"></div>
+        
+        <div id="slang-container" class="space-y-4">
+            <p class="text-center text-gray-400 italic">Caricamento dizionario...</p>
+        </div>
     </div>
 
     <script>
@@ -70,27 +71,30 @@
         let exercicios = []; 
         let indexAtual = 0;
 
-        function toca(tipo) {
-            const url = (tipo === 'ok') 
-                ? 'https://www.soundjay.com/buttons/sounds/button-37.mp3' 
-                : 'https://www.soundjay.com/buttons/sounds/button-10.mp3';
-            new Audio(url).play().catch(() => {});
+        // Função de som simplificada para não travar o código
+        function toca(url) {
+            try {
+                const a = new Audio(url);
+                a.play();
+            } catch(e) {}
         }
 
         const clean = (t) => t ? t.replace(/"/g, '').trim() : "";
 
-        async function init() {
+        async function carregarDados() {
+            // BUSCAR QUIZ
             try {
-                // Carregar Quiz
-                const resEx = await fetch(LINK_EX);
-                const dataEx = await resEx.text();
-                exercicios = dataEx.split(/\r?\n/).slice(1).map(row => {
+                const res = await fetch(LINK_EX);
+                const text = await res.text();
+                exercicios = text.split(/\r?\n/).slice(1).map(row => {
                     const c = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                     return { pergunta: clean(c[1]), a: clean(c[2]), b: clean(c[3]), c: clean(c[4]), correta: clean(c[5]).toLowerCase(), explica: clean(c[6]) };
                 }).filter(i => i.pergunta !== "");
                 showQuestao();
+            } catch(e) { document.getElementById('pergunta-txt').innerText = "Errore quiz."; }
 
-                // Carregar Slang
+            // BUSCAR GÍRIAS
+            try {
                 const resSl = await fetch(LINK_SL);
                 const dataSl = await resSl.text();
                 const container = document.getElementById('slang-container');
@@ -100,15 +104,71 @@
                 rows.forEach((row, i) => {
                     const c = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                     if (clean(c[2])) {
-                        const isLocked = i > 3; // Bloqueia após as primeiras gírias
+                        const isLocked = i > 3; // Mostra 4 abertas, o resto borra
                         const div = document.createElement('div');
                         div.className = `card-slang ${isLocked ? 'slang-locked' : ''}`;
                         
                         div.innerHTML = `
-                            ${isLocked ? '<div class="vip-badge">⭐ VIP</div>' : ''}
-                            <div class="content-to-blur">
-                                <div class="flex items-center">
+                            ${isLocked ? '<div class="vip-badge">⭐ VIP ACCESS</div>' : ''}
+                            <div class="blur-box">
+                                <div class="flex justify-between items-start">
                                     <h3 class="text-lg font-bold text-orange-600">${clean(c[2])}</h3>
-                                    ${!isLocked ? `<span class="btn-audio" onclick="toca('ok')">🔊</span>` : ''}
+                                    ${!isLocked ? `<button onclick="toca('https://www.soundjay.com/buttons/sounds/button-37.mp3')" class="text-xl">🔊</button>` : ''}
                                 </div>
-                                <p class="
+                                <p class="text-gray-500 italic text-xs mb-1">${clean(c[3])}</p>
+                                <p class="text-sm text-gray-700 mb-2">${clean(c[4])}</p>
+                                <div class="bg-orange-50 p-2 rounded text-[11px] border-l-2 border-orange-200">
+                                    <b>Exemplo:</b> ${clean(c[5])}
+                                </div>
+                            </div>
+                        `;
+                        container.appendChild(div);
+                    }
+                });
+                container.innerHTML += `<a href="https://wa.me/${fone}?text=${msg}" class="btn-upgrade">SBLOCCA TUTTO IL DIZIONARIO ➔</a>`;
+            } catch(e) { document.getElementById('slang-container').innerHTML = "Errore gírie."; }
+        }
+
+        function showQuestao() {
+            if (indexAtual >= 2) {
+                document.getElementById('quiz-area').innerHTML = `
+                    <div class="text-center py-4">
+                        <div class="text-4xl mb-2">🔓</div>
+                        <h2 class="text-xl font-bold text-gray-800">Vuoi continuare?</h2>
+                        <p class="text-xs text-gray-500 mb-4">Passa al VIP per sbloccare tutti gli esercizi.</p>
+                        <a href="https://wa.me/${fone}?text=${msg}" class="btn-upgrade text-sm">DIVENTA VIP ORA</a>
+                    </div>`;
+                return;
+            }
+            const item = exercicios[indexAtual];
+            document.getElementById('pergunta-txt').innerText = item.pergunta;
+            const area = document.getElementById('opcoes-area');
+            area.innerHTML = '';
+            document.getElementById('feedback-area').classList.add('hidden');
+
+            ['a', 'b', 'c'].forEach(l => {
+                const btn = document.createElement('button');
+                btn.className = 'btn-opcao';
+                btn.innerText = item[l];
+                btn.onclick = () => {
+                    document.getElementById('feedback-area').classList.remove('hidden');
+                    if (l === item.correta) {
+                        toca('https://www.soundjay.com/buttons/sounds/button-37.mp3');
+                        document.getElementById('feedback-txt').innerHTML = "✅ <b>Ottimo!</b> " + item.explica;
+                        document.getElementById('feedback-txt').className = "text-orange-600 font-bold mb-2";
+                    } else {
+                        toca('https://www.soundjay.com/buttons/sounds/button-10.mp3');
+                        document.getElementById('feedback-txt').innerHTML = "❌ <b>Sbagliato!</b> La corretta era " + item.correta.toUpperCase();
+                        document.getElementById('feedback-txt').className = "text-red-500 font-bold mb-2";
+                    }
+                };
+                area.appendChild(btn);
+            });
+        }
+
+        function proximaQuestao() { indexAtual++; showQuestao(); }
+        
+        carregarDados();
+    </script>
+</body>
+</html>
