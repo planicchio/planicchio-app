@@ -6,155 +6,194 @@
     <title>Planicchio 🐱</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #FFF5EB; font-family: sans-serif; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        .splash-screen { position: fixed; inset: 0; background: #FF8C00; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; }
+        body { background-color: #FFF5EB; font-family: sans-serif; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
+        
+        /* Splash Screen */
+        .splash-screen { position: fixed; inset: 0; background: #FF8C00; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; text-align: center; }
         .hidden { display: none !important; }
-        .page { display: none; padding: 20px; padding-bottom: 140px; animation: fadeIn 0.3s; }
-        .active-page { display: block !important; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        /* Nav e Mascote Interativo */
+
+        /* Animação do Gato */
+        .gato-emoji { font-size: 50px; cursor: pointer; display: inline-block; transition: 0.3s; }
+        .pulando { animation: jump 0.6s ease; }
+        @keyframes jump { 
+            0%, 100% { transform: translateY(0) scale(1); } 
+            50% { transform: translateY(-30px) scale(1.1) rotate(15deg); } 
+        }
+
+        /* Layout */
         .nav-bottom { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 15px; border-top: 2px solid #FFEDD5; z-index: 999; }
-        .nav-btn { display: flex; flex-direction: column; align-items: center; font-size: 10px; font-weight: bold; color: #FF8C00; border: none; background: none; }
+        .nav-btn { display: flex; flex-direction: column; align-items: center; font-size: 10px; font-weight: bold; color: #FF8C00; border: none; background: none; outline: none; }
+        .page { display: none; padding: 20px; padding-bottom: 140px; }
+        .active-page { display: block !important; }
+
+        /* Balão de Fala */
         .mascote-box { position: fixed; bottom: 85px; left: 20px; display: flex; align-items: center; gap: 8px; z-index: 998; }
-        .gato-emoji { font-size: 45px; cursor: pointer; transition: 0.3s; }
-        .gato-pulo { animation: jump 0.5s ease; }
-        @keyframes jump { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px) rotate(10deg); } }
-        .balao { background: white; padding: 8px; border-radius: 12px; border: 2px solid #FF8C00; font-size: 10px; font-weight: bold; max-width: 120px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .balao { background: white; padding: 10px; border-radius: 15px; border: 2px solid #FF8C00; font-size: 11px; font-weight: bold; max-width: 140px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         
-        /* Cards e Progressão */
-        .progress-container { background: #E5E7EB; border-radius: 20px; height: 12px; overflow: hidden; margin: 10px 0; }
-        #progress-bar { background: #FF8C00; width: 0%; height: 100%; transition: 0.5s; }
-        .card { background: white; border-radius: 25px; padding: 20px; border: 2px solid #FF8C00; box-shadow: 0 6px 0 #FFEDD5; }
-        .avatar-opt { font-size: 30px; padding: 10px; border: 2px solid #eee; border-radius: 15px; cursor: pointer; }
-        .avatar-selected { border-color: #FF8C00; background: #FFF5EB; }
+        /* Botões de Opção */
+        .btn-opt { width: 100%; text-align: left; padding: 16px; margin-bottom: 12px; border: 2px solid #FFEDD5; border-radius: 20px; font-weight: bold; color: #FF8C00; background: white; transition: 0.2s; }
+        .btn-opt:active { background: #FF8C00; color: white; transform: scale(0.98); }
+        
+        .progress-bar { background: #E5E7EB; border-radius: 10px; height: 12px; overflow: hidden; margin: 10px 0; }
+        #progress-fill { background: #FF8C00; width: 0%; height: 100%; transition: 0.5s; }
     </style>
 </head>
 <body>
 
     <div id="splash" class="splash-screen">
-        <div style="font-size: 70px; margin-bottom: 10px;" class="gato-emoji gato-pulo">🐱</div>
-        <h1 class="text-3xl font-black mb-1 italic">PLANICCHIO</h1>
-        <div class="mb-6 text-center px-6">
-            <p class="text-sm font-medium">Escolha o seu curso</p>
-            <p class="text-sm italic opacity-80">Scegli o teu corso / Choose your course</p>
+        <div class="gato-emoji pulando">🐱</div>
+        <h1 class="text-3xl font-black mb-2 italic">PLANICCHIO</h1>
+        <div class="mb-6 px-4">
+            <p class="text-sm font-bold">Escolha o seu curso</p>
+            <p class="text-xs italic opacity-80">Scegli o teu corso / Choose your course</p>
         </div>
         
         <div class="grid grid-cols-1 gap-3 w-72 px-4">
-            <button onclick="entrarApp('it-en')" class="bg-white text-orange-600 font-black py-3 rounded-xl shadow-lg border-b-4 border-orange-200 text-xs">ITALIANO ➔ ENGLISH 🇺🇸</button>
-            <button onclick="entrarApp('it-pt')" class="bg-white text-orange-600 font-black py-3 rounded-xl shadow-lg border-b-4 border-orange-200 text-xs">ITALIANO ➔ PORTUGUÊS 🇧🇷</button>
-            <button onclick="entrarApp('pt-it')" class="bg-white text-orange-600 font-black py-3 rounded-xl shadow-lg border-b-4 border-orange-200 text-xs">PORTUGUÊS ➔ ITALIANO 🇮🇹</button>
-            <button onclick="entrarApp('pt-en')" class="bg-white text-orange-600 font-black py-3 rounded-xl shadow-lg border-b-4 border-orange-200 text-xs">PORTUGUÊS ➔ ENGLISH 🇺🇸</button>
-            <button onclick="entrarApp('en-it')" class="bg-white text-orange-600 font-black py-3 rounded-xl shadow-lg border-b-4 border-orange-200 text-xs">ENGLISH ➔ ITALIANO 🇮🇹</button>
-            <button onclick="entrarApp('en-pt')" class="bg-white text-orange-600 font-black py-3 rounded-xl shadow-lg border-b-4 border-orange-200 text-xs">ENGLISH ➔ PORTUGUÊS 🇧🇷</button>
+            <button onclick="entrar('it-en')" class="bg-white text-orange-600 font-black py-3 rounded-xl shadow-lg border-b-4 border-orange-200 text-xs">ITALIANO ➔ ENGLISH 🇺🇸</button>
+            <button onclick="entrar('it-pt')" class="bg-white text-orange-600 font-black py-3 rounded-xl shadow-lg border-b-4 border-orange-200 text-xs">ITALIANO ➔ PORTUGUÊS 🇧🇷</button>
+            <button onclick="entrar('pt-it')" class="bg-white text-orange-600 font-black py-3 rounded-xl shadow-lg border-b-4 border-orange-200 text-xs">PORTUGUÊS ➔ ITALIANO 🇮🇹</button>
+            <button onclick="entrar('pt-en')" class="bg-white text-orange-600 font-black py-3 rounded-xl shadow-lg border-b-4 border-orange-200 text-xs">PORTUGUÊS ➔ ENGLISH 🇺🇸</button>
+            <button onclick="entrar('en-it')" class="bg-white text-orange-600 font-black py-3 rounded-xl shadow-lg border-b-4 border-orange-200 text-xs">ENGLISH ➔ ITALIANO 🇮🇹</button>
+            <button onclick="entrar('en-pt')" class="bg-white text-orange-600 font-black py-3 rounded-xl shadow-lg border-b-4 border-orange-200 text-xs">ENGLISH ➔ PORTUGUÊS 🇧🇷</button>
         </div>
     </div>
 
-    <div id="global-ui" class="hidden">
-        <div class="mascote-box">
-            <div id="gato" class="gato-emoji" onclick="falarInterativo()">🐱</div>
-            <div id="balao" class="balao">Ciao! 👋</div>
-        </div>
-
-        <nav class="nav-bottom">
-            <button onclick="irPara('home')" class="nav-btn">🏠<span id="nav-home">HOME</span></button>
-            <button onclick="irPara('dicionario')" class="nav-btn">📖<span id="nav-dic">DICIONÁRIO</span></button>
-            <button onclick="irPara('curiosidades')" class="nav-btn">🌍<span id="nav-dicas">DICAS</span></button>
-            <button onclick="irPara('perfil')" class="nav-btn">👤<span id="nav-perfil">PERFIL</span></button>
-        </nav>
-    </div>
-
-    <main id="main-content" class="hidden">
-        <header class="p-4 bg-white sticky top-0 z-50 border-b border-orange-100">
-            <div class="flex justify-between items-center text-[10px] font-black text-orange-600 uppercase">
+    <div id="app" class="hidden">
+        <header class="p-4 bg-white sticky top-0 z-50 border-b-2 border-orange-50">
+            <div class="flex justify-between items-center text-[10px] font-black text-orange-600">
                 <span id="txt-titulo">APRENDIZ 🐣</span>
                 <span>LVL <span id="txt-lvl">1</span></span>
             </div>
-            <div class="progress-container"><div id="progress-bar"></div></div>
+            <div class="progress-bar"><div id="progress-fill"></div></div>
         </header>
 
-        <div id="page-home" class="page active-page">
-            <div class="card mb-4">
-                <div id="ex-tipo" class="text-[9px] font-bold text-orange-400 uppercase mb-2">Quiz</div>
-                <p id="pergunta-txt" class="font-bold text-gray-800 mb-6 italic text-lg">Carregando...</p>
-                <div id="opcoes-box" class="space-y-3"></div>
+        <div id="p-home" class="page active-page">
+            <div class="bg-white p-6 rounded-[30px] border-2 border-orange-500 shadow-xl">
+                <p id="q-txt" class="font-bold text-gray-800 mb-6 text-center italic text-lg">Carregando...</p>
+                <div id="q-box"></div>
+                <button onclick="falarPergunta()" class="mt-4 w-full text-xs font-bold text-orange-400">🔊 OUVIR PERGUNTA</button>
             </div>
         </div>
 
-        <div id="page-dicionario" class="page">
-            <h2 class="text-xl font-black text-orange-600 mb-4 uppercase" id="title-dic">Dicionário</h2>
-            <div id="lista-girias" class="space-y-3"></div>
+        <div id="p-dic" class="page">
+            <h2 class="text-xl font-black text-orange-600 mb-4 uppercase">Dicionário de Gírias</h2>
+            <div id="lista-dic" class="space-y-4"></div>
         </div>
 
-        <div id="page-curiosidades" class="page">
-            <h2 class="text-xl font-black text-orange-600 mb-4 uppercase" id="title-cur">Dicas e Cultura</h2>
-            <div class="bg-white p-4 rounded-2xl border-l-4 border-blue-500 shadow-sm mb-4">
-                <img src="https://images.unsplash.com/photo-1543349689-9a4d426bee8e?w=400" class="rounded-xl mb-3 w-full h-40 object-cover">
-                <p class="text-sm text-gray-700"><b>Torre de Pisa:</b> Ela não é torta por design, mas sim pelo solo instável. Sabias que existem outras torres tortas na Itália?</p>
+        <div id="p-perfil" class="page text-center">
+            <div id="avatar-display" class="text-7xl mb-4">🐱</div>
+            <h2 id="user-name-display" class="text-2xl font-black text-orange-600 mb-6">Estudante</h2>
+            <div class="flex justify-center gap-4 mb-8">
+                <span class="text-3xl p-2 bg-white rounded-xl border" onclick="setAvatar('🐱')">🐱</span>
+                <span class="text-3xl p-2 bg-white rounded-xl border" onclick="setAvatar('🐶')">🐶</span>
+                <span class="text-3xl p-2 bg-white rounded-xl border" onclick="setAvatar('🐰')">🐰</span>
+                <span class="text-3xl p-2 bg-white rounded-xl border" onclick="setAvatar('🦊')">🦊</span>
+            </div>
+            <div class="bg-orange-100 p-6 rounded-2xl mb-4">
+                <p class="text-3xl font-black text-orange-600" id="txt-xp">0 XP</p>
+                <p class="text-xs font-bold text-orange-400 uppercase">Pontos acumulados</p>
             </div>
         </div>
 
-        <div id="page-perfil" class="page">
-            <div class="card text-center">
-                <div id="user-avatar-display" class="text-6xl mb-2">🐱</div>
-                <input type="text" id="user-name" placeholder="Seu Nome" class="text-center font-black text-xl border-b-2 border-orange-200 outline-none mb-4 w-full" onchange="salvarPerfil()">
-                
-                <p class="text-xs font-bold text-gray-400 mb-2">ESCOLHA SEU AVATAR:</p>
-                <div class="flex justify-around mb-6">
-                    <span class="avatar-opt" onclick="setAvatar('🐱')">🐱</span>
-                    <span class="avatar-opt" onclick="setAvatar('🐶')">🐶</span>
-                    <span class="avatar-opt" onclick="setAvatar('🐰')">🐰</span>
-                    <span class="avatar-opt" onclick="setAvatar('🐻')">🐻</span>
-                </div>
-
-                <div class="bg-orange-50 p-4 rounded-xl mb-4">
-                    <h3 id="txt-xp" class="text-2xl font-black text-orange-600">0 XP</h3>
-                </div>
-                <button onclick="window.open('https://wa.me/393716755981')" class="w-full bg-green-500 text-white font-bold py-3 rounded-xl shadow-lg">WHATSAPP SUPORTE</button>
-            </div>
+        <div class="mascote-box">
+            <div id="gato" class="gato-emoji" onclick="animarGato()">🐱</div>
+            <div id="balao" class="balao">Ciao! Vamos começar? ✨</div>
         </div>
-    </main>
+
+        <nav class="nav-bottom">
+            <button onclick="aba('home')" class="nav-btn">🏠<span id="n-home">HOME</span></button>
+            <button onclick="aba('dic')" class="nav-btn">📖<span id="n-dic">DICIONÁRIO</span></button>
+            <button onclick="aba('perfil')" class="nav-btn">👤<span id="n-perfil">PERFIL</span></button>
+        </nav>
+    </div>
 
     <script>
-        const LINK_EX = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT6-Ah6rq3hnBihlxVAzmsTD8rEF1rbGJu3__sBgm-DDyFWE_D7sxgJx3I3s55uiNl-qvP2x2wh0UD9/pub?gid=633031910&single=true&output=csv';
-        const LINK_SL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT6-Ah6rq3hnBihlxVAzmsTD8rEF1rbGJu3__sBgm-DDyFWE_D7sxgJx3I3s55uiNl-qvP2x2wh0UD9/pub?gid=541320303&single=true&output=csv';
-
-        let xp = parseInt(localStorage.getItem('planicchio_xp')) || 0;
-        let userAvatar = localStorage.getItem('planicchio_avatar') || '🐱';
+        let xp = parseInt(localStorage.getItem('p_xp')) || 0;
         let curso = "";
-        let exercicios = [];
-        let index = 0;
+        let questaoAtual = { q: "Como se diz 'Bom dia'?", a: "Buongiorno", b: "Ciao", c: "Prego", ok: "a" };
 
-        // TRADUÇÕES DE INTERFACE
-        const traducoes = {
-            'it-pt': { home: 'HOME', dic: 'DIZIONARIO', dicas: 'CULTURA', perfil: 'PROFILO', cur: 'CURIOSITÀ' },
-            'pt-it': { home: 'INÍCIO', dic: 'DICIONÁRIO', dicas: 'DICAS', perfil: 'PERFIL', cur: 'CURIOSIDADES' },
-            'en-it': { home: 'HOME', dic: 'DICTIONARY', dicas: 'TIPS', perfil: 'PROFILE', cur: 'CURIOSITIES' }
-        };
-
-        function entrarApp(idioma) {
-            curso = idioma;
+        function entrar(id) {
+            curso = id;
             document.getElementById('splash').classList.add('hidden');
-            document.getElementById('main-content').classList.remove('hidden');
-            document.getElementById('global-ui').classList.remove('hidden');
-            
-            aplicarIdioma();
+            document.getElementById('app').classList.remove('hidden');
             atualizarProgresso();
-            carregarConteudo();
-            setAvatar(userAvatar);
-            document.getElementById('user-name').value = localStorage.getItem('planicchio_name') || "";
+            animarGato("Miau! Boa escolha! 🚀");
+            traduzirInterface();
         }
 
-        function aplicarIdioma() {
-            const t = traducoes[curso] || traducoes['it-pt'];
-            document.getElementById('nav-home').innerText = t.home;
-            document.getElementById('nav-dic').innerText = t.dic;
-            document.getElementById('nav-dicas').innerText = t.dicas;
-            document.getElementById('nav-perfil').innerText = t.perfil;
-            document.getElementById('title-dic').innerText = t.dic;
-            document.getElementById('title-cur').innerText = t.cur;
-        }
-
-        function irPara(id) {
+        function aba(id) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
-            document.getElementById('page-' + id).classList.add('active-
+            document.getElementById('p-' + id).classList.add('active-page');
+        }
+
+        function animarGato(msg) {
+            const gato = document.getElementById('gato');
+            gato.classList.add('pulando');
+            setTimeout(() => gato.classList.remove('pulando'), 600);
+            
+            if(msg) {
+                document.getElementById('balao').innerText = msg;
+            } else {
+                const frases = ["Miau! Você é fera!", "Já estudou hoje?", "O VIP tem muito mais!", "Tente falar em voz alta!"];
+                document.getElementById('balao').innerText = frases[Math.floor(Math.random()*frases.length)];
+            }
+        }
+
+        function falarPergunta() {
+            const msg = new SpeechSynthesisUtterance(document.getElementById('q-txt').innerText);
+            msg.lang = curso.startsWith('it') ? 'it-IT' : 'pt-BR';
+            window.speechSynthesis.speak(msg);
+        }
+
+        function traduzirInterface() {
+            const dic = {
+                'it-pt': { h: 'HOME', d: 'DIZIONARIO', p: 'PROFILO' },
+                'pt-it': { h: 'INÍCIO', d: 'DICIONÁRIO', p: 'PERFIL' }
+            };
+            const t = dic[curso] || dic['it-pt'];
+            document.getElementById('n-home').innerText = t.h;
+            document.getElementById('n-dic').innerText = t.d;
+            document.getElementById('n-perfil').innerText = t.p;
+        }
+
+        function setAvatar(e) {
+            document.getElementById('avatar-display').innerText = e;
+            document.getElementById('gato').innerText = e;
+            localStorage.setItem('p_avatar', e);
+            animarGato("Amei o novo visual!");
+        }
+
+        function atualizarProgresso() {
+            localStorage.setItem('p_xp', xp);
+            document.getElementById('txt-xp').innerText = xp + " XP";
+            const lvl = Math.floor(xp / 100) + 1;
+            document.getElementById('txt-lvl').innerText = lvl;
+            document.getElementById('progress-fill').style.width = (xp % 100) + "%";
+            
+            // Simulação de renderizar pergunta
+            document.getElementById('q-txt').innerText = questaoAtual.q;
+            const box = document.getElementById('q-box');
+            box.innerHTML = "";
+            ['a','b','c'].forEach(opt => {
+                const b = document.createElement('button');
+                b.className = "btn-opt";
+                b.innerText = questaoAtual[opt];
+                b.onclick = () => {
+                    if(opt === questaoAtual.ok) {
+                        xp += 25; atualizarProgresso();
+                        b.style.borderColor = "#22c55e";
+                        animarGato("Correto! +25 XP 🎉");
+                    } else {
+                        b.style.borderColor = "#ef4444";
+                    }
+                };
+                box.appendChild(b);
+            });
+        }
+
+        // Recuperar Avatar
+        const salvo = localStorage.getItem('p_avatar');
+        if(salvo) setAvatar(salvo);
+    </script>
+</body>
+</html>
