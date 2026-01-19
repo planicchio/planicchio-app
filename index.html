@@ -9,56 +9,62 @@
         body { background-color: #FFF5EB; font-family: sans-serif; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         .splash-screen { position: fixed; inset: 0; background: #FF8C00; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; }
         .hidden { display: none !important; }
-        .page { display: none; padding: 20px; padding-bottom: 120px; animation: fadeIn 0.3s; }
+        .page { display: none; padding: 20px; padding-bottom: 140px; animation: fadeIn 0.3s; }
         .active-page { display: block !important; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
-        /* Nav e Mascote */
+        /* Nav e Mascote Interativo */
         .nav-bottom { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 15px; border-top: 2px solid #FFEDD5; z-index: 999; }
         .nav-btn { display: flex; flex-direction: column; align-items: center; font-size: 10px; font-weight: bold; color: #FF8C00; border: none; background: none; }
         .mascote-box { position: fixed; bottom: 85px; left: 20px; display: flex; align-items: center; gap: 8px; z-index: 998; }
-        .gato-emoji { font-size: 40px; cursor: pointer; }
+        .gato-emoji { font-size: 45px; cursor: pointer; transition: 0.3s; }
+        .gato-pulo { animation: jump 0.5s ease; }
+        @keyframes jump { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px) rotate(10deg); } }
         .balao { background: white; padding: 8px; border-radius: 12px; border: 2px solid #FF8C00; font-size: 10px; font-weight: bold; max-width: 120px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         
-        /* Elementos de Jogo */
+        /* Cards e Progressão */
         .progress-container { background: #E5E7EB; border-radius: 20px; height: 12px; overflow: hidden; margin: 10px 0; }
         #progress-bar { background: #FF8C00; width: 0%; height: 100%; transition: 0.5s; }
-        .card { background: white; border-radius: 20px; padding: 20px; border: 2px solid #FF8C00; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .btn-opt { w-full text-left p-4 mb-3 border-2 border-orange-100 rounded-xl font-bold text-orange-600 active:bg-orange-500 active:text-white transition-all; display: block; width: 100%; }
+        .card { background: white; border-radius: 25px; padding: 20px; border: 2px solid #FF8C00; box-shadow: 0 6px 0 #FFEDD5; }
+        .avatar-opt { font-size: 30px; padding: 10px; border: 2px solid #eee; border-radius: 15px; cursor: pointer; }
+        .avatar-selected { border-color: #FF8C00; background: #FFF5EB; }
     </style>
 </head>
 <body>
 
     <div id="splash" class="splash-screen">
-        <div style="font-size: 70px; margin-bottom: 10px;">🐱</div>
+        <div style="font-size: 70px; margin-bottom: 10px;" class="gato-emoji gato-pulo">🐱</div>
         <h1 class="text-3xl font-black mb-1 italic">PLANICCHIO</h1>
-        <p class="mb-6 text-sm font-medium opacity-90 text-center">Escolha o seu curso / <span class="italic">Choose your course</span></p>
+        <div class="mb-6 text-center px-6">
+            <p class="text-sm font-medium">Escolha o seu curso</p>
+            <p class="text-sm italic opacity-80">Scegli o teu corso / Choose your course</p>
+        </div>
         
         <div class="grid grid-cols-1 gap-3 w-72 px-4">
-            <button onclick="entrarApp('it-en')" class="bg-white text-orange-600 font-black py-3 rounded-xl shadow-lg border-b-4 border-orange-200">ITALIANO ➔ ENGLISH 🇺🇸</button>
-            <button onclick="entrarApp('it-pt')" class="bg-white text-orange-600 font-black py-3 rounded-xl shadow-lg border-b-4 border-orange-200">ITALIANO ➔ PORTUGUÊS 🇧🇷</button>
-            <button onclick="entrarApp('pt-it')" class="bg-white text-orange-600 font-black py-3 rounded-xl shadow-lg border-b-4 border-orange-200">PORTUGUÊS ➔ ITALIANO 🇮🇹</button>
-            <button onclick="entrarApp('pt-en')" class="bg-white text-orange-600 font-black py-3 rounded-xl shadow-lg border-b-4 border-orange-200">PORTUGUÊS ➔ ENGLISH 🇺🇸</button>
-            <button onclick="entrarApp('en-it')" class="bg-white text-orange-600 font-black py-3 rounded-xl shadow-lg border-b-4 border-orange-200">ENGLISH ➔ ITALIANO 🇮🇹</button>
-            <button onclick="entrarApp('en-pt')" class="bg-white text-orange-600 font-black py-3 rounded-xl shadow-lg border-b-4 border-orange-200">ENGLISH ➔ PORTUGUÊS 🇧🇷</button>
+            <button onclick="entrarApp('it-en')" class="bg-white text-orange-600 font-black py-3 rounded-xl shadow-lg border-b-4 border-orange-200 text-xs">ITALIANO ➔ ENGLISH 🇺🇸</button>
+            <button onclick="entrarApp('it-pt')" class="bg-white text-orange-600 font-black py-3 rounded-xl shadow-lg border-b-4 border-orange-200 text-xs">ITALIANO ➔ PORTUGUÊS 🇧🇷</button>
+            <button onclick="entrarApp('pt-it')" class="bg-white text-orange-600 font-black py-3 rounded-xl shadow-lg border-b-4 border-orange-200 text-xs">PORTUGUÊS ➔ ITALIANO 🇮🇹</button>
+            <button onclick="entrarApp('pt-en')" class="bg-white text-orange-600 font-black py-3 rounded-xl shadow-lg border-b-4 border-orange-200 text-xs">PORTUGUÊS ➔ ENGLISH 🇺🇸</button>
+            <button onclick="entrarApp('en-it')" class="bg-white text-orange-600 font-black py-3 rounded-xl shadow-lg border-b-4 border-orange-200 text-xs">ENGLISH ➔ ITALIANO 🇮🇹</button>
+            <button onclick="entrarApp('en-pt')" class="bg-white text-orange-600 font-black py-3 rounded-xl shadow-lg border-b-4 border-orange-200 text-xs">ENGLISH ➔ PORTUGUÊS 🇧🇷</button>
         </div>
     </div>
 
     <div id="global-ui" class="hidden">
         <div class="mascote-box">
-            <div class="gato-emoji" onclick="falar()">🐱</div>
-            <div id="balao" class="balao">Ciao! Vamos aprender? ✨</div>
+            <div id="gato" class="gato-emoji" onclick="falarInterativo()">🐱</div>
+            <div id="balao" class="balao">Ciao! 👋</div>
         </div>
 
         <nav class="nav-bottom">
-            <button onclick="irPara('home')" class="nav-btn">🏠<span>HOME</span></button>
-            <button onclick="irPara('curiosidades')" class="nav-btn">🌍<span>DICAS</span></button>
-            <button onclick="irPara('perfil')" class="nav-btn">🏆<span>PERFIL</span></button>
+            <button onclick="irPara('home')" class="nav-btn">🏠<span id="nav-home">HOME</span></button>
+            <button onclick="irPara('dicionario')" class="nav-btn">📖<span id="nav-dic">DICIONÁRIO</span></button>
+            <button onclick="irPara('curiosidades')" class="nav-btn">🌍<span id="nav-dicas">DICAS</span></button>
+            <button onclick="irPara('perfil')" class="nav-btn">👤<span id="nav-perfil">PERFIL</span></button>
         </nav>
     </div>
 
     <main id="main-content" class="hidden">
-        
         <header class="p-4 bg-white sticky top-0 z-50 border-b border-orange-100">
             <div class="flex justify-between items-center text-[10px] font-black text-orange-600 uppercase">
                 <span id="txt-titulo">APRENDIZ 🐣</span>
@@ -68,115 +74,87 @@
         </header>
 
         <div id="page-home" class="page active-page">
-            <div class="card">
-                <p id="pergunta-txt" class="font-bold text-gray-800 mb-6 italic text-center text-lg">Carregando conteúdo...</p>
+            <div class="card mb-4">
+                <div id="ex-tipo" class="text-[9px] font-bold text-orange-400 uppercase mb-2">Quiz</div>
+                <p id="pergunta-txt" class="font-bold text-gray-800 mb-6 italic text-lg">Carregando...</p>
                 <div id="opcoes-box" class="space-y-3"></div>
             </div>
         </div>
 
+        <div id="page-dicionario" class="page">
+            <h2 class="text-xl font-black text-orange-600 mb-4 uppercase" id="title-dic">Dicionário</h2>
+            <div id="lista-girias" class="space-y-3"></div>
+        </div>
+
         <div id="page-curiosidades" class="page">
-            <h2 class="text-xl font-black text-orange-600 mb-4 uppercase">Dicas e Cultura</h2>
+            <h2 class="text-xl font-black text-orange-600 mb-4 uppercase" id="title-cur">Dicas e Cultura</h2>
             <div class="bg-white p-4 rounded-2xl border-l-4 border-blue-500 shadow-sm mb-4">
                 <img src="https://images.unsplash.com/photo-1543349689-9a4d426bee8e?w=400" class="rounded-xl mb-3 w-full h-40 object-cover">
                 <p class="text-sm text-gray-700"><b>Torre de Pisa:</b> Ela não é torta por design, mas sim pelo solo instável. Sabias que existem outras torres tortas na Itália?</p>
             </div>
         </div>
 
-        <div id="page-perfil" class="page text-center">
-            <div class="text-6xl mb-4">🐱</div>
-            <h2 id="txt-xp" class="text-4xl font-black text-orange-600 mb-2">0 XP</h2>
-            <p class="text-gray-400 text-sm mb-8">Backup automático ativo ✅</p>
-            <button onclick="window.open('https://wa.me/393716755981')" class="w-full bg-green-500 text-white font-bold py-4 rounded-2xl mb-4">FALAR COMIGO (AULAS)</button>
-        </div>
+        <div id="page-perfil" class="page">
+            <div class="card text-center">
+                <div id="user-avatar-display" class="text-6xl mb-2">🐱</div>
+                <input type="text" id="user-name" placeholder="Seu Nome" class="text-center font-black text-xl border-b-2 border-orange-200 outline-none mb-4 w-full" onchange="salvarPerfil()">
+                
+                <p class="text-xs font-bold text-gray-400 mb-2">ESCOLHA SEU AVATAR:</p>
+                <div class="flex justify-around mb-6">
+                    <span class="avatar-opt" onclick="setAvatar('🐱')">🐱</span>
+                    <span class="avatar-opt" onclick="setAvatar('🐶')">🐶</span>
+                    <span class="avatar-opt" onclick="setAvatar('🐰')">🐰</span>
+                    <span class="avatar-opt" onclick="setAvatar('🐻')">🐻</span>
+                </div>
 
+                <div class="bg-orange-50 p-4 rounded-xl mb-4">
+                    <h3 id="txt-xp" class="text-2xl font-black text-orange-600">0 XP</h3>
+                </div>
+                <button onclick="window.open('https://wa.me/393716755981')" class="w-full bg-green-500 text-white font-bold py-3 rounded-xl shadow-lg">WHATSAPP SUPORTE</button>
+            </div>
+        </div>
     </main>
 
     <script>
-        // CONFIG E LINKS
         const LINK_EX = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT6-Ah6rq3hnBihlxVAzmsTD8rEF1rbGJu3__sBgm-DDyFWE_D7sxgJx3I3s55uiNl-qvP2x2wh0UD9/pub?gid=633031910&single=true&output=csv';
-        
+        const LINK_SL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT6-Ah6rq3hnBihlxVAzmsTD8rEF1rbGJu3__sBgm-DDyFWE_D7sxgJx3I3s55uiNl-qvP2x2wh0UD9/pub?gid=541320303&single=true&output=csv';
+
         let xp = parseInt(localStorage.getItem('planicchio_xp')) || 0;
+        let userAvatar = localStorage.getItem('planicchio_avatar') || '🐱';
         let curso = "";
         let exercicios = [];
         let index = 0;
 
-        // ENTRAR NO APP (FORÇADO)
+        // TRADUÇÕES DE INTERFACE
+        const traducoes = {
+            'it-pt': { home: 'HOME', dic: 'DIZIONARIO', dicas: 'CULTURA', perfil: 'PROFILO', cur: 'CURIOSITÀ' },
+            'pt-it': { home: 'INÍCIO', dic: 'DICIONÁRIO', dicas: 'DICAS', perfil: 'PERFIL', cur: 'CURIOSIDADES' },
+            'en-it': { home: 'HOME', dic: 'DICTIONARY', dicas: 'TIPS', perfil: 'PROFILE', cur: 'CURIOSITIES' }
+        };
+
         function entrarApp(idioma) {
             curso = idioma;
             document.getElementById('splash').classList.add('hidden');
             document.getElementById('main-content').classList.remove('hidden');
             document.getElementById('global-ui').classList.remove('hidden');
             
+            aplicarIdioma();
             atualizarProgresso();
-            carregarDados();
+            carregarConteudo();
+            setAvatar(userAvatar);
+            document.getElementById('user-name').value = localStorage.getItem('planicchio_name') || "";
         }
 
-        // NAVEGAÇÃO
+        function aplicarIdioma() {
+            const t = traducoes[curso] || traducoes['it-pt'];
+            document.getElementById('nav-home').innerText = t.home;
+            document.getElementById('nav-dic').innerText = t.dic;
+            document.getElementById('nav-dicas').innerText = t.dicas;
+            document.getElementById('nav-perfil').innerText = t.perfil;
+            document.getElementById('title-dic').innerText = t.dic;
+            document.getElementById('title-cur').innerText = t.cur;
+        }
+
         function irPara(id) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
-            document.getElementById('page-' + id).classList.add('active-page');
-        }
-
-        function falar(t) {
-            const frases = ["Miau! Vamos lá! 🚀", "Bom trabalho!", "Sabias que o VIP tem áudios?", "Foco nos estudos!"];
-            document.getElementById('balao').innerText = t || frases[Math.floor(Math.random()*frases.length)];
-        }
-
-        // DADOS DA PLANILHA
-        async function carregarDados() {
-            try {
-                const res = await fetch(LINK_EX);
-                const text = await res.text();
-                const rows = text.split(/\r?\n/).slice(1);
-                exercicios = rows.map(r => {
-                    const c = r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                    return { q: clean(c[1]), a: clean(c[2]), b: clean(c[3]), c: clean(c[4]), ok: clean(c[5]).toLowerCase() };
-                }).filter(i => i.q);
-                renderQuiz();
-            } catch(e) {
-                document.getElementById('pergunta-txt').innerText = "Erro ao carregar dados. Tente atualizar!";
-            }
-        }
-
-        function renderQuiz() {
-            if(index >= exercicios.length) { index = 0; }
-            const item = exercicios[index];
-            document.getElementById('pergunta-txt').innerText = item.q;
-            
-            const box = document.getElementById('opcoes-box');
-            box.innerHTML = "";
-            
-            ['a','b','c'].forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = "w-full text-left p-4 mb-3 border-2 border-orange-100 rounded-xl font-bold text-orange-600 active:bg-orange-500 active:text-white";
-                btn.innerText = item[opt];
-                btn.onclick = () => {
-                    if(opt === item.ok) {
-                        xp += 25; atualizarProgresso();
-                        btn.style.background = "#dcfce7";
-                        falar("Correto! +25 XP 🏆");
-                        setTimeout(() => { index++; renderQuiz(); }, 1000);
-                    } else {
-                        btn.style.background = "#fee2e2";
-                        falar("Quase! Tenta de novo.");
-                    }
-                };
-                box.appendChild(btn);
-            });
-        }
-
-        function atualizarProgresso() {
-            localStorage.setItem('planicchio_xp', xp);
-            const nivel = Math.floor(xp / 100) + 1;
-            document.getElementById('txt-lvl').innerText = nivel;
-            document.getElementById('txt-xp').innerText = xp + " XP";
-            document.getElementById('progress-bar').style.width = (xp % 100) + "%";
-            
-            const titulos = ["Aprendiz 🐣", "Viajante 🌍", "Explorador 🛶", "Cidadão Global 🏛️", "Mestre 👑"];
-            document.getElementById('txt-titulo').innerText = titulos[Math.min(nivel-1, 4)];
-        }
-
-        function clean(t) { return t ? t.replace(/"/g, '').trim() : ""; }
-    </script>
-</body>
-</html>
+            document.getElementById('page-' + id).classList.add('active-
