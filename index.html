@@ -3,92 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planicchio IT</title>
+    <title>Planicchio 🚀</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
-        .premium-blur { filter: blur(6px); pointer-events: none; }
-        .loader { border-top-color: #f97316; animation: spinner 1.5s linear infinite; }
-        @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        /* Estilo para o botão de áudio brilhar ao clicar */
-        .btn-audio:active { transform: scale(0.9); background-color: #ffedd5; }
+        body { background-color: #FFF5EB; padding-bottom: 50px; }
+        .quiz-container {
+            background: white; border: 3px solid #FF8C00; border-radius: 20px;
+            padding: 20px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(255, 140, 0, 0.2);
+        }
+        .btn-opcao {
+            display: block; width: 100%; background: #fff; color: #FF8C00;
+            border: 2px solid #FF8C00; padding: 12px; margin: 10px 0;
+            border-radius: 12px; font-weight: bold; transition: 0.3s; text-align: left;
+        }
+        .btn-opcao:hover { background: #FF8C00; color: white; }
+        .btn-proximo {
+            background: #FF8C00; color: white; padding: 12px;
+            border-radius: 10px; margin-top: 10px; font-weight: bold; width: 100%;
+        }
+        .card-slang {
+            background: white; padding: 20px; border-radius: 15px;
+            border-left: 5px solid #FF8C00; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        /* BOTÃO DE UPGRADE */
+        .btn-upgrade {
+            background: #FF8C00; color: white; padding: 18px;
+            border-radius: 15px; font-weight: bold; display: block;
+            text-align: center; margin-top: 20px; text-decoration: none;
+            box-shadow: 0 4px 15px rgba(255, 140, 0, 0.4);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+        .hidden { display: none; }
     </style>
 </head>
-<body class="bg-gray-50 pb-10">
+<body class="p-5">
 
-    <header class="bg-orange-500 text-white p-6 text-center shadow-lg sticky top-0 z-50">
-        <img src="https://i.ibb.co/zHjS4mbk/logo.png" class="h-20 mx-auto mb-2 rounded-full border-2 border-white shadow-md" alt="Planicchio Logo">
-        <h1 class="text-2xl font-bold italic tracking-tighter">Planicchio IT</h1>
-    </header>
+    <div class="max-w-md mx-auto">
+        <h1 class="text-3xl font-bold text-center mb-8 text-orange-600">Planicchio 🚀</h1>
 
-    <div id="loading" class="flex flex-col items-center justify-center mt-20">
-        <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"></div>
-        <p class="text-orange-600 font-bold">Caricamento slang...</p>
+        <div id="quiz-area" class="quiz-container">
+            <div id="quiz-content">
+                <p id="pergunta-txt" class="font-bold text-lg mb-4 text-gray-800">Caricamento...</p>
+                <div id="opcoes-area"></div>
+                <div id="feedback-area" class="hidden mt-4 p-4 rounded bg-orange-100 border-l-4 border-orange-500">
+                    <p id="feedback-txt" class="mb-3"></p>
+                    <button onclick="proximaQuestao()" class="btn-proximo">Prossimo ➔</button>
+                </div>
+            </div>
+        </div>
+
+        <hr class="border-orange-200 my-8">
+        <h2 class="text-xl font-bold mb-4 text-orange-700 italic">📚 Slang & Expressions</h2>
+        <div id="slang-container" class="space-y-4"></div>
     </div>
 
-    <main class="p-4 max-w-md mx-auto hidden" id="app-content">
-        <div id="slang-list"></div>
-    </main>
-
     <script>
-        const csv_url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT6-Ah6rq3hnBihlxVAzmsTD8rEF1rbGJu3__sBgm-DDyFWE_D7sxgJx3I3s55uiNl-qvP2x2wh0UD9/pub?output=csv';
-        const whatsapp_url = 'https://wa.me/393716755981?text=Ciao!%20Voglio%20sbloccare%20Premium';
+        const LINK_EX = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT6-Ah6rq3hnBihlxVAzmsTD8rEF1rbGJu3__sBgm-DDyFWE_D7sxgJx3I3s55uiNl-qvP2x2wh0UD9/pub?gid=633031910&single=true&output=csv';
+        const LINK_SL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT6-Ah6rq3hnBihlxVAzmsTD8rEF1rbGJu3__sBgm-DDyFWE_D7sxgJx3I3s55uiNl-qvP2x2wh0UD9/pub?gid=541320303&single=true&output=csv';
 
-        function init() {
-            Papa.parse(csv_url, { download: true, header: true, complete: showInfo });
+        let exercicios = [];
+        let indexAtual = 0;
+        const LIMITE = 2; // Número de exercícios grátis
+
+        const clean = (t) => t ? t.replace(/"/g, '').trim() : "";
+
+        async function init() {
+            try {
+                // Carregar Exercícios
+                const resEx = await fetch(LINK_EX);
+                const dataEx = await resEx.text();
+                const rowsEx = dataEx.split(/\r?\n/).slice(1);
+                exercicios = rowsEx.map(row => {
+                    const c = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                    return {
+                        pergunta: clean(c[1]), a: clean(c[2]), b: clean(c[3]), c: clean(c[4]),
+                        correta: clean(c[5]).toLowerCase(), explica: clean(c[6])
+                    };
+                }).filter(i => i.pergunta !== "");
+
+                showQuestao();
+
+                // Carregar Slang
+                const resSl = await fetch(LINK_SL);
+                const dataSl = await resSl.text();
+                const container = document.getElementById('slang-container');
+                dataSl.split(/\r?\n/).slice(1).forEach(row => {
+                    const c = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                    if (clean(c[2])) {
+                        const div = document.createElement('div');
+                        div.className = "card-slang";
+                        div.innerHTML = `<h3 class="text-xl font-bold text-orange-600">${clean(c[2])}</h3><p class="text-sm text-gray-700">${clean(c[4])}</p>`;
+                        container.appendChild(div);
+                    }
+                });
+            } catch (e) { console.log(e); }
         }
 
-        function showInfo(results) {
-            const listContainer = document.getElementById('slang-list');
-            results.data.forEach((row) => {
-                if (!row.English) return;
-                const isPremium = row.Status && row.Status.trim().toLowerCase() === 'premium';
-                const card = document.createElement('div');
-                card.className = "bg-white rounded-3xl shadow-sm p-6 mb-5 border border-orange-50 relative overflow-hidden";
-                card.innerHTML = `
-                    <div class="${isPremium ? 'premium-blur' : ''}">
-                        <div class="flex justify-between items-start">
-                            <h2 class="text-2xl font-extrabold text-orange-600 uppercase italic leading-none">${row.English}</h2>
-                            <button onclick="playAudio('${row.English}')" class="btn-audio bg-orange-100 p-3 rounded-full text-orange-600 transition-all">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                                </svg>
-                            </button>
-                        </div>
-                        <p class="text-gray-400 font-bold text-sm italic mt-1">${row.Traduzione || ''}</p>
-                        <div class="mt-4 p-3 bg-orange-50/50 rounded-xl border-l-4 border-orange-400">
-                           <p class="text-gray-700 text-sm font-medium">"${row.Esempio || ''}"</p>
-                        </div>
-                    </div>
-                    ${isPremium ? `
-                    <div class="absolute inset-0 flex flex-col items-center justify-center bg-white/60 backdrop-blur-[2px]">
-                        <button onclick="window.location.href='${whatsapp_url}'" class="bg-orange-600 text-white px-8 py-3 rounded-full font-black shadow-xl active:scale-95 transition">
-                            SBLOCCA PREMIUM 💎
-                        </button>
-                    </div>` : ''}
-                `;
-                listContainer.appendChild(card);
-            });
-            document.getElementById('loading').classList.add('hidden');
-            document.getElementById('app-content').classList.remove('hidden');
-        }
-
-        // FUNÇÃO DE ÁUDIO MELHORADA
-        function playAudio(word) {
-            // Se o áudio do Google falhar, ele usa o sintetizador nativo do celular (mais garantido)
-            if ('speechSynthesis' in window) {
-                const utterance = new SpeechSynthesisUtterance(word);
-                utterance.lang = 'en-US';
-                utterance.rate = 0.9; // Um pouco mais devagar para entenderem bem
-                window.speechSynthesis.speak(utterance);
-            } else {
-                const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=en&client=tw-ob&q=${encodeURIComponent(word)}`;
-                const audio = new Audio(url);
-                audio.play().catch(e => console.log("Erro ao tocar áudio:", e));
+        function showQuestao() {
+            if (indexAtual >= LIMITE) {
+                mostrarBloqueio();
+                return;
             }
+
+            const item = exercicios[indexAtual];
+            document.getElementById('pergunta-txt').innerText = item.pergunta;
+            const area = document.getElementById('opcoes-area');
+            area.innerHTML = '';
+            document.getElementById('feedback-area').classList.add('hidden');
+
+            ['a', 'b', 'c'].forEach(l => {
+                const btn = document.createElement('button');
+                btn.className = 'btn-opcao';
+                btn.innerText = item[l];
+                btn.onclick = () => {
+                    const feedback = document.getElementById('feedback-area');
+                    const txt = document.getElementById('feedback-txt');
+                    feedback.classList.remove('hidden');
+                    if (l === item.correta) {
+                        txt.innerHTML = "✅ <b>Bravo!</b> " + item.explica;
+                        txt.className = "text-orange-600 font-bold mb-3";
+                    } else {
+                        txt.innerHTML = "❌ <b>Sbagliato!</b> Era la " + item.correta.toUpperCase();
+                        txt.className = "text-red-500 font-bold mb-3";
+                    }
+                };
+                area.appendChild(btn);
+            });
         }
 
-        window.addEventListener('DOMContentLoaded', init);
+        function mostrarBloqueio() {
+            // Mensagem do WhatsApp em italiano
+            const msg = encodeURIComponent("Ciao Planicchio! Ho finito gli esercizi gratuiti e vorrei sbloccare l'accesso VIP. Come posso fare?");
+            const fone = "393716755981";
+
+            document.getElementById('quiz-area').innerHTML = `
+                <div class="text-center py-4">
+                    <p class="text-5xl mb-4">🔓</p>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Vuoi continuare?</h2>
+                    <p class="text-gray-600 mb-6">Hai completato i 2 esercizi gratuiti di oggi. Passa al <b>VIP</b> per avere esercizi illimitati e contenuti esclusivi!</p>
+                    <a href="https://wa.me/${fone}?text=${msg}" class="btn-upgrade">VOGLIO DIVENTARE VIP 🚀</a>
+                </div>
+            `;
+        }
+
+        function proximaQuestao() {
+            indexAtual++;
+            showQuestao();
+        }
+
+        init();
     </script>
 </body>
 </html>
