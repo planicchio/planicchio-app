@@ -1,152 +1,485 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Planicchio</title>
+    <title>Planicchio Premium</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background: #FFF5EB; font-family: sans-serif; margin: 0; padding: 0; }
-        .aba { display: none; padding: 20px; padding-bottom: 100px; }
-        .aba-ativa { display: block; }
-        .nav-fixa { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px; border-top: 2px solid #FFEDD5; }
-        .card { background: white; border-radius: 20px; padding: 20px; border: 2px solid #FF8C00; margin-bottom: 15px; }
-        .btn-check { display: flex; align-items: center; gap: 10px; background: white; padding: 12px; border-radius: 15px; border: 1px solid #FFEDD5; margin-bottom: 8px; width: 100%; font-weight: bold; font-size: 13px; }
-        .splash { position: fixed; inset: 0; background: #FF8C00; z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; }
-        .hidden { display: none; }
+        /* Variáveis CSS */
+        :root {
+            --p-orange: #FF8C00;
+            --p-bg: #FFF5EB;
+            --p-text: #333;
+            --p-card-bg: white;
+            --p-card-border: #FFEDD5;
+            --p-shadow: 0 6px 0 #FFEDD5;
+            --p-pet-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Dark Mode */
+        body.dark-mode {
+            --p-bg: #1a1a1a;
+            --p-text: #f0f0f0;
+            --p-card-bg: #2d2d2d;
+            --p-card-border: #444;
+            --p-shadow: 0 6px 0 #3a3a3a;
+            --p-pet-shadow: 0 4px 15px rgba(255,255,255,0.1);
+        }
+
+        body {
+            background: var(--p-bg);
+            color: var(--p-text);
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+            transition: background 0.3s, color 0.3s;
+            touch-action: pan-y; /* Previne scroll horizontal em dispositivos touch */
+        }
+
+        .page {
+            display: none;
+            height: 100vh;
+            overflow-y: auto;
+            padding-bottom: 120px; /* Espaço para a navbar */
+            -webkit-overflow-scrolling: touch; /* Melhorar o scroll em iOS */
+        }
+        .active { display: block; }
+        
+        /* Estilos dos Cards */
+        .card {
+            background: var(--p-card-bg);
+            border-radius: 25px;
+            padding: 20px;
+            border: 2px solid var(--p-card-border);
+            box-shadow: var(--p-shadow);
+            margin: 15px; /* Margem padrão para todos os cards */
+            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+        }
+        .card-no-margin { margin: 0; } /* Para cards dentro de grids sem margem própria */
+
+        /* Botões Principais */
+        .btn-main {
+            background: white;
+            border: 2px solid var(--p-orange);
+            border-radius: 20px;
+            padding: 15px;
+            width: 100%;
+            font-weight: 900;
+            color: var(--p-orange);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-main:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+
+        /* Pet Animado */
+        .pet-float {
+            font-size: 60px;
+            animation: float 3s ease-in-out infinite;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .pet-float:active {
+            transform: scale(0.95);
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        
+        /* Balão de Fala */
+        .balao {
+            background: var(--p-card-bg);
+            border: 3px solid var(--p-orange);
+            border-radius: 20px;
+            padding: 12px;
+            font-size: 13px;
+            font-weight: bold;
+            position: relative;
+            color: var(--p-text);
+            box-shadow: var(--p-pet-shadow);
+            transition: background 0.3s, border-color 0.3s, color 0.3s, box-shadow 0.3s;
+        }
+        .balao::before {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 8px 10px 0;
+            border-style: solid;
+            border-color: var(--p-orange) transparent transparent transparent;
+        }
+        .balao-top::before {
+            top: -15px;
+            bottom: auto;
+            border-color: transparent transparent var(--p-orange) transparent;
+        }
+        .dark-mode .balao::before {
+            border-color: #555 transparent transparent transparent; /* Ajuste para dark mode */
+        }
+        .dark-mode .balao-top::before {
+            border-color: transparent transparent #555 transparent; /* Ajuste para dark mode */
+        }
+
+
+        /* Navbar */
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            background: var(--p-card-bg);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px;
+            border-top: 3px solid var(--p-card-border);
+            z-index: 1000;
+            transition: background 0.3s, border-color 0.3s;
+        }
+        .nav-item {
+            font-size: 10px;
+            font-weight: bold;
+            color: var(--p-orange);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: none;
+            background: none;
+            flex-grow: 1; /* Para distribuir o espaço igualmente */
+            padding: 5px 0;
+        }
+        .nav-item.active-nav {
+            color: #FF4500; /* Cor de destaque para o item ativo */
+        }
+        
+        /* VIP Tag */
+        .vip-tag {
+            background: linear-gradient(45deg, #ffd700, #ff8c00);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 9px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            position: absolute;
+            top: 8px;
+            right: 8px;
+        }
+        .locked-content {
+            filter: blur(3px) grayscale(80%);
+            pointer-events: none;
+            user-select: none;
+            position: relative;
+        }
+        .locked-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.4);
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 20px;
+            z-index: 10;
+        }
+
+        /* Switch de Dark Mode */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 20px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: #2196F3; }
+        input:focus + .slider { box-shadow: 0 0 1px #2196F3; }
+        input:checked + .slider:before { transform: translateX(20px); }
     </style>
 </head>
-<body>
+<body id="body">
 
-    <div id="splash" class="splash">
-        <h1 class="text-4xl font-black mb-4">PLANICCHIO 🐱</h1>
-        <p class="mb-6 font-bold">SCEGLI IL TUO CORSO</p>
-        <div class="flex flex-col gap-3 w-64">
-            <button onclick="iniciar('it-en')" class="bg-yellow-400 text-orange-900 font-black py-4 rounded-xl shadow-lg">ITALIANO ➔ ENGLISH</button>
-            <button onclick="iniciar('it-pt')" class="bg-white text-orange-600 font-bold py-3 rounded-xl">ITALIANO ➔ PORTOGHESE</button>
-            <button onclick="iniciar('pt-it')" class="bg-white text-orange-600 font-bold py-3 rounded-xl">PORTUGUÊS ➔ ITALIANO</button>
+    <audio id="audio-pet" src="https://www.soundjay.com/misc/sounds/cat-meow-2.mp3" preload="auto"></audio>
+    <audio id="audio-acerto" src="https://www.soundjay.com/buttons/sounds/button-1.mp3" preload="auto"></audio>
+    <audio id="audio-erro" src="https://www.soundjay.com/buttons/sounds/button-2.mp3" preload="auto"></audio>
+    <audio id="audio-lvlup" src="https://www.soundjay.com/misc/sounds/ding-4.mp3" preload="auto"></audio>
+
+    <div id="page-splash" class="page active flex flex-col items-center justify-center p-6 bg-[#FF8C00]">
+        <div class="pet-float text-8xl mb-4" id="splash-pet-icon" onclick="falarSplash()">🐱</div>
+        <div class="balao mb-6" id="splash-balao-text">Ciao! Benvenuti su Planicchio!</div>
+        <h1 class="text-white text-5xl font-black italic mb-2">PLANICCHIO</h1>
+        <p class="text-white text-[10px] mb-8 font-bold opacity-80 uppercase tracking-tighter">
+            Escolha seu curso • Scegli il tuo corso • Choose your course
+        </p>
+        
+        <div class="grid grid-cols-1 gap-3 w-full max-w-xs">
+            <button onclick="configApp('it-en')" class="bg-yellow-400 text-orange-900 font-black p-4 rounded-2xl shadow-xl ring-4 ring-white uppercase">⭐ Italiano ➔ English</button>
+            <button onclick="configApp('it-pt')" class="bg-white text-orange-600 font-bold p-3 rounded-xl uppercase text-xs">Italiano ➔ Português</button>
+            <button onclick="configApp('pt-it')" class="bg-white text-orange-600 font-bold p-3 rounded-xl uppercase text-xs">Português ➔ Italiano</button>
+            <button onclick="configApp('pt-en')" class="bg-white text-orange-600 font-bold p-3 rounded-xl uppercase text-xs">Português ➔ English</button>
+            <button onclick="configApp('en-it')" class="bg-white text-orange-600 font-bold p-3 rounded-xl uppercase text-xs">English ➔ Italiano</button>
+            <button onclick="configApp('en-pt')" class="bg-white text-orange-600 font-bold p-3 rounded-xl uppercase text-xs">English ➔ Português</button>
         </div>
     </div>
 
-    <div id="app" class="hidden">
-        <header class="p-4 bg-white border-b-2 border-orange-100 flex justify-between items-center">
-            <b class="text-orange-600 text-xs uppercase">Apprendista 🐣</b>
-            <b class="text-orange-600 text-xs">LVL <span id="lvl">1</span></b>
+    <div id="page-home" class="page">
+        <header class="p-4 bg-white sticky top-0 border-b-2 border-orange-100 flex justify-between items-center z-50">
+            <div class="flex flex-col">
+                <span id="ui-rank" class="font-black text-orange-600 text-[10px]">NOVIZIO 🐣</span>
+                <span class="text-[9px] font-bold text-gray-400 uppercase" id="ui-curr-lang">IT ➔ EN</span>
+            </div>
+            <div class="flex flex-col items-end gap-1">
+                <span class="text-[10px] font-bold">LVL <span id="ui-lvl">1</span></span>
+                <div class="w-24 bg-gray-100 h-2 rounded-full overflow-hidden border"><div id="ui-bar" class="bg-orange-500 h-full w-0"></div></div>
+            </div>
         </header>
 
-        <div id="home" class="aba aba-ativa">
-            <h3 class="text-orange-600 font-black text-xs mb-3 uppercase">Missioni Diarie</h3>
-            <div class="btn-check"><input type="checkbox" onchange="addXP(10)"> <span>Fare il Quiz</span></div>
-            <div class="btn-check"><input type="checkbox" onchange="addXP(10)"> <span>Ascoltare Pronuncia</span></div>
-            
-            <div class="card text-center mt-6">
-                <p id="pergunta" class="font-bold text-lg mb-6">Caricamento...</p>
-                <div id="opcoes" class="flex flex-col gap-2"></div>
-                <button onclick="ouvir()" class="mt-6 text-orange-400 font-black text-[10px] uppercase tracking-widest">🔊 ASCOLTA</button>
+        <div class="p-2">
+            <div class="card bg-orange-50 border-orange-200 card-no-margin">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 id="t-mis-d" class="font-black text-xs uppercase text-orange-600">Missioni Diarie</h3>
+                    <span class="text-[10px] font-bold text-orange-400" id="mis-d-counter">0/3</span>
+                </div>
+                <div class="space-y-2">
+                    <label class="flex items-center gap-3 bg-white p-3 rounded-xl border border-orange-100 text-xs font-bold">
+                        <input type="checkbox" id="check-quiz" onchange="checkDailyMission(this, 'check-quiz')"> <span id="m-d1">Fare 1 Quiz</span>
+                    </label>
+                    <label class="flex items-center gap-3 bg-white p-3 rounded-xl border border-orange-100 text-xs font-bold">
+                        <input type="checkbox" id="check-pet" onchange="checkDailyMission(this, 'check-pet')"> <span id="m-d2">Toccare il Pet</span>
+                    </label>
+                    <label class="flex items-center gap-3 bg-white p-3 rounded-xl border border-orange-100 text-xs font-bold">
+                        <input type="checkbox" id="check-curiosity" onchange="checkDailyMission(this, 'check-curiosity')"> <span id="m-d3">Vedere una Curiosità</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="flex flex-col items-center my-6">
+                <div class="balao mb-4 max-w-[200px] text-center" id="pet-fala">Ciao! Sono pronto per imparare!</div>
+                <div class="pet-float" id="main-pet" onclick="petInteragir()">🐱</div>
+            </div>
+
+            <div class="card card-no-margin text-center">
+                <h4 id="t-game" class="font-black text-xs mb-3 text-orange-600">MINIGIOCO FLASH ⚡</h4>
+                <div id="game-box" class="h-32 flex flex-col items-center justify-center">
+                    <p id="game-txt" class="text-sm font-bold mb-4">Trova la parola giusta in 5s!</p>
+                    <button id="btn-play" onclick="startMiniGame()" class="bg-orange-500 text-white px-6 py-2 rounded-full font-black">PLAY</button>
+                </div>
             </div>
         </div>
-
-        <div id="dic" class="aba">
-            <h2 class="text-2xl font-black text-orange-600 mb-4 uppercase">Dizionario</h2>
-            <div id="lista-dic"></div>
-        </div>
-
-        <div id="perfil" class="aba text-center">
-            <div class="text-6xl mb-4">🐱</div>
-            <input type="text" id="nome-user" class="text-center font-black text-xl border-b-2 border-orange-200 w-full mb-6 bg-transparent outline-none" placeholder="Il tuo nome">
-            
-            <div class="text-left bg-white p-4 rounded-2xl border-2 border-blue-100">
-                <h3 class="text-blue-500 font-black text-[10px] mb-3">MISSIONI SETTIMANALI</h3>
-                <div class="btn-check"><input type="checkbox"> <span>Livello 5</span></div>
-                <div class="btn-check"><input type="checkbox"> <span>7 Giorni di fila</span></div>
-                <div class="btn-check"><input type="checkbox"> <span>Invita un Amico</span></div>
-            </div>
-            <button onclick="location.reload()" class="mt-6 text-gray-400 font-bold text-xs uppercase">Cambia Corso</button>
-        </div>
-
-        <nav class="nav-fixa">
-            <button onclick="mudarAba('home')" class="text-orange-600 font-black text-[10px]">🏠 HOME</button>
-            <button onclick="mudarAba('dic')" class="text-orange-600 font-black text-[10px]">📖 DIZ</button>
-            <button onclick="mudarAba('perfil')" class="text-orange-600 font-black text-[10px]">👤 PROFILO</button>
-        </nav>
     </div>
 
-    <script>
-        const URL_QUIZ = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT6-Ah6rq3hnBihlxVAzmsTD8rEF1rbGJu3__sBgm-DDyFWE_D7sxgJx3I3s55uiNl-qvP2x2wh0UD9/pub?gid=633031910&single=true&output=csv';
-        const URL_DIC = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT6-Ah6rq3hnBihlxVAzmsTD8rEF1rbGJu3__sBgm-DDyFWE_D7sxgJx3I3s55uiNl-qvP2x2wh0UD9/pub?gid=541320303&single=true&output=csv';
+    <div id="page-exercises" class="page">
+        <div class="p-4">
+            <h2 id="t-ex-tit" class="text-2xl font-black text-orange-600 mb-6">ESERCIZI</h2>
+            
+            <div id="quiz-section" class="card card-no-margin mb-4">
+                <h3 class="font-bold text-lg mb-4" id="quiz-main-title">Quiz: Traduci!</h3>
+                <p id="q-txt" class="text-xl font-bold mb-6 text-center italic">...</p>
+                <div id="q-opts" class="space-y-3"></div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-3 mt-4">
+                <div class="card text-center p-4 m-0 relative">
+                    <span class="vip-tag" id="t-vip-spell">VIP</span>
+                    <div class="locked-overlay" id="overlay-spell">Accedi VIP</div>
+                    <span class="text-2xl">✍️</span>
+                    <p class="text-[10px] font-black uppercase mt-2" id="t-spell">Ortografia</p>
+                </div>
+                <div class="card text-center p-4 m-0 relative">
+                    <span class="vip-tag" id="t-vip-listen">VIP</span>
+                    <div class="locked-overlay" id="overlay-listen">Accedi VIP</div>
+                    <span class="text-2xl">👂</span>
+                    <p class="text-[10px] font-black uppercase mt-2" id="t-listen">Ascolta e Scrivi</p>
+                </div>
+                <div class="card text-center p-4 m-0 relative">
+                    <span class="vip-tag" id="t-vip-real">VIP</span>
+                    <div class="locked-overlay" id="overlay-real">Accedi VIP</div>
+                    <span class="text-2xl">💬</span>
+                    <p class="text-[10px] font-black uppercase mt-2" id="t-real-situations">Situazioni Reali</p>
+                </div>
+                <div class="card text-center p-4 m-0 relative">
+                    <span class="vip-tag" id="t-vip-img">VIP</span>
+                    <div class="locked-overlay" id="overlay-img">Accedi VIP</div>
+                    <span class="text-2xl">🖼️</span>
+                    <p class="text-[10px] font-black uppercase mt-2" id="t-image-match">Abbina Immagini</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        let curso = "";
-        let xp = 0;
-        let listaQuiz = [];
+    <div id="page-community" class="page">
+        <div class="p-4">
+            <h2 id="t-com-tit" class="text-2xl font-black text-orange-600 mb-6">COMUNITÀ</h2>
+            
+            <div class="card card-no-margin mb-4">
+                <h3 class="font-bold text-lg mb-4" id="t-chat">Chat Generale</h3>
+                <div class="h-40 bg-gray-100 rounded-lg p-3 text-sm overflow-y-auto mb-3" id="chat-box">
+                    <p class="text-gray-600">Alice: Ciao a tutti!</p>
+                    <p class="text-gray-600">Bob: Ciao Alice! Come va lo studio?</p>
+                </div>
+                <input type="text" placeholder="Scrivi un messaggio..." class="w-full p-2 border rounded-lg text-sm">
+            </div>
 
-        function iniciar(id) {
-            curso = id;
-            document.getElementById('splash').classList.add('hidden');
-            document.getElementById('app').classList.remove('hidden');
-            carregarDados();
-        }
+            <div class="grid grid-cols-2 gap-3 mt-4">
+                <div class="card text-center p-4 m-0 relative">
+                    <span class="vip-tag" id="t-vip-lessons">VIP</span>
+                    <div class="locked-overlay" id="overlay-lessons">Accedi VIP</div>
+                    <span class="text-2xl">🧑‍🏫</span>
+                    <p class="text-[10px] font-black uppercase mt-2" id="t-lessons">Lezioni Private</p>
+                </div>
+                <div class="card text-center p-4 m-0 relative">
+                    <span class="vip-tag" id="t-vip-native">VIP</span>
+                    <div class="locked-overlay" id="overlay-native">Accedi VIP</div>
+                    <span class="text-2xl">🗣️</span>
+                    <p class="text-[10px] font-black uppercase mt-2" id="t-native">Parla con un Nativo</p>
+                </div>
+                <div class="card text-center p-4 m-0 relative">
+                    <span class="vip-tag" id="t-vip-sim">VIP</span>
+                    <div class="locked-overlay" id="overlay-sim">Accedi VIP</div>
+                    <span class="text-2xl">🤖</span>
+                    <p class="text-[10px] font-black uppercase mt-2" id="t-sim-conv">Simulazione Conversazione</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        async function carregarDados() {
-            try {
-                const [resQ, resD] = await Promise.all([fetch(URL_QUIZ), fetch(URL_DIC)]);
-                const txtQ = await resQ.text();
-                const txtD = await resD.text();
+    <div id="page-tools" class="page">
+        <div class="p-4">
+            <h2 id="t-tools-tit" class="text-2xl font-black text-orange-600 mb-6">STRUMENTI LINGUISTICI</h2>
 
-                // Processar Quiz
-                listaQuiz = txtQ.split('\n').slice(1).map(linha => {
-                    const c = linha.split(',');
-                    return { q: c[1], a: c[2], b: c[3], c: c[4], ok: c[5]?.trim().toLowerCase() };
-                }).filter(x => x.q);
-                showQuiz();
+            <div class="card card-no-margin mb-4">
+                <h3 class="font-bold text-lg mb-4" id="t-dic">Dizionario Rapido</h3>
+                <div class="h-40 bg-gray-100 rounded-lg p-3 text-sm overflow-y-auto mb-3" id="dic-display">
+                    </div>
+                <input type="text" placeholder="Cerca una parola..." class="w-full p-2 border rounded-lg text-sm">
+            </div>
 
-                // Processar Dicionário
-                const dicBox = document.getElementById('lista-dic');
-                txtD.split('\n').slice(1).forEach(linha => {
-                    const c = linha.split(',');
-                    if(!c[2]) return;
-                    const div = document.createElement('div');
-                    div.className = "card";
-                    div.innerHTML = `
-                        <div class="flex justify-between font-black text-orange-600"><span>${c[2]}</span> <button onclick="fala('${c[2]}')">🔊</button></div>
-                        <div class="text-[10px] italic text-gray-400">${c[3]}</div>
-                        <div class="font-bold text-sm mt-1">${c[4]}</div>
-                        <div class="mt-2 text-xs text-orange-800 bg-orange-50 p-2 rounded">Esempio: ${c[5] || '---'}</div>
-                    `;
-                    dicBox.appendChild(div);
-                });
-            } catch (e) { document.getElementById('pergunta').innerText = "Errore di connessione."; }
-        }
+            <div class="grid grid-cols-2 gap-3 mt-4">
+                <div class="card text-center p-4 m-0 relative">
+                    <span class="vip-tag" id="t-vip-flash">VIP</span>
+                    <div class="locked-overlay" id="overlay-flash">Accedi VIP</div>
+                    <span class="text-2xl">🃏</span>
+                    <p class="text-[10px] font-black uppercase mt-2" id="t-flash">Flashcards</p>
+                </div>
+                <div class="card text-center p-4 m-0 relative">
+                    <span class="vip-tag" id="t-vip-slang">VIP</span>
+                    <div class="locked-overlay" id="overlay-slang">Accedi VIP</div>
+                    <span class="text-2xl">🌶️</span>
+                    <p class="text-[10px] font-black uppercase mt-2" id="t-slang">Gergas</p>
+                </div>
+                <div class="card text-center p-4 m-0 relative">
+                    <span class="vip-tag" id="t-vip-stream">VIP</span>
+                    <div class="locked-overlay" id="overlay-stream">Accedi VIP</div>
+                    <span class="text-2xl">📺</span>
+                    <p class="text-[10px] font-black uppercase mt-2" id="t-streaming">Streaming (Reactor)</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        function showQuiz() {
-            const item = listaQuiz[Math.floor(Math.random() * listaQuiz.length)];
-            document.getElementById('pergunta').innerText = item.q;
-            const box = document.getElementById('opcoes');
-            box.innerHTML = "";
-            ['a', 'b', 'c'].forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = "btn-check justify-center border-2 border-orange-100";
-                btn.innerText = item[opt];
-                btn.onclick = () => {
-                    if(opt === item.ok) { alert("Bravissimo! +20XP"); addXP(20); showQuiz(); }
-                    else { btn.style.borderColor = "red"; }
-                };
-                box.appendChild(btn);
-            });
-        }
+    <div id="page-tips" class="page">
+        <div class="p-4">
+            <h2 id="t-tips-tit" class="text-2xl font-black text-orange-600 mb-6">CONSIGLI E CURIOSITÀ</h2>
+            
+            <div class="card card-no-margin">
+                <h3 class="font-bold text-lg mb-4" id="t-tip1-title">Curiosità sull'Italia</h3>
+                <p class="text-sm" id="t-tip1-text">L'Italia ha più siti Patrimonio dell'Umanità dell'UNESCO di qualsiasi altro paese al mondo.</p>
+                <button onclick="checkDailyMission(null, 'check-curiosity')" class="text-blue-500 text-xs font-bold mt-4" id="btn-next-tip">Prossima Curiosità</button>
+            </div>
 
-        function mudarAba(id) {
-            document.querySelectorAll('.aba').forEach(a => a.classList.remove('aba-ativa'));
-            document.getElementById(id).classList.add('aba-ativa');
-        }
+            <div class="card card-no-margin mt-4 relative">
+                <span class="vip-tag" id="t-vip-advanced-tips">VIP</span>
+                <div class="locked-overlay" id="overlay-advanced-tips">Accedi VIP</div>
+                <h3 class="font-bold text-lg mb-4" id="t-tip-adv-title">Consigli Avanzati</h3>
+                <p class="text-sm" id="t-tip-adv-text">Per imparare meglio, immergiti nella cultura: guarda film, ascolta musica e prova a cucinare piatti tipici!</p>
+            </div>
+        </div>
+    </div>
 
-        function addXP(v) { xp += v; document.getElementById('lvl').innerText = Math.floor(xp/100) + 1; }
+    <div id="page-profile" class="page text-center">
+        <div class="p-4">
+            <h2 id="t-prof-tit" class="text-2xl font-black text-orange-600 mb-6 text-left">PROFILO UTENTE</h2>
+            
+            <div class="flex flex-col items-center card card-no-margin">
+                <div class="text-7xl mb-4" id="profile-pet-icon">🐱</div>
+                <input type="text" id="profile-name" onchange="saveProfile()" class="text-center font-black text-2xl border-b-2 border-orange-200 w-full mb-6 bg-transparent outline-none" placeholder="Il tuo nome">
+                
+                <div class="space-y-3 w-full mb-6 text-left">
+                    <h3 class="font-black text-xs uppercase text-orange-600" id="t-change-pet">Cambia il tuo Pet</h3>
+                    <select id="select-pet" onchange="changePet()" class="w-full p-2 border rounded-lg">
+                        <option value="🐱">Gatto</option>
+                        <option value="🐶">Cane</option>
+                        <option value="🐰">Coniglio</option>
+                        <option value="🦊">Volpe (VIP)</option>
+                    </select>
+                </div>
 
-        function fala(t) {
-            const u = new SpeechSynthesisUtterance(t);
-            u.lang = curso.split('-')[1] === 'en' ? 'en-US' : 'it-IT';
-            speechSynthesis.speak(u);
-        }
-        function ouvir() { fala(document.getElementById('pergunta').innerText); }
-    </script>
-</body>
-</html>
+                <div class="space-y-3 w-full mb-6 text-left">
+                    <h3 class="font-black text-xs uppercase text-orange-600" id="t-theme">Tema App</h3>
+                    <label class="switch">
+                        <input type="checkbox" id="dark-mode-toggle" onchange="toggleDarkMode()">
+                        <span class="slider"></span>
+                    </label>
+                    <span id="t-mode-label" class="ml-3 text-sm">Modalità Chiara</span>
+                </div>
+            </div>
+
+            <div class="card bg-blue-50 border-blue-200 card-no-margin mt-4">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 id="t-mis-s" class="font-black text-xs uppercase text-blue-600">Missioni Settimanali</h3>
+                    <span class="text-[10px] font-bold text-blue-400" id="mis-s-counter">0/5</span>
+                </div>
+                <div class="space-y-2">
+                    <label class="flex items-center gap-3 bg-white p-3 rounded-xl border border-blue-100 text-xs font-bold">
+                        <input type="checkbox" id="check-lvl5" onchange="checkWeeklyMission(this, 'check-lvl5')"> <span id="m-s1">Raggiungi Livello 5</span>
+                    </label>
+                    <label class="flex items-center gap-3 bg-white p-3 rounded-xl border border-blue-100 text-xs font-bold">
+                        <input type="checkbox" id="check-7days" onchange="checkWeeklyMission(this, 'check-7days')"> <span id="m-s2">7 Giorni di fila</span>
+                    </label>
+                    <label class="flex items-center gap-3 bg-white p-3 rounded-xl border border-blue-100 text-xs font-bold">
+                        <input type="checkbox" id="check-dic-read" onchange="checkWeeklyMission(this, 'check-dic-read')"> <span id="m-s3">Leggi il Dizionario</span>
+                    </label>
+                    <label class="flex items-center gap-3 bg-white p-3 rounded-xl border border-blue-100 text-xs font-bold relative">
+                        <input type="checkbox" id="check-whatsapp" onchange="checkWeeklyMission(this, 'check-whatsapp')" disabled> <span id="m-s4">Supporto WhatsApp <span class="vip-tag">VIP</span></span>
+                    </label>
+                    <label class="flex items-center gap-3 bg-white p-3 rounded-xl border border-blue-100 text-xs font-bold relative">
+                        <input type="checkbox" id="check-friend" onchange="checkWeeklyMission(this, 'check-friend')" disabled> <span id="m-s5">Invita un Amico <span class="vip-tag">VIP</span></span>
+                    </label>
+                </div>
+                <button id="btn-weekly-reward" onclick="collectWeeklyReward()" class="mt-4 w-full bg-blue-500 text-white py-3 rounded-xl font-black text-xs hidden">
+                    RISCATTA +500 XP 🎁
+                </button>
+            </div>
+
+            <div class="card card-no-margin mt-4">
+                <h3 class="font-black text-xs uppercase text-orange-600 mb-3" id="t-
