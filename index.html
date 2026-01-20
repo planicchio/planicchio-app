@@ -1,185 +1,195 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Planicchio Ultra</title>
-    <style>
-        /* CSS PURO - SEM DEPENDER DE INTERNET */
-        :root { --orange: #FF8C00; --bg: #FFF5EB; --white: #ffffff; }
-        body { background: var(--bg); font-family: sans-serif; margin: 0; overflow: hidden; color: #333; }
-        
-        /* TELAS */
-        .page { display: none; height: 100vh; width: 100%; position: absolute; top: 0; left: 0; overflow-y: auto; padding-bottom: 80px; }
-        .active { display: block !important; }
+<meta charset="UTF-8">
+<title>PLANICCHIO 🐱</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.tailwindcss.com"></script>
 
-        /* TELA INICIAL */
-        #splash { background: var(--orange); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; z-index: 1000; }
-        .btn-curso { background: white; color: var(--orange); border: none; padding: 15px; margin: 5px; width: 80%; border-radius: 12px; font-weight: bold; font-size: 14px; text-transform: uppercase; }
-        .btn-principal { background: #FFD700; color: #553300; border: 4px solid white; }
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#fb923c">
 
-        /* HEADER & PROGRESSO */
-        .header { background: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #FFEDD5; }
-        .bar-bg { width: 100px; height: 10px; background: #eee; border-radius: 5px; overflow: hidden; border: 1px solid #ddd; }
-        #bar-fill { width: 10%; height: 100%; background: var(--orange); transition: 0.3s; }
-
-        /* CARDS */
-        .card { background: white; margin: 15px; padding: 20px; border-radius: 20px; border: 2px solid #FFEDD5; box-shadow: 0 4px 0 #FFEDD5; }
-        .pet { font-size: 80px; cursor: pointer; display: block; margin: 20px auto; text-align: center; transition: 0.2s; }
-        .pet:active { transform: scale(0.8); }
-
-        /* NAVBAR */
-        .nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; border-top: 2px solid #FFEDD5; height: 60px; }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: var(--orange); text-decoration: none; cursor: pointer; }
-
-        /* BALÃO */
-        .balao { background: white; border: 2px solid var(--orange); padding: 10px; border-radius: 15px; margin: 10px auto; width: fit-content; max-width: 80%; font-weight: bold; text-align: center; }
-    </style>
+<style>
+body { transition: 0.3s }
+.hidden { display:none }
+</style>
 </head>
-<body>
 
-    <div id="splash" class="page active">
-        <div class="pet" onclick="som('meow')">🐱</div>
-        <div class="balao">Ciao! Scegli il tuo corso!</div>
-        <h1 style="color: white; font-style: italic; font-size: 35px; margin: 10px;">PLANICCHIO</h1>
-        <p style="color: white; font-size: 10px; font-weight: bold; margin-bottom: 20px;">ESCOLHA SEU CURSO • SCEGLI IL CORSO • CHOOSE COURSE</p>
-        
-        <button class="btn-curso btn-principal" onclick="irPara('home', 'it-en')">⭐ Italiano ➔ English</button>
-        <button class="btn-curso" onclick="irPara('home', 'it-pt')">Italiano ➔ Português</button>
-        <button class="btn-curso" onclick="irPara('home', 'pt-it')">Português ➔ Italiano</button>
-        <button class="btn-curso" onclick="irPara('home', 'en-it')">English ➔ Italiano</button>
-    </div>
+<body class="bg-orange-50 text-gray-800">
 
-    <div id="home" class="page">
-        <div class="header">
-            <div>
-                <b id="rank-txt" style="color: var(--orange); font-size: 12px;">APPRENDISTA 🐣</b><br>
-                <small id="level-label">LIVELLO A1</small>
-            </div>
-            <div style="text-align: right;">
-                <b style="font-size: 12px;">LVL <span id="lvl-num">1</span></b>
-                <div class="bar-bg"><div id="bar-fill"></div></div>
-            </div>
-        </div>
+<!-- ================= SONS ================= -->
+<audio id="meow" src="assets/meow.mp3"></audio>
+<audio id="correct" src="assets/correct.mp3"></audio>
+<audio id="wrong" src="assets/wrong.mp3"></audio>
+<audio id="levelup" src="assets/levelup.mp3"></audio>
 
-        <div class="card">
-            <h3 style="margin-top:0; font-size: 12px; color: var(--orange);">MISSIONI DIARIE</h3>
-            <div onclick="addXP(20)" style="cursor:pointer; margin-bottom:10px;">⬜ <span id="m1">Fare il Quiz</span></div>
-            <div onclick="addXP(20)" style="cursor:pointer; margin-bottom:10px;">⬜ <span id="m2">Salutare il Pet</span></div>
-            <div onclick="addXP(20)" style="cursor:pointer;">⬜ <span id="m3">Leggere Curiosità</span></div>
-        </div>
+<!-- ================= TELA INICIAL ================= -->
+<div id="start" class="min-h-screen flex flex-col items-center justify-center">
+  <img src="assets/cat.gif" class="w-40 cursor-pointer" onclick="meow()">
+  <h1 class="text-5xl font-bold mt-2">PLANICCHIO</h1>
+  <p class="mb-4">Escolha seu curso</p>
 
-        <div class="balao" id="fala-pet">Andiamo a studiare! 🚀</div>
-        <div class="pet" id="main-pet" onclick="petFala()">🐱</div>
+  <div class="grid grid-cols-2 gap-3">
+    <button class="btn" onclick="startApp('IT-EN')">🇮🇹 → 🇬🇧</button>
+    <button class="btn" onclick="startApp('IT-PT')">🇮🇹 → 🇧🇷</button>
+    <button class="btn" onclick="startApp('PT-IT')">🇧🇷 → 🇮🇹</button>
+    <button class="btn" onclick="startApp('EN-IT')">🇬🇧 → 🇮🇹</button>
+  </div>
+</div>
 
-        <div class="card" style="text-align:center;">
-            <b style="color: var(--orange);">SPEED CLICK ⚡</b>
-            <p style="font-size:11px;">Clicca 5 volte velocemente!</p>
-            <button onclick="startMiniGame(this)" style="background: var(--orange); color:white; border:none; padding:10px 20px; border-radius:20px; font-weight:bold;">START</button>
-        </div>
-    </div>
+<!-- ================= HOME ================= -->
+<div id="home" class="hidden p-4">
 
-    <div id="perfil" class="page" style="text-align: center;">
-        <div class="pet" id="prof-pet">🐱</div>
-        <h2 id="user-display">Studente</h2>
-        
-        <div class="card" style="text-align: left;">
-            <b>IMPOSTAZIONI</b><br><br>
-            Troca Animal: 
-            <select onchange="trocarEmoji(this.value)">
-                <option value="🐱">Gatto</option>
-                <option value="🐶">Cane</option>
-                <option value="🐰">Coniglio</option>
-            </select>
-            <br><br>
-            SOS Help: <br>
-            <button onclick="window.open('https://wa.me/393716755981')" style="background:#25D366; color:white; border:none; width:100%; padding:10px; border-radius:10px; font-weight:bold; margin-top:5px;">WHATSAPP SOS</button>
-        </div>
-        
-        <button onclick="location.reload()" style="background:none; border:none; color:gray; text-decoration:underline; margin-top:20px;">CAMBIA CORSO</button>
-    </div>
+<!-- TOPO -->
+<div>
+  <b id="level">A1 – Explorador</b>
+  <div class="bg-gray-300 rounded">
+    <div id="progress" class="bg-green-500 h-2 w-1/4 rounded"></div>
+  </div>
+</div>
 
-    <div id="navbar" class="nav" style="display:none;">
-        <div class="nav-item" onclick="aba('home')">🏠<span>HOME</span></div>
-        <div class="nav-item" onclick="alert('Quiz em breve!')">📖<span>QUIZ</span></div>
-        <div class="nav-item" onclick="aba('perfil')">👤<span>PROFILO</span></div>
-    </div>
+<!-- MISSÕES -->
+<h2 class="mt-4 font-bold">Missões Diárias</h2>
+<div class="grid grid-cols-3 gap-2">
+  <div class="card">📘 Palavras</div>
+  <div class="card">🎧 Ouvir</div>
+  <div class="card">🎮 Jogo</div>
+</div>
 
-    <script>
-        /* MOTOR JAVASCRIPT SIMPLIFICADO */
-        let xp = 0;
-        let petEmoji = "🐱";
+<!-- EXERCÍCIO -->
+<div class="card mt-4">
+  <p>Fale em italiano: <b>Cibo</b></p>
+  <button class="btn" onclick="speakExample()">🔊 Ouvir</button>
+  <button class="btn bg-blue-500" onclick="startVoice()">🎤 Falar</button>
+  <p id="voiceResult"></p>
+</div>
 
-        function irPara(telaId, curso) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(telaId).classList.add('active');
-            if(curso) {
-                document.getElementById('navbar').style.display = 'flex';
-                som('nav');
-            }
-        }
+<!-- IA CONVERSA -->
+<div class="card mt-4">
+  <h3 class="font-bold">🧠 Conversa com IA</h3>
+  <input id="aiInput" class="border p-2 w-full" placeholder="Diga algo...">
+  <button class="btn mt-2" onclick="aiTalk()">Enviar</button>
+  <p id="aiReply" class="mt-2 text-sm"></p>
+</div>
 
-        function aba(id) {
-            irPara(id);
-            som('nav');
-        }
+<!-- COMUNIDADE -->
+<div class="card mt-4">
+  <h3 class="font-bold">💬 Comunidade</h3>
+  <input id="chat" class="border p-2 w-full" placeholder="Mensagem">
+  <button class="btn mt-2" onclick="sendChat()">Enviar</button>
+  <div id="messages" class="text-sm mt-2"></div>
+</div>
 
-        function addXP(valor) {
-            xp += valor;
-            let lvl = Math.floor(xp / 100) + 1;
-            document.getElementById('lvl-num').innerText = lvl;
-            document.getElementById('bar-fill').style.width = (xp % 100) + "%";
-            som('win');
-            if(xp % 100 === 0) { som('level'); alert("Level Up!"); }
-        }
+<!-- VIP -->
+<div class="card mt-4">
+  <h3 class="font-bold">🔒 VIP</h3>
+  <p>Conteúdos avançados bloqueados</p>
+  <button class="btn bg-yellow-400" onclick="vip()">Desbloquear VIP</button>
+</div>
 
-        function petFala() {
-            const frases = ["Bravissimo!", "Miao!", "Studiamo!", "Vai forte!", "Tocca qui!"];
-            document.getElementById('fala-pet').innerText = frases[Math.floor(Math.random()*frases.length)];
-            som('meow');
-        }
+</div>
 
-        function trocarEmoji(e) {
-            petEmoji = e;
-            document.getElementById('main-pet').innerText = e;
-            document.getElementById('prof-pet').innerText = e;
-            document.getElementById('splash').querySelector('.pet').innerText = e;
-        }
+<!-- PET -->
+<div class="fixed bottom-4 right-4 text-center">
+  <img src="assets/cat.gif" class="w-24 cursor-pointer animate-bounce" onclick="meow()">
+  <div id="petMsg" class="bg-white p-2 rounded shadow">
+    Vamos aprender 😸
+  </div>
+</div>
 
-        function som(tipo) {
-            const ctx = new (window.AudioContext || window.webkitAudioContext)();
-            const osc = ctx.createOscillator();
-            const g = ctx.createGain();
-            osc.connect(g);
-            g.connect(ctx.destination);
-            
-            if(tipo === 'meow') { osc.frequency.value = 600; }
-            else if(tipo === 'win') { osc.frequency.value = 800; }
-            else if(tipo === 'level') { osc.frequency.value = 1200; }
-            else { osc.frequency.value = 400; }
-            
-            g.gain.setValueAtTime(0.1, ctx.currentTime);
-            g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
-            osc.start();
-            osc.stop(ctx.currentTime + 0.3);
-        }
+<!-- SOS -->
+<a href="https://wa.me/393716755981" target="_blank"
+class="fixed bottom-4 left-4 bg-green-500 text-white p-3 rounded-full">
+🆘 SOS
+</a>
 
-        let gameClicks = 0;
-        function startMiniGame(btn) {
-            gameClicks = 0;
-            btn.innerText = "TAP TAP TAP!";
-            let timer = setInterval(() => {
-                gameClicks++;
-                btn.innerText = "CLICKS: " + gameClicks;
-                if(gameClicks >= 10) {
-                    clearInterval(timer);
-                    btn.innerText = "WIN! +50XP";
-                    addXP(50);
-                    setTimeout(() => btn.innerText = "START", 2000);
-                }
-            }, 300);
-            setTimeout(() => { clearInterval(timer); if(gameClicks < 10) btn.innerText = "TRY AGAIN"; }, 5000);
-        }
-    </script>
+<script>
+let progress = 25
+
+function meow(){
+  document.getElementById("meow").play()
+  speak("Miau! Continue assim!")
+}
+
+function startApp(course){
+  localStorage.setItem("course", course)
+  document.getElementById("start").classList.add("hidden")
+  document.getElementById("home").classList.remove("hidden")
+  speak("Bem vindo ao Planicchio")
+}
+
+/* VOZ APP */
+function speak(text){
+  let msg = new SpeechSynthesisUtterance(text)
+  msg.lang = "pt-BR"
+  speechSynthesis.speak(msg)
+}
+
+/* EXEMPLO */
+function speakExample(){
+  let msg = new SpeechSynthesisUtterance("Cibo")
+  msg.lang = "it-IT"
+  speechSynthesis.speak(msg)
+}
+
+/* VOZ USUÁRIO */
+function startVoice(){
+  let rec = new webkitSpeechRecognition()
+  rec.lang = "it-IT"
+  rec.start()
+  rec.onresult = e => {
+    let text = e.results[0][0].transcript.toLowerCase()
+    document.getElementById("voiceResult").innerText = text
+    if(text.includes("cibo")){
+      document.getElementById("correct").play()
+      progress += 15
+      document.getElementById("progress").style.width = progress + "%"
+      document.getElementById("petMsg").innerText = "Perfeito 😻"
+      if(progress >= 100){
+        document.getElementById("levelup").play()
+        alert("🎉 Nível UP!")
+        progress = 0
+      }
+    } else {
+      document.getElementById("wrong").play()
+      document.getElementById("petMsg").innerText = "Tente de novo 😿"
+    }
+  }
+}
+
+/* IA (SIMULADA – PRONTA P/ GPT) */
+function aiTalk(){
+  let input = document.getElementById("aiInput").value
+  document.getElementById("aiReply").innerText =
+    "🤖 IA: Vamos praticar isso em italiano!"
+}
+
+/* CHAT */
+function sendChat(){
+  let msg = document.getElementById("chat").value
+  document.getElementById("messages").innerHTML += "<div>👤 " + msg + "</div>"
+}
+
+/* VIP */
+function vip(){
+  alert("VIP desbloqueia aulas, IA avançada e nativos!")
+}
+</script>
+
+<style>
+.btn{
+  background:#fb923c;
+  color:white;
+  padding:10px;
+  border-radius:12px;
+}
+.card{
+  background:white;
+  padding:12px;
+  border-radius:12px;
+}
+</style>
+
 </body>
 </html>
