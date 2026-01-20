@@ -3,189 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Planicchio 🐱</title>
+    <title>Planicchio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #FFF5EB; font-family: sans-serif; margin: 0; overflow: hidden; -webkit-tap-highlight-color: transparent; }
-        .splash { position: fixed; inset: 0; background: #FF8C00; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; text-align: center; }
-        .page { display: none; padding: 20px; padding-bottom: 180px; height: 100vh; overflow-y: auto; }
-        .active-page { display: block !important; }
-        .hidden { display: none !important; }
-        .card { background: white; border-radius: 28px; padding: 22px; border: 2px solid #FF8C00; box-shadow: 0 5px 0 #FFEDD5; margin-bottom: 15px; }
-        .vip-blur { filter: blur(5px); opacity: 0.3; pointer-events: none; }
-        .nav-bottom { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 15px; border-top: 3px solid #FFEDD5; z-index: 1000; }
-        .nav-btn { display: flex; flex-direction: column; align-items: center; font-size: 10px; font-weight: 900; color: #FF8C00; background: none; border: none; }
-        .btn-check { display: flex; align-items: center; gap: 12px; background: white; padding: 12px; border-radius: 18px; border: 1px solid #FFEDD5; margin-bottom: 8px; font-size: 12px; font-weight: bold; width: 100%; text-align: left; }
-        input[type="checkbox"] { width: 20px; height: 20px; accent-color: #22c55e; }
-        .gato { font-size: 60px; cursor: pointer; transition: 0.3s; }
-        .balao { background: white; padding: 12px; border-radius: 20px; border: 3px solid #FF8C00; font-size: 11px; font-weight: bold; max-width: 150px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); color: #333; margin-left: 10px; }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
-        .bounce { animation: bounce 0.6s ease; }
+        body { background: #FFF5EB; font-family: sans-serif; margin: 0; padding: 0; }
+        .aba { display: none; padding: 20px; padding-bottom: 100px; }
+        .aba-ativa { display: block; }
+        .nav-fixa { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px; border-top: 2px solid #FFEDD5; }
+        .card { background: white; border-radius: 20px; padding: 20px; border: 2px solid #FF8C00; margin-bottom: 15px; }
+        .btn-check { display: flex; align-items: center; gap: 10px; background: white; padding: 12px; border-radius: 15px; border: 1px solid #FFEDD5; margin-bottom: 8px; width: 100%; font-weight: bold; font-size: 13px; }
+        .splash { position: fixed; inset: 0; background: #FF8C00; z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
     <div id="splash" class="splash">
-        <div class="gato bounce">🐱</div>
-        <h1 class="text-4xl font-black italic mb-2">PLANICCHIO</h1>
-        <div class="mb-8 space-y-1">
-            <p class="text-sm font-bold">SCEGLI IL TUO CORSO</p>
-            <p class="text-xs opacity-80">ESCOLHA SEU CURSO</p>
-            <p class="text-[10px] opacity-60">CHOOSE YOUR COURSE</p>
-        </div>
-        <div class="flex flex-col gap-3 w-72 px-4">
-            <button onclick="entrar('it-en')" class="bg-yellow-400 text-orange-900 font-black py-5 rounded-2xl shadow-2xl uppercase text-xs ring-4 ring-white">⭐ Italiano ➔ English</button>
-            <button onclick="entrar('it-pt')" class="bg-white text-orange-600 font-bold py-3 rounded-xl text-xs uppercase">Italiano ➔ Português</button>
-            <button onclick="entrar('pt-it')" class="bg-white text-orange-600 font-bold py-3 rounded-xl text-xs uppercase">Português ➔ Italiano</button>
+        <h1 class="text-4xl font-black mb-4">PLANICCHIO 🐱</h1>
+        <p class="mb-6 font-bold">SCEGLI IL TUO CORSO</p>
+        <div class="flex flex-col gap-3 w-64">
+            <button onclick="iniciar('it-en')" class="bg-yellow-400 text-orange-900 font-black py-4 rounded-xl shadow-lg">ITALIANO ➔ ENGLISH</button>
+            <button onclick="iniciar('it-pt')" class="bg-white text-orange-600 font-bold py-3 rounded-xl">ITALIANO ➔ PORTOGHESE</button>
+            <button onclick="iniciar('pt-it')" class="bg-white text-orange-600 font-bold py-3 rounded-xl">PORTUGUÊS ➔ ITALIANO</button>
         </div>
     </div>
 
     <div id="app" class="hidden">
-        <header class="p-4 bg-white sticky top-0 z-50 border-b-2 border-orange-100 flex justify-between items-center">
-            <span class="font-black text-orange-600 text-[10px]">APPRENDISTA 🐣</span>
-            <div class="flex items-center gap-2">
-                <span class="text-[10px] font-bold">LIVELLO <span id="ui-lvl">1</span></span>
-                <div class="w-20 bg-gray-100 h-2 rounded-full overflow-hidden border"><div id="ui-bar" class="bg-orange-500 h-full w-0"></div></div>
-            </div>
+        <header class="p-4 bg-white border-b-2 border-orange-100 flex justify-between items-center">
+            <b class="text-orange-600 text-xs uppercase">Apprendista 🐣</b>
+            <b class="text-orange-600 text-xs">LVL <span id="lvl">1</span></b>
         </header>
 
-        <div id="p-home" class="page active-page">
-            <div class="bg-orange-100 p-4 rounded-[30px] mb-6 border-2 border-orange-200">
-                <h3 class="text-[10px] font-black text-orange-600 mb-3 uppercase">MISSIONI DIARIE</h3>
-                <div class="btn-check"><input type="checkbox" onchange="addXP(15)"> <span>Fare il Quiz</span></div>
-                <div class="btn-check"><input type="checkbox" onchange="addXP(15)"> <span>Ascoltare Pronuncia</span></div>
-                <div class="btn-check"><input type="checkbox" onchange="addXP(15)"> <span>Cambiare Nome</span></div>
-            </div>
-            <div class="card text-center">
-                <p id="q-txt" class="font-bold text-xl mb-8 italic text-gray-800">Caricamento...</p>
-                <div id="q-box" class="space-y-3"></div>
-                <button onclick="falar(document.getElementById('q-txt').innerText)" class="mt-8 text-[10px] font-black text-orange-400 uppercase">🔊 ASCOLTA</button>
+        <div id="home" class="aba aba-ativa">
+            <h3 class="text-orange-600 font-black text-xs mb-3 uppercase">Missioni Diarie</h3>
+            <div class="btn-check"><input type="checkbox" onchange="addXP(10)"> <span>Fare il Quiz</span></div>
+            <div class="btn-check"><input type="checkbox" onchange="addXP(10)"> <span>Ascoltare Pronuncia</span></div>
+            
+            <div class="card text-center mt-6">
+                <p id="pergunta" class="font-bold text-lg mb-6">Caricamento...</p>
+                <div id="opcoes" class="flex flex-col gap-2"></div>
+                <button onclick="ouvir()" class="mt-6 text-orange-400 font-black text-[10px] uppercase tracking-widest">🔊 ASCOLTA</button>
             </div>
         </div>
 
-        <div id="p-dic" class="page">
-            <h2 class="text-2xl font-black text-orange-600 mb-6">DIZIONARIO</h2>
-            <div id="ui-lista-dic" class="space-y-4"></div>
+        <div id="dic" class="aba">
+            <h2 class="text-2xl font-black text-orange-600 mb-4 uppercase">Dizionario</h2>
+            <div id="lista-dic"></div>
         </div>
 
-        <div id="p-perfil" class="page text-center">
-            <div class="text-7xl mb-4 p-4 bg-white rounded-full inline-block">🐱</div>
-            <input type="text" id="ui-nome" onchange="salvarNome()" class="text-center font-black text-2xl border-b-2 border-orange-200 w-full mb-8 bg-transparent outline-none" placeholder="Il tuo nome">
-            <div class="bg-white p-5 rounded-[30px] mb-6 border-2 border-blue-100 text-left">
-                <h3 class="text-[10px] font-black text-blue-500 mb-4 uppercase">MISSIONI SETTIMANALI</h3>
-                <div class="btn-check"><input type="checkbox" class="ms-check"> <span>Raggiungi Livello 5</span></div>
-                <div class="btn-check"><input type="checkbox" class="ms-check"> <span>7 Giorni di fila</span></div>
-                <div class="btn-check"><input type="checkbox" class="ms-check"> <span>Leggi il Dizionario</span></div>
-                <div class="btn-check"><input type="checkbox" class="ms-check"> <span>Supporto WhatsApp</span></div>
-                <div class="btn-check"><input type="checkbox" class="ms-check"> <span>Invita un Amico</span></div>
-                <button id="btn-recompensa" onclick="bonusXP()" class="hidden w-full mt-4 bg-blue-500 text-white py-4 rounded-2xl font-black text-xs">RISCATTA +500 XP 🎁</button>
+        <div id="perfil" class="aba text-center">
+            <div class="text-6xl mb-4">🐱</div>
+            <input type="text" id="nome-user" class="text-center font-black text-xl border-b-2 border-orange-200 w-full mb-6 bg-transparent outline-none" placeholder="Il tuo nome">
+            
+            <div class="text-left bg-white p-4 rounded-2xl border-2 border-blue-100">
+                <h3 class="text-blue-500 font-black text-[10px] mb-3">MISSIONI SETTIMANALI</h3>
+                <div class="btn-check"><input type="checkbox"> <span>Livello 5</span></div>
+                <div class="btn-check"><input type="checkbox"> <span>7 Giorni di fila</span></div>
+                <div class="btn-check"><input type="checkbox"> <span>Invita un Amico</span></div>
             </div>
-            <button onclick="location.reload()" class="w-full py-4 bg-gray-100 rounded-2xl font-black text-gray-400 text-[10px] uppercase">CAMBIA CORSO</button>
+            <button onclick="location.reload()" class="mt-6 text-gray-400 font-bold text-xs uppercase">Cambia Corso</button>
         </div>
 
-        <div class="mascote-box">
-            <div id="gato-img" class="gato" onclick="animarGato()">🐱</div>
-            <div id="balao" class="balao">Ciao! 👋</div>
-        </div>
-
-        <nav class="nav-bottom">
-            <button onclick="aba('home')" class="nav-btn">🏠<span>HOME</span></button>
-            <button onclick="aba('dic')" class="nav-btn">📖<span>DIZ</span></button>
-            <button onclick="aba('perfil')" class="nav-btn">👤<span>PROFILO</span></button>
+        <nav class="nav-fixa">
+            <button onclick="mudarAba('home')" class="text-orange-600 font-black text-[10px]">🏠 HOME</button>
+            <button onclick="mudarAba('dic')" class="text-orange-600 font-black text-[10px]">📖 DIZ</button>
+            <button onclick="mudarAba('perfil')" class="text-orange-600 font-black text-[10px]">👤 PROFILO</button>
         </nav>
     </div>
 
     <script>
-        const S_QUIZ = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT6-Ah6rq3hnBihlxVAzmsTD8rEF1rbGJu3__sBgm-DDyFWE_D7sxgJx3I3s55uiNl-qvP2x2wh0UD9/pub?gid=633031910&single=true&output=csv';
-        const S_DIC = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT6-Ah6rq3hnBihlxVAzmsTD8rEF1rbGJu3__sBgm-DDyFWE_D7sxgJx3I3s55uiNl-qvP2x2wh0UD9/pub?gid=541320303&single=true&output=csv';
+        const URL_QUIZ = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT6-Ah6rq3hnBihlxVAzmsTD8rEF1rbGJu3__sBgm-DDyFWE_D7sxgJx3I3s55uiNl-qvP2x2wh0UD9/pub?gid=633031910&single=true&output=csv';
+        const URL_DIC = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT6-Ah6rq3hnBihlxVAzmsTD8rEF1rbGJu3__sBgm-DDyFWE_D7sxgJx3I3s55uiNl-qvP2x2wh0UD9/pub?gid=541320303&single=true&output=csv';
 
-        let xp = parseInt(localStorage.getItem('p_xp')) || 0;
         let curso = "";
-        let baseQuiz = [];
-        let indexQ = 0;
+        let xp = 0;
+        let listaQuiz = [];
 
-        function entrar(id) {
+        function iniciar(id) {
             curso = id;
             document.getElementById('splash').classList.add('hidden');
             document.getElementById('app').classList.remove('hidden');
-            carregarConteudo();
-            atualizarProgresso();
-            document.getElementById('ui-nome').value = localStorage.getItem('p_nome') || "";
+            carregarDados();
         }
 
-        async function carregarConteudo() {
+        async function carregarDados() {
             try {
-                const [rQ, rD] = await Promise.all([fetch(S_QUIZ), fetch(S_DIC)]);
-                const tQ = await rQ.text();
-                const tD = await rD.text();
+                const [resQ, resD] = await Promise.all([fetch(URL_QUIZ), fetch(URL_DIC)]);
+                const txtQ = await resQ.text();
+                const txtD = await resD.text();
 
-                baseQuiz = tQ.split(/\r?\n/).slice(1).map(l => {
-                    const c = l.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                    return { q:lim(c[1]), a:lim(c[2]), b:lim(c[3]), c:lim(c[4]), ok:lim(c[5]).toLowerCase() };
+                // Processar Quiz
+                listaQuiz = txtQ.split('\n').slice(1).map(linha => {
+                    const c = linha.split(',');
+                    return { q: c[1], a: c[2], b: c[3], c: c[4], ok: c[5]?.trim().toLowerCase() };
                 }).filter(x => x.q);
-                proximaQ();
+                showQuiz();
 
-                const box = document.getElementById('ui-lista-dic');
-                box.innerHTML = "";
-                tD.split(/\r?\n/).slice(1).forEach((l, i) => {
-                    const c = l.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                    if(!lim(c[2])) return;
-                    const vip = i > 10;
-                    const card = document.createElement('div');
-                    card.className = "card relative overflow-hidden";
-                    card.innerHTML = `<div class="${vip ? 'vip-blur' : ''}"><div class="flex justify-between items-center"><b>${lim(c[2])}</b><button onclick="falar('${lim(c[2])}')">🔊</button></div><p class="text-[10px] text-gray-400 italic">${lim(c[3])}</p><p class="text-sm font-bold mt-1">${lim(c[4])}</p>${lim(c[5]) ? `<div class="mt-2 p-2 bg-orange-50 rounded-lg text-xs italic">Esempio: "${lim(c[5])}"</div>`:''}</div>${vip?'<div class="absolute inset-0 flex items-center justify-center font-black text-red-500 text-xs">🔒 VIP</div>':''}`;
-                    box.appendChild(card);
+                // Processar Dicionário
+                const dicBox = document.getElementById('lista-dic');
+                txtD.split('\n').slice(1).forEach(linha => {
+                    const c = linha.split(',');
+                    if(!c[2]) return;
+                    const div = document.createElement('div');
+                    div.className = "card";
+                    div.innerHTML = `
+                        <div class="flex justify-between font-black text-orange-600"><span>${c[2]}</span> <button onclick="fala('${c[2]}')">🔊</button></div>
+                        <div class="text-[10px] italic text-gray-400">${c[3]}</div>
+                        <div class="font-bold text-sm mt-1">${c[4]}</div>
+                        <div class="mt-2 text-xs text-orange-800 bg-orange-50 p-2 rounded">Esempio: ${c[5] || '---'}</div>
+                    `;
+                    dicBox.appendChild(div);
                 });
-            } catch(e) { console.error(e); }
+            } catch (e) { document.getElementById('pergunta').innerText = "Errore di connessione."; }
         }
 
-        function proximaQ() {
-            if(!baseQuiz.length) return;
-            const item = baseQuiz[indexQ % baseQuiz.length];
-            document.getElementById('q-txt').innerText = item.q;
-            const box = document.getElementById('q-box');
+        function showQuiz() {
+            const item = listaQuiz[Math.floor(Math.random() * listaQuiz.length)];
+            document.getElementById('pergunta').innerText = item.q;
+            const box = document.getElementById('opcoes');
             box.innerHTML = "";
-            ['a','b','c'].forEach(o => {
-                const b = document.createElement('button');
-                b.className = "btn-check justify-between";
-                b.innerHTML = `<span>${item[o]}</span>`;
-                b.onclick = () => {
-                    if(o === item.ok) { addXP(25); b.style.borderColor = "#22c55e"; animarGato("Bravissimo! +25 XP"); setTimeout(() => { indexQ++; proximaQ(); }, 800); }
-                    else { b.style.borderColor = "#ef4444"; }
+            ['a', 'b', 'c'].forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "btn-check justify-center border-2 border-orange-100";
+                btn.innerText = item[opt];
+                btn.onclick = () => {
+                    if(opt === item.ok) { alert("Bravissimo! +20XP"); addXP(20); showQuiz(); }
+                    else { btn.style.borderColor = "red"; }
                 };
-                box.appendChild(b);
+                box.appendChild(btn);
             });
         }
 
-        function aba(id) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
-            document.getElementById('p-' + id).classList.add('active-page');
-            animarGato();
+        function mudarAba(id) {
+            document.querySelectorAll('.aba').forEach(a => a.classList.remove('aba-ativa'));
+            document.getElementById(id).classList.add('aba-ativa');
         }
 
-        function addXP(n) { xp += n; atualizarProgresso(); }
-        function atualizarProgresso() {
-            localStorage.setItem('p_xp', xp);
-            document.getElementById('ui-lvl').innerText = Math.floor(xp/100)+1;
-            document.getElementById('ui-bar').style.width = (xp%100)+"%";
-        }
+        function addXP(v) { xp += v; document.getElementById('lvl').innerText = Math.floor(xp/100) + 1; }
 
-        function animarGato(msg) {
-            const g = document.getElementById('gato-img');
-            g.classList.add('bounce');
-            setTimeout(() => g.classList.remove('bounce'), 600);
-            if(msg) document.getElementById('balao').innerText = msg;
+        function fala(t) {
+            const u = new SpeechSynthesisUtterance(t);
+            u.lang = curso.split('-')[1] === 'en' ? 'en-US' : 'it-IT';
+            speechSynthesis.speak(u);
         }
-
-        function falar(t) {
-            const f = new SpeechSynthesisUtterance(t);
-            const dst = curso.split('-')[1]; // it ou en ou pt
-            f.lang = dst === 'it' ? 'it-IT' : (dst === 'en' ? 'en-US' : 'pt-BR');
-            window.speechSynthesis.speak(f);
-        }
-
-        function salvarNome() { localStorage.setItem('p_nome', document.getElementById('ui-nome').value); animarGato("Salvato! 🐱"); }
-        function lim(t) { return t ? t.replace(/"/g, '').trim() : ""; }
-        
-        document.querySelectorAll('.ms-check').forEach(c => {
-            c.onchange = () => { if(document.querySelectorAll('.ms-check:checked').length === 5) document.getElementById('btn-recompensa
+        function ouvir() { fala(document.getElementById('pergunta').innerText); }
+    </script>
+</body>
+</html>
