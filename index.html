@@ -1,179 +1,231 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="it">
 <head>
 <meta charset="UTF-8">
-<title>PLANICCHIO 🐱</title>
+<title>Planicchio 🐱</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="https://cdn.tailwindcss.com"></script>
 
-<!-- PWA -->
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#fb923c">
-
 <style>
-body { transition: 0.3s }
+body { transition: .3s }
 .hidden { display:none }
+.pet { animation: float 2.5s ease-in-out infinite }
+@keyframes float {
+  0%{transform:translateY(0)}
+  50%{transform:translateY(-12px)}
+  100%{transform:translateY(0)}
+}
 </style>
 </head>
 
 <body class="bg-orange-50 text-gray-800">
 
-<!-- ================= SONS ================= -->
-<audio id="meow" src="assets/meow.mp3"></audio>
-<audio id="correct" src="assets/correct.mp3"></audio>
-<audio id="wrong" src="assets/wrong.mp3"></audio>
-<audio id="levelup" src="assets/levelup.mp3"></audio>
+<!-- 🔊 Sons (gerados por código, não quebram) -->
+<script>
+function sound(type){
+  const ctx = new AudioContext()
+  const o = ctx.createOscillator()
+  const g = ctx.createGain()
+  o.connect(g); g.connect(ctx.destination)
+  o.frequency.value = type==="ok"?600:type==="up"?900:200
+  o.start(); g.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + .3)
+}
+</script>
+
+<!-- 🐱 PET GLOBAL -->
+<div class="fixed bottom-4 right-4 text-center z-50">
+  <div onclick="meow()" class="text-6xl pet cursor-pointer">🐱</div>
+  <div id="petText" class="bg-white p-2 rounded shadow text-sm">
+    Cliccami! 😸
+  </div>
+</div>
+
+<!-- 🆘 SOS -->
+<a href="https://wa.me/393716755981" target="_blank"
+class="fixed bottom-4 left-4 bg-green-500 text-white px-4 py-2 rounded-full z-50">
+🆘 SOS Planicchio
+</a>
 
 <!-- ================= TELA INICIAL ================= -->
 <div id="start" class="min-h-screen flex flex-col items-center justify-center">
-  <img src="assets/cat.gif" class="w-40 cursor-pointer" onclick="meow()">
-  <h1 class="text-5xl font-bold mt-2">PLANICCHIO</h1>
-  <p class="mb-4">Escolha seu curso</p>
+  <div class="text-7xl pet mb-2">🐱</div>
+  <h1 class="text-4xl font-bold">PLANICCHIO</h1>
+  <p class="mb-4">Scegli il tuo corso</p>
 
   <div class="grid grid-cols-2 gap-3">
-    <button class="btn" onclick="startApp('IT-EN')">🇮🇹 → 🇬🇧</button>
-    <button class="btn" onclick="startApp('IT-PT')">🇮🇹 → 🇧🇷</button>
-    <button class="btn" onclick="startApp('PT-IT')">🇧🇷 → 🇮🇹</button>
-    <button class="btn" onclick="startApp('EN-IT')">🇬🇧 → 🇮🇹</button>
+    <button class="btn" onclick="startCourse('it-en')">🇮🇹 → 🇬🇧</button>
+    <button class="btn" onclick="startCourse('it-pt')">🇮🇹 → 🇧🇷</button>
+    <button class="btn" onclick="startCourse('pt-it')">🇧🇷 → 🇮🇹</button>
+    <button class="btn" onclick="startCourse('pt-en')">🇧🇷 → 🇬🇧</button>
+    <button class="btn" onclick="startCourse('en-it')">🇬🇧 → 🇮🇹</button>
+    <button class="btn" onclick="startCourse('en-pt')">🇬🇧 → 🇧🇷</button>
   </div>
+</div>
+
+<!-- ================= APP ================= -->
+<div id="app" class="hidden">
+
+<!-- 🔝 TOPO -->
+<div class="p-4 bg-white shadow">
+  <div class="flex justify-between items-center">
+    <div>
+      <b id="levelText">A1 – Esploratore</b>
+      <div class="w-40 bg-gray-300 rounded">
+        <div id="progress" class="bg-green-500 h-2 w-1/5 rounded"></div>
+      </div>
+    </div>
+    <button onclick="toggleTheme()">🌙</button>
+  </div>
+</div>
+
+<!-- 📌 MENU -->
+<div class="flex gap-2 p-2 overflow-x-auto bg-orange-100 text-sm">
+  <button onclick="show('home')">🏠 Home</button>
+  <button onclick="show('ex')">✍️ Esercizi</button>
+  <button onclick="show('game')">🎮 Gioco</button>
+  <button onclick="show('chat')">💬 Comunità</button>
+  <button onclick="show('profile')">👤 Profilo</button>
 </div>
 
 <!-- ================= HOME ================= -->
-<div id="home" class="hidden p-4">
+<div id="home" class="p-4">
+  <h2 class="font-bold">🎯 Missioni giornaliere</h2>
+  <ul>
+    <li>✔ 10 parole</li>
+    <li>✔ 1 esercizio parlato</li>
+    <li>✔ 1 gioco</li>
+  </ul>
 
-<!-- TOPO -->
-<div>
-  <b id="level">A1 – Explorador</b>
-  <div class="bg-gray-300 rounded">
-    <div id="progress" class="bg-green-500 h-2 w-1/4 rounded"></div>
+  <h2 class="font-bold mt-4">🔥 Missioni settimanali</h2>
+  <p>5 missioni per sbloccare titoli</p>
+</div>
+
+<!-- ================= ESERCIZI ================= -->
+<div id="ex" class="p-4 hidden">
+  <p>Come si dice <b>cibo</b> in inglese?</p>
+  <button onclick="answer(true)" class="btn">Food</button>
+  <button onclick="answer(false)" class="btn">House</button>
+
+  <div class="mt-4">
+    <button onclick="speak()">🔊 Ascolta</button>
+    <button onclick="listen()">🎤 Parla</button>
+    <p id="voice"></p>
   </div>
 </div>
 
-<!-- MISSÕES -->
-<h2 class="mt-4 font-bold">Missões Diárias</h2>
-<div class="grid grid-cols-3 gap-2">
-  <div class="card">📘 Palavras</div>
-  <div class="card">🎧 Ouvir</div>
-  <div class="card">🎮 Jogo</div>
+<!-- ================= GIOCO ================= -->
+<div id="game" class="p-4 hidden">
+  <p>Clicca la parola giusta in 5s:</p>
+  <button onclick="answer(true)" class="btn">Food</button>
+  <button onclick="answer(false)" class="btn">Car</button>
 </div>
 
-<!-- EXERCÍCIO -->
-<div class="card mt-4">
-  <p>Fale em italiano: <b>Cibo</b></p>
-  <button class="btn" onclick="speakExample()">🔊 Ouvir</button>
-  <button class="btn bg-blue-500" onclick="startVoice()">🎤 Falar</button>
-  <p id="voiceResult"></p>
+<!-- ================= CHAT ================= -->
+<div id="chat" class="p-4 hidden">
+  <input id="msg" class="border p-2 w-full" placeholder="Scrivi...">
+  <button onclick="send()" class="btn mt-2">Invia</button>
+  <div id="msgs" class="mt-2 text-sm"></div>
 </div>
 
-<!-- IA CONVERSA -->
-<div class="card mt-4">
-  <h3 class="font-bold">🧠 Conversa com IA</h3>
-  <input id="aiInput" class="border p-2 w-full" placeholder="Diga algo...">
-  <button class="btn mt-2" onclick="aiTalk()">Enviar</button>
-  <p id="aiReply" class="mt-2 text-sm"></p>
-</div>
+<!-- ================= PROFILO ================= -->
+<div id="profile" class="p-4 hidden">
+  <input id="name" class="border p-2" placeholder="Il tuo nome">
+  <button onclick="saveName()" class="btn">Salva</button>
+  <p id="saved"></p>
 
-<!-- COMUNIDADE -->
-<div class="card mt-4">
-  <h3 class="font-bold">💬 Comunidade</h3>
-  <input id="chat" class="border p-2 w-full" placeholder="Mensagem">
-  <button class="btn mt-2" onclick="sendChat()">Enviar</button>
-  <div id="messages" class="text-sm mt-2"></div>
-</div>
+  <h3 class="mt-4">🔒 VIP</h3>
+  <button onclick="vip()" class="btn bg-yellow-400">Sblocca VIP</button>
 
-<!-- VIP -->
-<div class="card mt-4">
-  <h3 class="font-bold">🔒 VIP</h3>
-  <p>Conteúdos avançados bloqueados</p>
-  <button class="btn bg-yellow-400" onclick="vip()">Desbloquear VIP</button>
+  <button onclick="reset()" class="btn mt-4">Cambia corso</button>
 </div>
 
 </div>
-
-<!-- PET -->
-<div class="fixed bottom-4 right-4 text-center">
-  <img src="assets/cat.gif" class="w-24 cursor-pointer animate-bounce" onclick="meow()">
-  <div id="petMsg" class="bg-white p-2 rounded shadow">
-    Vamos aprender 😸
-  </div>
-</div>
-
-<!-- SOS -->
-<a href="https://wa.me/393716755981" target="_blank"
-class="fixed bottom-4 left-4 bg-green-500 text-white p-3 rounded-full">
-🆘 SOS
-</a>
 
 <script>
-let progress = 25
+let progress = Number(localStorage.getItem("progress")) || 20
+
+document.getElementById("progress").style.width = progress + "%"
+
+function startCourse(c){
+  localStorage.setItem("course", c)
+  start.classList.add("hidden")
+  app.classList.remove("hidden")
+  notify("Benvenuto su Planicchio!")
+}
+
+function show(id){
+  ["home","ex","game","chat","profile"].forEach(x=>document.getElementById(x).classList.add("hidden"))
+  document.getElementById(id).classList.remove("hidden")
+}
+
+function answer(ok){
+  if(ok){
+    progress+=10
+    sound("ok")
+    pet("Bravo! 😻")
+  }else{
+    sound("no")
+    pet("Riprova 😿")
+  }
+  if(progress>=100){
+    sound("up")
+    alert("🎉 Livello aumentato!")
+    progress=0
+  }
+  localStorage.setItem("progress",progress)
+  document.getElementById("progress").style.width=progress+"%"
+}
+
+function speak(){
+  let u=new SpeechSynthesisUtterance("Food")
+  u.lang="en-US"
+  speechSynthesis.speak(u)
+}
+
+function listen(){
+  let r=new webkitSpeechRecognition()
+  r.lang="en-US"
+  r.start()
+  r.onresult=e=>voice.innerText=e.results[0][0].transcript
+}
+
+function send(){
+  msgs.innerHTML+=`<div>👤 ${msg.value}</div>`
+  msg.value=""
+}
+
+function saveName(){
+  localStorage.setItem("name",name.value)
+  saved.innerText="Salvato!"
+}
+
+function reset(){
+  location.reload()
+}
+
+function vip(){
+  alert("VIP: lezioni avanzate, nativi, IA")
+}
+
+function pet(t){
+  petText.innerText=t
+}
 
 function meow(){
-  document.getElementById("meow").play()
-  speak("Miau! Continue assim!")
+  pet("Miao! Continua!")
 }
 
-function startApp(course){
-  localStorage.setItem("course", course)
-  document.getElementById("start").classList.add("hidden")
-  document.getElementById("home").classList.remove("hidden")
-  speak("Bem vindo ao Planicchio")
+function toggleTheme(){
+  document.body.classList.toggle("bg-gray-900")
+  document.body.classList.toggle("text-white")
 }
 
-/* VOZ APP */
-function speak(text){
-  let msg = new SpeechSynthesisUtterance(text)
-  msg.lang = "pt-BR"
-  speechSynthesis.speak(msg)
-}
-
-/* EXEMPLO */
-function speakExample(){
-  let msg = new SpeechSynthesisUtterance("Cibo")
-  msg.lang = "it-IT"
-  speechSynthesis.speak(msg)
-}
-
-/* VOZ USUÁRIO */
-function startVoice(){
-  let rec = new webkitSpeechRecognition()
-  rec.lang = "it-IT"
-  rec.start()
-  rec.onresult = e => {
-    let text = e.results[0][0].transcript.toLowerCase()
-    document.getElementById("voiceResult").innerText = text
-    if(text.includes("cibo")){
-      document.getElementById("correct").play()
-      progress += 15
-      document.getElementById("progress").style.width = progress + "%"
-      document.getElementById("petMsg").innerText = "Perfeito 😻"
-      if(progress >= 100){
-        document.getElementById("levelup").play()
-        alert("🎉 Nível UP!")
-        progress = 0
-      }
-    } else {
-      document.getElementById("wrong").play()
-      document.getElementById("petMsg").innerText = "Tente de novo 😿"
-    }
+function notify(text){
+  if("Notification"in window){
+    Notification.requestPermission().then(p=>{
+      if(p==="granted") new Notification(text)
+    })
   }
-}
-
-/* IA (SIMULADA – PRONTA P/ GPT) */
-function aiTalk(){
-  let input = document.getElementById("aiInput").value
-  document.getElementById("aiReply").innerText =
-    "🤖 IA: Vamos praticar isso em italiano!"
-}
-
-/* CHAT */
-function sendChat(){
-  let msg = document.getElementById("chat").value
-  document.getElementById("messages").innerHTML += "<div>👤 " + msg + "</div>"
-}
-
-/* VIP */
-function vip(){
-  alert("VIP desbloqueia aulas, IA avançada e nativos!")
 }
 </script>
 
@@ -181,13 +233,9 @@ function vip(){
 .btn{
   background:#fb923c;
   color:white;
-  padding:10px;
+  padding:8px 12px;
   border-radius:12px;
-}
-.card{
-  background:white;
-  padding:12px;
-  border-radius:12px;
+  margin:4px 0;
 }
 </style>
 
