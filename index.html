@@ -42,81 +42,80 @@ select,input{width:100%;padding:8px;margin-top:8px}
 
 <div id="app" class="card hidden">
 <div id="question" class="question"></div>
-<input id="input" placeholder="Escreva sua resposta">
-<button onclick="next()">Ver resposta / Próximo</button>
+<input id="input" placeholder="Escreva sua resposta (opcional)">
+<button onclick="handleClick()" id="actionBtn">Ver resposta</button>
 <div id="answer" class="answer"></div>
 <div id="info" class="notice"></div>
 </div>
 
 <script>
 const exercises = [
-/* ITALIANO → INGLÊS */
+/* IT → EN */
 {c:"it-en",l:"A1",q:"Come si dice 'Ciao' in inglese?",a:"Hello"},
 {c:"it-en",l:"A1",q:"Come si dice 'Grazie' in inglese?",a:"Thank you"},
-{c:"it-en",l:"A1",q:"Come si dice 'Sì' in inglese?",a:"Yes"},
 {c:"it-en",l:"A2",q:"Traduci: Io lavoro",a:"I work"},
-{c:"it-en",l:"A2",q:"Traduci: Io studio inglese",a:"I study English"},
 {c:"it-en",l:"B1",q:"Traduci: Vivo in Italia",a:"I live in Italy"},
-{c:"it-en",l:"B1",q:"Situazione: presentati",a:"My name is..."},
 {c:"it-en",l:"B2",q:"Situazione: ordinare al ristorante",a:"I would like to order"},
-{c:"it-en",l:"B2",q:"Traduci: esperienza di lavoro",a:"Work experience"},
 {c:"it-en",l:"C1",q:"Traduci: sviluppo professionale",a:"Professional development"},
 {c:"it-en",l:"C2",q:"Traduci: capacità di adattamento",a:"Adaptability skills"},
 
-/* PORTUGUÊS → ITALIANO */
+/* PT → IT */
 {c:"pt-it",l:"A1",q:"Como se diz Olá em italiano?",a:"Ciao"},
-{c:"pt-it",l:"A1",q:"Como se diz Obrigado em italiano?",a:"Grazie"},
 {c:"pt-it",l:"A2",q:"Traduza: Bom dia",a:"Buongiorno"},
-{c:"pt-it",l:"A2",q:"Traduza: Boa noite",a:"Buona sera"},
 {c:"pt-it",l:"B1",q:"Traduza: Eu moro aqui",a:"Io vivo qui"},
-{c:"pt-it",l:"B1",q:"Situação: pedir informação",a:"Scusi, dov'è..."},
-{c:"pt-it",l:"B2",q:"Situação: entrevista de trabalho",a:"Ho esperienza"},
-{c:"pt-it",l:"B2",q:"Traduza: carreira profissional",a:"Carriera professionale"},
+{c:"pt-it",l:"B2",q:"Situação: pedir informação",a:"Scusi, dov'è..."},
 {c:"pt-it",l:"C1",q:"Traduza: desenvolvimento pessoal",a:"Sviluppo personale"},
 {c:"pt-it",l:"C2",q:"Traduza: competências interpessoais",a:"Competenze interpersonali"},
 
-/* PORTUGUÊS → INGLÊS */
+/* PT → EN */
 {c:"pt-en",l:"A1",q:"Como se diz Olá em inglês?",a:"Hello"},
-{c:"pt-en",l:"A1",q:"Como se diz Tchau em inglês?",a:"Goodbye"},
 {c:"pt-en",l:"A2",q:"Traduza: Eu trabalho",a:"I work"},
-{c:"pt-en",l:"A2",q:"Traduza: Eu estudo",a:"I study"},
 {c:"pt-en",l:"B1",q:"Traduza: Estou aprendendo inglês",a:"I am learning English"},
-{c:"pt-en",l:"B1",q:"Situação: pedir ajuda",a:"Can you help me?"},
 {c:"pt-en",l:"B2",q:"Situação: reunião",a:"I agree with you"},
-{c:"pt-en",l:"B2",q:"Traduza: experiência profissional",a:"Professional experience"},
 {c:"pt-en",l:"C1",q:"Traduza: crescimento na carreira",a:"Career growth"},
 {c:"pt-en",l:"C2",q:"Traduza: pensamento estratégico",a:"Strategic thinking"}
 ];
 
-let list=[],i=0;
+let list=[],i=0,showingAnswer=false;
 
 function start(){
-const c=document.getElementById("course").value;
-const l=document.getElementById("level").value;
+const c=course.value;
+const l=level.value;
 list=exercises.filter(e=>e.c===c && e.l===l);
-document.getElementById("start").classList.add("hidden");
-document.getElementById("app").classList.remove("hidden");
+startDiv.classList.add("hidden");
+app.classList.remove("hidden");
 i=0;
+showingAnswer=false;
 show();
 }
 
 function show(){
 if(list.length===0){
-document.getElementById("question").innerText="Ainda não há exercícios neste nível.";
-document.getElementById("answer").innerText="";
-document.getElementById("info").innerText="Escolha outro nível.";
+question.innerText="Ainda não há exercícios neste nível.";
+answer.innerText="";
+info.innerText="";
+actionBtn.style.display="none";
 return;
 }
-const e=list[i%list.length];
-document.getElementById("question").innerText=e.q;
-document.getElementById("answer").innerText="";
-document.getElementById("info").innerText=`Exercício ${i+1} de ${list.length}`;
+const e=list[i];
+question.innerText=e.q;
+answer.innerText="";
+info.innerText=`Exercício ${i+1} de ${list.length}`;
+actionBtn.innerText="Ver resposta";
+showingAnswer=false;
 }
 
-function next(){
-const e=list[i%list.length];
-document.getElementById("answer").innerText="Resposta: "+e.a;
+function handleClick(){
+if(list.length===0) return;
+if(!showingAnswer){
+answer.innerText="Resposta: "+list[i].a;
+actionBtn.innerText="Próximo";
+showingAnswer=true;
+}else{
 i++;
+if(i>=list.length) i=0;
+show();
+}
 }
 </script>
 
