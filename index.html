@@ -9,157 +9,113 @@ body{font-family:sans-serif;background:#fff7ed;margin:0;padding:20px}
 .hidden{display:none}
 button{padding:10px;margin:5px 0;width:100%;border:none;border-radius:10px;background:#fb923c;color:white;font-size:16px}
 .card{background:white;padding:16px;border-radius:12px;margin-bottom:16px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+select,input{width:100%;padding:8px;margin-bottom:10px}
 </style>
 </head>
 
 <body>
 
-<!-- START -->
 <div id="start" class="card">
   <h1>PLANICCHIO 🐱</h1>
-  <p id="chooseText"></p>
 
-  <div class="grid">
-    <button onclick="startCourse('it-en')">Italiano → English</button>
-    <button onclick="startCourse('it-pt')">Italiano → Português</button>
-    <button onclick="startCourse('pt-it')">Português → Italiano</button>
-    <button onclick="startCourse('pt-en')">Português → English</button>
-    <button onclick="startCourse('en-it')">English → Italiano</button>
-    <button onclick="startCourse('en-pt')">English → Português</button>
-  </div>
+  <select id="course">
+    <option value="it-en">Italiano → English</option>
+    <option value="it-pt">Italiano → Português</option>
+    <option value="pt-it">Português → Italiano</option>
+    <option value="pt-en">Português → English</option>
+    <option value="en-it">English → Italiano</option>
+    <option value="en-pt">English → Português</option>
+  </select>
 
-  <div style="margin-top:10px">
-    <button onclick="setLang('it')">IT</button>
-    <button onclick="setLang('en')">EN</button>
-    <button onclick="setLang('pt')">PT-BR</button>
-  </div>
+  <select id="level">
+    <option>A1</option>
+    <option>A2</option>
+    <option>B1</option>
+    <option>B2</option>
+    <option>C1</option>
+    <option>C2</option>
+  </select>
+
+  <button onclick="start()">Começar</button>
 </div>
 
-<!-- APP -->
 <div id="app" class="hidden">
-
   <div class="card">
     <p id="prompt"></p>
-    <p id="help" style="color:gray;font-size:14px"></p>
+    <p id="help" style="color:gray"></p>
 
     <div id="quizBox">
-      <button id="opt1"></button>
-      <button id="opt2"></button>
+      <button id="o1"></button>
+      <button id="o2"></button>
     </div>
 
     <div id="writeBox" class="hidden">
-      <input id="writeInput" style="width:100%;padding:8px">
-      <button onclick="checkWrite()">OK</button>
+      <input id="input">
+      <button onclick="next()">OK</button>
     </div>
   </div>
-
 </div>
 
 <script>
-/* ===== INTERFACE TEXT ===== */
-const UI={
-choose:{
-  it:"Scegli il tuo corso",
-  en:"Choose your course",
-  pt:"Escolha seu curso"
-}
-}
+let course, level, i=0
 
-let uiLang="it"
-let course=""
-let index=0
+const exercises=[
+/* A1 */
+{course:"it-en",level:"A1",type:"quiz",prompt:"Come si dice 'Ciao' in inglese?",o1:"Hello",o2:"Bye"},
+{course:"pt-it",level:"A1",type:"quiz",prompt:"Como se diz 'Olá' em italiano?",o1:"Ciao",o2:"Grazie"},
+{course:"en-pt",level:"A1",type:"write",prompt:"Translate: Hello",answer:"Olá"},
 
-/* ===== CONTENT (EXEMPLOS PARA OS 6 CURSOS) ===== */
-const content=[
+/* A2 */
+{course:"it-en",level:"A2",type:"write",prompt:"Come si dice 'Io mangio' in inglese?",answer:"I eat"},
+{course:"pt-it",level:"A2",type:"quiz",prompt:"Como se diz 'Eu gosto de café' em italiano?",o1:"Mi piace il caffè",o2:"Vado a casa"},
 
-/* IT → EN */
-{course:"it-en",type:"quiz",
- prompt:"Cosa significa 'Buongiorno'?",
- help:"Scegli la traduzione corretta",
- o1:"Good morning",o2:"Good night",c:"Good morning"},
+/* B1 */
+{course:"it-en",level:"B1",type:"situation",prompt:"Al ristorante: Come chiedi un menu?",answer:"Can I have the menu?"},
+{course:"pt-it",level:"B1",type:"write",prompt:"Como dizer 'Eu estou aprendendo italiano'?",answer:"Sto imparando italiano"},
 
-/* IT → PT */
-{course:"it-pt",type:"quiz",
- prompt:"Cosa significa 'Grazie'?",
- help:"Escolha a tradução correta",
- o1:"Obrigado",o2:"Desculpa",c:"Obrigado"},
+/* B2 */
+{course:"en-pt",level:"B2",type:"situation",prompt:"At work: I need to finish this today.",answer:"Preciso terminar isso hoje"},
 
-/* PT → IT */
-{course:"pt-it",type:"quiz",
- prompt:"O que significa 'Buongiorno'?",
- help:"Escolha a opção correta",
- o1:"Bom dia",o2:"Boa noite",c:"Bom dia"},
+/* C1 */
+{course:"it-en",level:"C1",type:"write",prompt:"Traduci: Ho maturato esperienza nel settore.",answer:"I have gained experience in the field"},
 
-/* PT → EN */
-{course:"pt-en",type:"quiz",
- prompt:"O que significa 'Obrigado'?",
- help:"Escolha a tradução correta",
- o1:"Thank you",o2:"Please",c:"Thank you"},
-
-/* EN → IT */
-{course:"en-it",type:"quiz",
- prompt:"What does 'Good morning' mean?",
- help:"Choose the correct translation",
- o1:"Buongiorno",o2:"Buona notte",c:"Buongiorno"},
-
-/* EN → PT */
-{course:"en-pt",type:"quiz",
- prompt:"What does 'Please' mean?",
- help:"Choose the correct translation",
- o1:"Por favor",o2:"Obrigado",c:"Por favor"}
+/* C2 */
+{course:"pt-it",level:"C2",type:"situation",prompt:"Discussione: A educação muda a sociedade.",answer:"L'educazione cambia la società"}
 ]
 
-/* ===== FUNCTIONS ===== */
-function setLang(l){
-  uiLang=l
-  document.getElementById("chooseText").innerText=UI.choose[l]
-}
+let list=[]
 
-setLang("it")
-
-function startCourse(c){
-  course=c
+function start(){
+  course=document.getElementById("course").value
+  level=document.getElementById("level").value
+  list=exercises.filter(e=>e.course===course && e.level===level)
   document.getElementById("start").classList.add("hidden")
   document.getElementById("app").classList.remove("hidden")
-  index=0
-  showExercise()
+  i=0
+  show()
 }
 
-function showExercise(){
-  const list=content.filter(e=>e.course===course)
-  if(list.length===0){
-    document.getElementById("prompt").innerText="Sem conteúdo ainda"
-    document.getElementById("help").innerText=""
-    return
-  }
-
-  const e=list[index%list.length]
-
-  document.getElementById("prompt").innerText=e.prompt
-  document.getElementById("help").innerText=e.help
-
+function show(){
+  const e=list[i%list.length]
+  prompt.innerText=e.prompt
   quizBox.classList.add("hidden")
   writeBox.classList.add("hidden")
 
   if(e.type==="quiz"){
     quizBox.classList.remove("hidden")
-    opt1.innerText=e.o1
-    opt2.innerText=e.o2
-    opt1.onclick=()=>next()
-    opt2.onclick=()=>next()
+    o1.innerText=e.o1
+    o2.innerText=e.o2
+    o1.onclick=next
+    o2.onclick=next
+  }else{
+    writeBox.classList.remove("hidden")
   }
 }
 
-function checkWrite(){
-  next()
-}
-
 function next(){
-  index++
-  showExercise()
+  i++
+  show()
 }
 </script>
-
 </body>
 </html>
