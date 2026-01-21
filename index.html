@@ -5,22 +5,110 @@
 <title>Planicchio</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-body{font-family:Arial;background:#fff7ed;margin:0;padding:20px}
-.card{background:#fff;padding:16px;border-radius:14px;margin-bottom:16px}
+:root{
+--orange:#fb923c;
+--light:#fff7ed;
+--card:#ffffff;
+--text:#1f2937;
+}
+body{
+margin:0;
+font-family:Arial, sans-serif;
+background:var(--light);
+color:var(--text);
+}
 .hidden{display:none}
-h1{text-align:center}
-button{width:100%;padding:10px;margin-top:10px;border:none;border-radius:10px;background:#fb923c;color:white;font-size:16px}
-select,input{width:100%;padding:8px;margin-top:8px}
-.question{font-weight:bold;font-size:18px;margin-bottom:10px}
-.answer{margin-top:10px;font-style:italic}
-.notice{opacity:.7;font-size:14px}
+header{
+background:var(--orange);
+color:white;
+padding:16px;
+text-align:center;
+font-size:22px;
+font-weight:bold;
+}
+.container{padding:16px}
+.card{
+background:var(--card);
+border-radius:18px;
+padding:16px;
+margin-bottom:16px;
+box-shadow:0 4px 10px rgba(0,0,0,.05);
+}
+button{
+background:var(--orange);
+border:none;
+color:white;
+padding:12px;
+border-radius:14px;
+width:100%;
+font-size:16px;
+margin-top:10px;
+cursor:pointer;
+}
+select{
+width:100%;
+padding:10px;
+border-radius:12px;
+margin-top:8px;
+}
+.tabs{
+display:flex;
+gap:6px;
+overflow-x:auto;
+margin-bottom:16px;
+}
+.tab{
+flex:1;
+background:#fde68a;
+padding:8px;
+border-radius:12px;
+text-align:center;
+font-size:14px;
+cursor:pointer;
+white-space:nowrap;
+}
+.tab.active{
+background:var(--orange);
+color:white;
+}
+.progress-bar{
+height:10px;
+background:#fde68a;
+border-radius:10px;
+overflow:hidden;
+margin-top:6px;
+}
+.progress{
+height:100%;
+width:40%;
+background:var(--orange);
+}
+.pet{
+position:fixed;
+bottom:16px;
+right:16px;
+background:white;
+border-radius:50%;
+width:70px;
+height:70px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:32px;
+box-shadow:0 6px 14px rgba(0,0,0,.15);
+cursor:pointer;
+}
 </style>
 </head>
 
 <body>
 
-<div id="start" class="card">
-<h1>PLANICCHIO 🐱</h1>
+<header>PLANICCHIO 🐱</header>
+
+<!-- TELA INICIAL -->
+<div id="start" class="container">
+<div class="card">
+<h2 style="text-align:center">Escolha seu curso</h2>
 
 <select id="course">
 <option value="it-en">Italiano → English</option>
@@ -31,97 +119,95 @@ select,input{width:100%;padding:8px;margin-top:8px}
 <option value="en-pt">English → Português</option>
 </select>
 
-<select id="level">
-<option>A1</option>
-<option>A2</option>
-<option>B1</option>
-<option>B2</option>
-<option>C1</option>
-<option>C2</option>
-</select>
-
-<button id="startBtn">Começar</button>
+<button onclick="enterApp()">Entrar</button>
+</div>
 </div>
 
-<div id="app" class="card hidden">
-<div id="question" class="question"></div>
-<input id="input" placeholder="Escreva sua resposta (opcional)">
-<button id="actionBtn">Ver resposta</button>
-<div id="answer" class="answer"></div>
-<div id="info" class="notice"></div>
+<!-- APP -->
+<div id="app" class="hidden">
+
+<div class="container">
+
+<!-- PROGRESSO -->
+<div class="card">
+<strong>Nível do usuário</strong>
+<div class="progress-bar"><div class="progress"></div></div>
+<p>XP: 120</p>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+<div class="tab active" onclick="openTab('home')">🏠 Home</div>
+<div class="tab" onclick="openTab('ex')">✏️ Exercícios</div>
+<div class="tab" onclick="openTab('tips')">💡 Dicas</div>
+<div class="tab" onclick="openTab('dict')">📖 Dicionário</div>
+<div class="tab" onclick="openTab('com')">💬 Comunidade</div>
+<div class="tab" onclick="openTab('profile')">👤 Perfil</div>
+</div>
+
+<!-- HOME -->
+<div id="home" class="card">
+<h3>🎯 Missões</h3>
+<p>✔ Complete 3 exercícios</p>
+<p>✔ Estude hoje</p>
+<p>✔ Ganhe XP</p>
+</div>
+
+<!-- EXERCICIOS -->
+<div id="ex" class="card hidden">
+<h3>✏️ Exercícios</h3>
+<p>Aqui entram quizzes, escrita, fala, escuta…</p>
+<button>Começar exercício</button>
+</div>
+
+<!-- DICAS -->
+<div id="tips" class="card hidden">
+<h3>💡 Dicas & Curiosidades</h3>
+<p>Curiosidades culturais do idioma.</p>
+</div>
+
+<!-- DICIONARIO -->
+<div id="dict" class="card hidden">
+<h3>📖 Dicionário & Flashcards</h3>
+<p>Palavras, gírias e exemplos.</p>
+</div>
+
+<!-- COMUNIDADE -->
+<div id="com" class="card hidden">
+<h3>💬 Comunidade</h3>
+<p>Converse com outros alunos.</p>
+</div>
+
+<!-- PERFIL -->
+<div id="profile" class="card hidden">
+<h3>👤 Perfil</h3>
+<p>Nome, foto, progresso, trocar curso.</p>
+<button onclick="back()">Trocar curso</button>
+</div>
+
+</div>
+
+<!-- PET -->
+<div class="pet" onclick="alert('Miau! 😺')">🐱</div>
+
 </div>
 
 <script>
-const exercises = [
-{c:"it-en",l:"A1",q:"Come si dice 'Ciao' in inglese?",a:"Hello"},
-{c:"it-en",l:"A1",q:"Come si dice 'Grazie' in inglese?",a:"Thank you"},
-{c:"it-en",l:"A2",q:"Traduci: Io lavoro",a:"I work"},
-{c:"it-en",l:"B1",q:"Traduci: Vivo in Italia",a:"I live in Italy"},
-{c:"it-en",l:"B2",q:"Situazione: ordinare al ristorante",a:"I would like to order"},
-{c:"it-en",l:"C1",q:"Traduci: sviluppo professionale",a:"Professional development"},
-{c:"it-en",l:"C2",q:"Traduci: capacità di adattamento",a:"Adaptability skills"},
-
-{c:"pt-it",l:"A1",q:"Como se diz Olá em italiano?",a:"Ciao"},
-{c:"pt-it",l:"A2",q:"Traduza: Bom dia",a:"Buongiorno"},
-{c:"pt-it",l:"B1",q:"Traduza: Eu moro aqui",a:"Io vivo qui"},
-{c:"pt-it",l:"B2",q:"Situação: pedir informação",a:"Scusi, dov'è..."},
-{c:"pt-it",l:"C1",q:"Traduza: desenvolvimento pessoal",a:"Sviluppo personale"},
-{c:"pt-it",l:"C2",q:"Traduza: competências interpessoais",a:"Competenze interpersonali"},
-
-{c:"pt-en",l:"A1",q:"Como se diz Olá em inglês?",a:"Hello"},
-{c:"pt-en",l:"A2",q:"Traduza: Eu trabalho",a:"I work"},
-{c:"pt-en",l:"B1",q:"Traduza: Estou aprendendo inglês",a:"I am learning English"},
-{c:"pt-en",l:"B2",q:"Situação: reunião",a:"I agree with you"},
-{c:"pt-en",l:"C1",q:"Traduza: crescimento na carreira",a:"Career growth"},
-{c:"pt-en",l:"C2",q:"Traduza: pensamento estratégico",a:"Strategic thinking"}
-];
-
-let list=[],index=0,showAnswer=false;
-
-const startDiv=document.getElementById("start");
-const appDiv=document.getElementById("app");
-const question=document.getElementById("question");
-const answer=document.getElementById("answer");
-const info=document.getElementById("info");
-const btn=document.getElementById("actionBtn");
-
-document.getElementById("startBtn").onclick=()=>{
-const c=document.getElementById("course").value;
-const l=document.getElementById("level").value;
-list=exercises.filter(e=>e.c===c && e.l===l);
-index=0;
-startDiv.classList.add("hidden");
-appDiv.classList.remove("hidden");
-show();
-};
-
-btn.onclick=()=>{
-if(list.length===0) return;
-if(!showAnswer){
-answer.innerText="Resposta: "+list[index].a;
-btn.innerText="Próximo";
-showAnswer=true;
-}else{
-index=(index+1)%list.length;
-show();
+function enterApp(){
+start.classList.add("hidden");
+app.classList.remove("hidden");
 }
-};
-
-function show(){
-if(list.length===0){
-question.innerText="Ainda não há exercícios neste nível.";
-answer.innerText="";
-info.innerText="";
-btn.style.display="none";
-return;
+function back(){
+app.classList.add("hidden");
+start.classList.remove("hidden");
 }
-btn.style.display="block";
-const e=list[index];
-question.innerText=e.q;
-answer.innerText="";
-info.innerText=`Exercício ${index+1} de ${list.length}`;
-btn.innerText="Ver resposta";
-showAnswer=false;
+function openTab(id){
+document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+event.target.classList.add("active");
+document.querySelectorAll(".card").forEach(c=>{
+if(c.id && c.id!==""){c.classList.add("hidden")}
+});
+document.getElementById(id).classList.remove("hidden");
 }
 </script>
 
