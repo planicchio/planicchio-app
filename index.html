@@ -8,151 +8,189 @@
 
 <style>
 .hidden{display:none}
-.pet{animation:float 2.5s ease-in-out infinite}
+.pet{animation:float 3s ease-in-out infinite}
 @keyframes float{
-  0%{transform:translateY(0)}
-  50%{transform:translateY(-12px)}
-  100%{transform:translateY(0)}
+0%{transform:translateY(0)}
+50%{transform:translateY(-10px)}
+100%{transform:translateY(0)}
 }
+.btn{background:#fb923c;color:#fff;padding:12px;border-radius:16px;width:100%;margin-top:8px}
+.card{background:#fff;padding:16px;border-radius:16px;box-shadow:0 4px 10px rgba(0,0,0,.1)}
 </style>
 </head>
 
 <body class="bg-orange-50 text-gray-800">
 
-<!-- 🐱 PET -->
+<!-- PET -->
 <div class="fixed bottom-4 right-4 text-center z-50">
-  <div class="text-6xl pet cursor-pointer" onclick="meow()">🐱</div>
-  <div id="petText" class="bg-white p-2 rounded shadow text-sm">
-    Ciao! 😸
-  </div>
+  <div class="text-6xl pet cursor-pointer" onclick="petSay()">🐱</div>
+  <div id="petText" class="bg-white p-2 rounded shadow text-sm mt-1"></div>
 </div>
 
 <!-- START -->
 <div id="start" class="min-h-screen flex flex-col items-center justify-center">
-  <div class="text-7xl pet mb-2">🐱</div>
-  <h1 class="text-4xl font-bold">PLANICCHIO</h1>
-  <p id="chooseText" class="mb-4">Scegli il tuo corso</p>
+  <h1 class="text-4xl font-bold mb-4">PLANICCHIO</h1>
 
-  <div class="grid grid-cols-2 gap-3">
-    <button onclick="startCourse('it-en')" class="btn">🇮🇹 → 🇬🇧 EN</button>
-    <button onclick="startCourse('it-pt')" class="btn">🇮🇹 → 🇧🇷 PT</button>
-    <button onclick="startCourse('pt-it')" class="btn">🇧🇷 → 🇮🇹 IT</button>
-    <button onclick="startCourse('pt-en')" class="btn">🇧🇷 → 🇬🇧 EN</button>
-    <button onclick="startCourse('en-it')" class="btn">🇬🇧 → 🇮🇹 IT</button>
-    <button onclick="startCourse('en-pt')" class="btn">🇬🇧 → 🇧🇷 PT</button>
+  <div class="grid grid-cols-1 gap-3 w-64">
+    <button class="btn" onclick="start('it-en')">🇮🇹 Italiano → 🇬🇧 English</button>
+    <button class="btn" onclick="start('pt-it')">🇧🇷 Português → 🇮🇹 Italiano</button>
   </div>
 </div>
 
 <!-- APP -->
-<div id="app" class="hidden">
+<div id="app" class="hidden p-4 max-w-xl mx-auto">
 
-<div class="p-4 bg-white shadow">
-  <b>A1 – Esploratore</b>
-  <div class="w-40 bg-gray-300 rounded">
-    <div id="progress" class="bg-green-500 h-2 rounded" style="width:20%"></div>
+  <!-- PROGRESS -->
+  <div class="card mb-4">
+    <p id="level"></p>
+    <div class="w-full bg-gray-300 rounded mt-1">
+      <div id="bar" class="bg-green-500 h-2 rounded" style="width:10%"></div>
+    </div>
   </div>
-</div>
 
-<div class="flex gap-2 p-2 bg-orange-100 text-sm">
-  <button onclick="show('home')">🏠 Home</button>
-  <button onclick="show('ex')">✍️ Esercizi</button>
-</div>
+  <!-- MISSIONS -->
+  <div class="card mb-4">
+    <h2 class="font-bold mb-2">🎯 Missões de hoje</h2>
+    <ul id="missions"></ul>
+  </div>
 
-<div id="home" class="p-4">
-  <p>Missioni giornaliere in arrivo 🐾</p>
-</div>
+  <!-- EXERCISE -->
+  <div class="card">
+    <p id="prompt" class="font-semibold"></p>
+    <p id="help" class="text-sm text-gray-500 mb-2"></p>
 
-<div id="ex" class="p-4 hidden">
-  <p id="q">Caricamento...</p>
-  <button id="b1" class="btn"></button>
-  <button id="b2" class="btn"></button>
-</div>
+    <div id="quiz">
+      <button id="a1" class="btn"></button>
+      <button id="a2" class="btn"></button>
+    </div>
+
+    <div id="write" class="hidden">
+      <input id="input" class="border p-2 w-full rounded" placeholder="...">
+      <button class="btn" onclick="checkWrite()">OK</button>
+    </div>
+
+    <div id="listen" class="hidden">
+      <button class="btn" onclick="play()">🔊</button>
+      <button class="btn" onclick="next()">Continuar</button>
+    </div>
+
+    <div id="speak" class="hidden">
+      <button class="btn" onclick="speak()">🎤</button>
+      <p id="spoken"></p>
+    </div>
+  </div>
 
 </div>
 
 <script>
-let course="it-en"
-let progress=20
-let exercises=[]
-let current=0
+let course=""
+let i=0
+let xp=0
 
-const SHEET_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vT6-Ah6rq3hnBihlxVAzmsTD8rEF1rbGJu3__sBgm-DDyFWE_D7sxgJx3I3s55uiNl-qvP2x2wh0UD9/pub?gid=927577129&single=true&output=csv"
+const content=[
+/* ITALIANO → INGLÊS */
+{course:"it-en",type:"quiz",prompt:"Cosa significa 'Buongiorno'?",help:"Scegli la traduzione corretta",a1:"Good morning",a2:"Good night",c:"Good morning"},
+{course:"it-en",type:"write",prompt:"Traduci 'Grazie'",help:"Scrivi in inglese",c:"Thank you"},
+{course:"it-en",type:"listen",prompt:"Ascolta e ripeti",help:"È una parola di cortesia",c:"Please"},
+{course:"it-en",type:"speak",prompt:"Di': Per favore",help:"Parla in inglese",c:"Please"},
+{course:"it-en",type:"quiz",prompt:"Come chiedi il conto?",help:"Situazione: ristorante",a1:"The bill, please",a2:"Where is the hotel?",c:"The bill, please"},
 
-// CSV robusto (vírgula OU ponto e vírgula)
-function parseCSV(text){
-  const sep = text.includes(";") ? ";" : ","
-  const rows = text.trim().split("\n").map(r=>r.split(sep))
-  const headers = rows.shift().map(h=>h.trim())
-  return rows.map(r=>{
-    let o={}
-    headers.forEach((h,i)=>{
-      o[h]= (r[i]||"").trim()
-    })
-    return o
-  })
+/* PORTUGUÊS → ITALIANO */
+{course:"pt-it",type:"quiz",prompt:"O que significa 'Buongiorno'?",help:"Escolha a opção correta",a1:"Bom dia",a2:"Boa noite",c:"Bom dia"},
+{course:"pt-it",type:"write",prompt:"Traduza 'Obrigado'",help:"Escreva em italiano",c:"Grazie"},
+{course:"pt-it",type:"listen",prompt:"Ouça e entenda",help:"Palavra comum",c:"Per favore"},
+{course:"pt-it",type:"speak",prompt:"Fale: Por favor",help:"Diga em italiano",c:"Per favore"},
+{course:"pt-it",type:"quiz",prompt:"Como pedir a conta?",help:"Situação: restaurante",a1:"Il conto, per favore",a2:"Dove è il bagno?",c:"Il conto, per favore"}
+]
+
+const missionsText={
+"it-en":["Completa 3 esercizi","Ascolta 1 parola","Parla una frase"],
+"pt-it":["Complete 3 exercícios","Ouça 1 palavra","Fale uma frase"]
 }
 
-async function loadExercises(){
-  const res = await fetch(SHEET_URL)
-  const text = await res.text()
-  const data = parseCSV(text)
-  exercises = data.filter(e=>e.course === course)
-  showExercise()
+function start(c){
+course=c
+startEl.classList.add("hidden")
+app.classList.remove("hidden")
+missions.innerHTML=missionsText[c].map(m=>`<li>• ${m}</li>`).join("")
+next()
 }
 
-function showExercise(){
-  if(!exercises.length){
-    q.innerText="⚠️ Nessun esercizio trovato per questo corso"
-    b1.style.display="none"
-    b2.style.display="none"
-    return
-  }
-  const e = exercises[current]
-  q.innerText = e.question
-  b1.innerText = e.option1
-  b2.innerText = e.option2
-  b1.onclick = ()=>check(e.option1, e.correct)
-  b2.onclick = ()=>check(e.option2, e.correct)
+function show(e){
+quiz.classList.add("hidden")
+write.classList.add("hidden")
+listen.classList.add("hidden")
+speak.classList.add("hidden")
+
+prompt.innerText=e.prompt
+help.innerText=e.help
+
+if(e.type==="quiz"){
+quiz.classList.remove("hidden")
+a1.innerText=e.a1
+a2.innerText=e.a2
+a1.onclick=()=>check(e.a1,e.c)
+a2.onclick=()=>check(e.a2,e.c)
+}
+if(e.type==="write"){
+write.classList.remove("hidden")
+input.value=""
+input.dataset.c=e.c
+}
+if(e.type==="listen"){
+listen.classList.remove("hidden")
+listen.dataset.c=e.c
+}
+if(e.type==="speak"){
+speak.classList.remove("hidden")
+speak.dataset.c=e.c
+}
 }
 
-function check(ans, correct){
-  if(ans === correct){
-    progress += 10
-    pet("Bravo! 😻")
-  } else {
-    pet("Ops 😿")
-  }
-  document.getElementById("progress").style.width = progress + "%"
-  current = (current + 1) % exercises.length
-  setTimeout(showExercise, 500)
+function next(){
+const list=content.filter(x=>x.course===course)
+show(list[i%list.length])
 }
 
-function startCourse(c){
-  course = c
-  start.classList.add("hidden")
-  app.classList.remove("hidden")
-  loadExercises()
+function check(a,c){
+petText.innerText=a===c?"😻 Bravo!":"😿 Ops!"
+advance()
 }
 
-function show(id){
-  ["home","ex"].forEach(x=>document.getElementById(x).classList.add("hidden"))
-  document.getElementById(id).classList.remove("hidden")
+function checkWrite(){
+petText.innerText=input.value===input.dataset.c?"😸 Perfetto!":"😿 Quase!"
+advance()
 }
 
-function pet(t){ petText.innerText=t }
-function meow(){ pet("Miao 😸 Continua!") }
+function play(){
+speechSynthesis.speak(new SpeechSynthesisUtterance(listen.dataset.c))
+}
+
+function speak(){
+const r=new webkitSpeechRecognition()
+r.lang=course==="it-en"?"en-US":"it-IT"
+r.start()
+r.onresult=e=>{
+spoken.innerText=e.results[0][0].transcript
+petText.innerText="😺 Muito bem!"
+advance()
+}
+}
+
+function advance(){
+xp+=10
+bar.style.width=Math.min(xp,100)+"%"
+level.innerText=xp<50?"A1":"A2"
+i++
+setTimeout(next,500)
+}
+
+function petSay(){
+petText.innerText="Continua! 🐱"
+}
+
+const startEl=document.getElementById("start")
 </script>
-
-<style>
-.btn{
-  background:#fb923c;
-  color:white;
-  padding:10px;
-  border-radius:14px;
-  margin:6px 0;
-  width:100%;
-}
-</style>
 
 </body>
 </html>
