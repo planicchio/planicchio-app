@@ -3,40 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <title>Planicchio 🐱</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
-body { transition: .3s }
-.hidden { display:none }
-.pet { animation: float 2.5s ease-in-out infinite }
-@keyframes float {
-  0%{transform:translateY(0)}
-  50%{transform:translateY(-12px)}
-  100%{transform:translateY(0)}
-}
+.hidden{display:none}
+.pet{animation:float 2.5s ease-in-out infinite}
+@keyframes float{0%{transform:translateY(0)}50%{transform:translateY(-10px)}100%{transform:translateY(0)}}
 </style>
 </head>
 
 <body class="bg-orange-50 text-gray-800">
 
-<!-- 🔊 Sons (gerados por código, não quebram) -->
-<script>
-function sound(type){
-  const ctx = new AudioContext()
-  const o = ctx.createOscillator()
-  const g = ctx.createGain()
-  o.connect(g); g.connect(ctx.destination)
-  o.frequency.value = type==="ok"?600:type==="up"?900:200
-  o.start(); g.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + .3)
-}
-</script>
-
-<!-- 🐱 PET GLOBAL -->
+<!-- 🐱 PET -->
 <div class="fixed bottom-4 right-4 text-center z-50">
-  <div onclick="meow()" class="text-6xl pet cursor-pointer">🐱</div>
+  <div class="text-6xl pet cursor-pointer" onclick="meow()">🐱</div>
   <div id="petText" class="bg-white p-2 rounded shadow text-sm">
-    Cliccami! 😸
+    Ciao! Continuiamo 😸
   </div>
 </div>
 
@@ -46,147 +29,158 @@ class="fixed bottom-4 left-4 bg-green-500 text-white px-4 py-2 rounded-full z-50
 🆘 SOS Planicchio
 </a>
 
-<!-- ================= TELA INICIAL ================= -->
+<!-- ========== START ========== -->
 <div id="start" class="min-h-screen flex flex-col items-center justify-center">
   <div class="text-7xl pet mb-2">🐱</div>
   <h1 class="text-4xl font-bold">PLANICCHIO</h1>
-  <p class="mb-4">Scegli il tuo corso</p>
+  <p id="chooseText" class="mb-4">Scegli il tuo corso</p>
 
   <div class="grid grid-cols-2 gap-3">
-    <button class="btn" onclick="startCourse('it-en')">🇮🇹 → 🇬🇧</button>
-    <button class="btn" onclick="startCourse('it-pt')">🇮🇹 → 🇧🇷</button>
-    <button class="btn" onclick="startCourse('pt-it')">🇧🇷 → 🇮🇹</button>
-    <button class="btn" onclick="startCourse('pt-en')">🇧🇷 → 🇬🇧</button>
-    <button class="btn" onclick="startCourse('en-it')">🇬🇧 → 🇮🇹</button>
-    <button class="btn" onclick="startCourse('en-pt')">🇬🇧 → 🇧🇷</button>
+    <button onclick="startCourse('it-en')" class="btn">🇮🇹 → ENG</button>
+    <button onclick="startCourse('it-pt')" class="btn">🇮🇹 → 🇧🇷</button>
+    <button onclick="startCourse('pt-it')" class="btn">🇧🇷 → 🇮🇹</button>
+    <button onclick="startCourse('pt-en')" class="btn">🇧🇷 → ENG</button>
+    <button onclick="startCourse('en-it')" class="btn">ENG → 🇮🇹</button>
+    <button onclick="startCourse('en-pt')" class="btn">ENG → 🇧🇷</button>
+  </div>
+
+  <div class="mt-4">
+    <button onclick="setLang('it')">IT</button>
+    <button onclick="setLang('en')">EN</button>
+    <button onclick="setLang('pt')">PT-BR</button>
   </div>
 </div>
 
-<!-- ================= APP ================= -->
+<!-- ========== APP ========== -->
 <div id="app" class="hidden">
 
-<!-- 🔝 TOPO -->
 <div class="p-4 bg-white shadow">
-  <div class="flex justify-between items-center">
-    <div>
-      <b id="levelText">A1 – Esploratore</b>
-      <div class="w-40 bg-gray-300 rounded">
-        <div id="progress" class="bg-green-500 h-2 w-1/5 rounded"></div>
-      </div>
-    </div>
-    <button onclick="toggleTheme()">🌙</button>
+  <b id="levelText">A1 – Esploratore</b>
+  <div class="w-40 bg-gray-300 rounded">
+    <div id="progress" class="bg-green-500 h-2 rounded" style="width:20%"></div>
   </div>
 </div>
 
-<!-- 📌 MENU -->
-<div class="flex gap-2 p-2 overflow-x-auto bg-orange-100 text-sm">
+<div class="flex gap-2 p-2 bg-orange-100 text-sm">
   <button onclick="show('home')">🏠 Home</button>
   <button onclick="show('ex')">✍️ Esercizi</button>
-  <button onclick="show('game')">🎮 Gioco</button>
-  <button onclick="show('chat')">💬 Comunità</button>
+  <button onclick="show('community')">💬 Comunità</button>
   <button onclick="show('profile')">👤 Profilo</button>
 </div>
 
-<!-- ================= HOME ================= -->
+<!-- HOME -->
 <div id="home" class="p-4">
-  <h2 class="font-bold">🎯 Missioni giornaliere</h2>
+  <h2 id="dailyTitle" class="font-bold">Missioni giornaliere</h2>
   <ul>
     <li>✔ 10 parole</li>
-    <li>✔ 1 esercizio parlato</li>
+    <li>✔ 1 esercizio</li>
     <li>✔ 1 gioco</li>
   </ul>
-
-  <h2 class="font-bold mt-4">🔥 Missioni settimanali</h2>
-  <p>5 missioni per sbloccare titoli</p>
 </div>
 
-<!-- ================= ESERCIZI ================= -->
+<!-- ESERCIZI -->
 <div id="ex" class="p-4 hidden">
-  <p>Come si dice <b>cibo</b> in inglese?</p>
-  <button onclick="answer(true)" class="btn">Food</button>
-  <button onclick="answer(false)" class="btn">House</button>
-
-  <div class="mt-4">
-    <button onclick="speak()">🔊 Ascolta</button>
-    <button onclick="listen()">🎤 Parla</button>
-    <p id="voice"></p>
-  </div>
+  <p id="q">Caricamento esercizio...</p>
+  <button id="b1" class="btn"></button>
+  <button id="b2" class="btn"></button>
 </div>
 
-<!-- ================= GIOCO ================= -->
-<div id="game" class="p-4 hidden">
-  <p>Clicca la parola giusta in 5s:</p>
-  <button onclick="answer(true)" class="btn">Food</button>
-  <button onclick="answer(false)" class="btn">Car</button>
-</div>
-
-<!-- ================= CHAT ================= -->
-<div id="chat" class="p-4 hidden">
+<!-- COMMUNITY -->
+<div id="community" class="p-4 hidden">
   <input id="msg" class="border p-2 w-full" placeholder="Scrivi...">
   <button onclick="send()" class="btn mt-2">Invia</button>
   <div id="msgs" class="mt-2 text-sm"></div>
 </div>
 
-<!-- ================= PROFILO ================= -->
+<!-- PROFILO -->
 <div id="profile" class="p-4 hidden">
   <input id="name" class="border p-2" placeholder="Il tuo nome">
   <button onclick="saveName()" class="btn">Salva</button>
   <p id="saved"></p>
-
-  <h3 class="mt-4">🔒 VIP</h3>
-  <button onclick="vip()" class="btn bg-yellow-400">Sblocca VIP</button>
-
-  <button onclick="reset()" class="btn mt-4">Cambia corso</button>
 </div>
 
 </div>
 
 <script>
-let progress = Number(localStorage.getItem("progress")) || 20
+let lang="it"
+let course="it-en"
+let progress=Number(localStorage.getItem("progress"))||20
+let exercises=[]
+let current=0
 
-document.getElementById("progress").style.width = progress + "%"
+const SHEET_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vT6-Ah6rq3hnBihlxVAzmsTD8rEF1rbGJu3__sBgm-DDyFWE_D7sxgJx3I3s55uiNl-qvP2x2wh0UD9/pub?gid=927577129&single=true&output=csv"
 
-function startCourse(c){
-  localStorage.setItem("course", c)
-  start.classList.add("hidden")
-  app.classList.remove("hidden")
-  notify("Benvenuto su Planicchio!")
+const t={
+  it:{choose:"Scegli il tuo corso",daily:"Missioni giornaliere"},
+  en:{choose:"Choose your course",daily:"Daily missions"},
+  pt:{choose:"Escolha seu curso",daily:"Missões diárias"}
 }
 
-function show(id){
-  ["home","ex","game","chat","profile"].forEach(x=>document.getElementById(x).classList.add("hidden"))
-  document.getElementById(id).classList.remove("hidden")
+function parseCSV(text){
+  const rows=text.trim().split("\n").map(r=>r.split(","))
+  const headers=rows.shift()
+  return rows.map(r=>{
+    let o={}
+    headers.forEach((h,i)=>o[h]=r[i])
+    return o
+  })
 }
 
-function answer(ok){
-  if(ok){
+async function loadExercises(){
+  const res=await fetch(SHEET_URL)
+  const text=await res.text()
+  const data=parseCSV(text)
+  exercises=data.filter(e=>e.course===course)
+  showExercise()
+}
+
+function showExercise(){
+  if(!exercises.length){
+    q.innerText="Nessun esercizio trovato"
+    return
+  }
+  const e=exercises[current]
+  q.innerText=e.question
+  b1.innerText=e.option1
+  b2.innerText=e.option2
+  b1.onclick=()=>check(e.option1,e.correct)
+  b2.onclick=()=>check(e.option2,e.correct)
+}
+
+function check(ans,correct){
+  if(ans===correct){
     progress+=10
-    sound("ok")
     pet("Bravo! 😻")
   }else{
-    sound("no")
-    pet("Riprova 😿")
-  }
-  if(progress>=100){
-    sound("up")
-    alert("🎉 Livello aumentato!")
-    progress=0
+    pet("Ops 😿")
   }
   localStorage.setItem("progress",progress)
+  progressBar()
+  current=(current+1)%exercises.length
+  setTimeout(showExercise,500)
+}
+
+function progressBar(){
   document.getElementById("progress").style.width=progress+"%"
 }
 
-function speak(){
-  let u=new SpeechSynthesisUtterance("Food")
-  u.lang="en-US"
-  speechSynthesis.speak(u)
+function startCourse(c){
+  course=c
+  localStorage.setItem("course",c)
+  start.classList.add("hidden")
+  app.classList.remove("hidden")
+  loadExercises()
 }
 
-function listen(){
-  let r=new webkitSpeechRecognition()
-  r.lang="en-US"
-  r.start()
-  r.onresult=e=>voice.innerText=e.results[0][0].transcript
+function show(id){
+  ["home","ex","community","profile"].forEach(x=>document.getElementById(x).classList.add("hidden"))
+  document.getElementById(id).classList.remove("hidden")
+}
+
+function setLang(l){
+  lang=l
+  chooseText.innerText=t[l].choose
+  dailyTitle.innerText=t[l].daily
 }
 
 function send(){
@@ -199,34 +193,8 @@ function saveName(){
   saved.innerText="Salvato!"
 }
 
-function reset(){
-  location.reload()
-}
-
-function vip(){
-  alert("VIP: lezioni avanzate, nativi, IA")
-}
-
-function pet(t){
-  petText.innerText=t
-}
-
-function meow(){
-  pet("Miao! Continua!")
-}
-
-function toggleTheme(){
-  document.body.classList.toggle("bg-gray-900")
-  document.body.classList.toggle("text-white")
-}
-
-function notify(text){
-  if("Notification"in window){
-    Notification.requestPermission().then(p=>{
-      if(p==="granted") new Notification(text)
-    })
-  }
-}
+function pet(t){ petText.innerText=t }
+function meow(){ pet("Miao 😸 Continua!") }
 </script>
 
 <style>
@@ -235,7 +203,8 @@ function notify(text){
   color:white;
   padding:8px 12px;
   border-radius:12px;
-  margin:4px 0;
+  margin:6px 0;
+  display:block;
 }
 </style>
 
