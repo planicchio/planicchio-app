@@ -5,10 +5,10 @@
 <title>Planicchio</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-body{font-family:sans-serif;background:#fff7ed;margin:0;padding:20px}
+body{font-family:Arial;background:#fff7ed;margin:0;padding:20px}
 .hidden{display:none}
-button{padding:10px;margin:5px 0;width:100%;border:none;border-radius:10px;background:#fb923c;color:white;font-size:16px}
 .card{background:white;padding:16px;border-radius:12px;margin-bottom:16px}
+button{width:100%;padding:10px;margin-top:8px;border:none;border-radius:10px;background:#fb923c;color:white;font-size:16px}
 select,input{width:100%;padding:8px;margin-bottom:10px}
 </style>
 </head>
@@ -28,12 +28,9 @@ select,input{width:100%;padding:8px;margin-bottom:10px}
   </select>
 
   <select id="level">
-    <option>A1</option>
-    <option>A2</option>
-    <option>B1</option>
-    <option>B2</option>
-    <option>C1</option>
-    <option>C2</option>
+    <option>A1</option><option>A2</option>
+    <option>B1</option><option>B2</option>
+    <option>C1</option><option>C2</option>
   </select>
 
   <button onclick="start()">Começar</button>
@@ -42,7 +39,6 @@ select,input{width:100%;padding:8px;margin-bottom:10px}
 <div id="app" class="hidden">
   <div class="card">
     <p id="prompt"></p>
-    <p id="help" style="color:gray"></p>
 
     <div id="quizBox">
       <button id="o1"></button>
@@ -50,45 +46,48 @@ select,input{width:100%;padding:8px;margin-bottom:10px}
     </div>
 
     <div id="writeBox" class="hidden">
-      <input id="input">
+      <input id="input" placeholder="Escreva aqui">
       <button onclick="next()">OK</button>
     </div>
   </div>
 </div>
 
 <script>
-let course, level, i=0
+let list=[],i=0
 
 const exercises=[
-/* A1 */
+
+/* ===== IT → EN ===== */
 {course:"it-en",level:"A1",type:"quiz",prompt:"Come si dice 'Ciao' in inglese?",o1:"Hello",o2:"Bye"},
-{course:"pt-it",level:"A1",type:"quiz",prompt:"Como se diz 'Olá' em italiano?",o1:"Ciao",o2:"Grazie"},
+{course:"it-en",level:"A2",type:"write",prompt:"Traduci: Io mangio",answer:"I eat"},
+{course:"it-en",level:"B1",type:"situation",prompt:"Al bar: Come ordini un caffè?",answer:"I would like a coffee"},
+{course:"it-en",level:"B2",type:"write",prompt:"Traduci: Sto cercando lavoro",answer:"I am looking for a job"},
+{course:"it-en",level:"C1",type:"write",prompt:"Traduci: Ho acquisito molta esperienza",answer:"I have gained a lot of experience"},
+{course:"it-en",level:"C2",type:"situation",prompt:"Discussione: L'educazione migliora la società",answer:"Education improves society"},
+
+/* ===== PT → IT ===== */
+{course:"pt-it",level:"A1",type:"quiz",prompt:"Como se diz 'Olá' em italiano?",o1:"Ciao",o2:"Prego"},
+{course:"pt-it",level:"A2",type:"write",prompt:"Traduza: Eu gosto de café",answer:"Mi piace il caffè"},
+{course:"pt-it",level:"B1",type:"write",prompt:"Traduza: Estou aprendendo italiano",answer:"Sto imparando italiano"},
+{course:"pt-it",level:"B2",type:"situation",prompt:"No restaurante: peça a conta",answer:"Il conto, per favore"},
+{course:"pt-it",level:"C1",type:"write",prompt:"Traduza: Quero melhorar minhas habilidades",answer:"Voglio migliorare le mie competenze"},
+{course:"pt-it",level:"C2",type:"situation",prompt:"Discussão: A tecnologia muda o mundo",answer:"La tecnologia cambia il mondo"},
+
+/* ===== EN → PT ===== */
 {course:"en-pt",level:"A1",type:"write",prompt:"Translate: Hello",answer:"Olá"},
-
-/* A2 */
-{course:"it-en",level:"A2",type:"write",prompt:"Come si dice 'Io mangio' in inglese?",answer:"I eat"},
-{course:"pt-it",level:"A2",type:"quiz",prompt:"Como se diz 'Eu gosto de café' em italiano?",o1:"Mi piace il caffè",o2:"Vado a casa"},
-
-/* B1 */
-{course:"it-en",level:"B1",type:"situation",prompt:"Al ristorante: Come chiedi un menu?",answer:"Can I have the menu?"},
-{course:"pt-it",level:"B1",type:"write",prompt:"Como dizer 'Eu estou aprendendo italiano'?",answer:"Sto imparando italiano"},
-
-/* B2 */
-{course:"en-pt",level:"B2",type:"situation",prompt:"At work: I need to finish this today.",answer:"Preciso terminar isso hoje"},
-
-/* C1 */
-{course:"it-en",level:"C1",type:"write",prompt:"Traduci: Ho maturato esperienza nel settore.",answer:"I have gained experience in the field"},
-
-/* C2 */
-{course:"pt-it",level:"C2",type:"situation",prompt:"Discussione: A educação muda a sociedade.",answer:"L'educazione cambia la società"}
+{course:"en-pt",level:"A2",type:"quiz",prompt:"Translate: Thank you",o1:"Obrigado",o2:"Desculpa"},
+{course:"en-pt",level:"B1",type:"write",prompt:"Translate: I am studying languages",answer:"Estou estudando línguas"},
+{course:"en-pt",level:"B2",type:"situation",prompt:"At work: I need help",answer:"Preciso de ajuda"},
+{course:"en-pt",level:"C1",type:"write",prompt:"Translate: I have extensive experience",answer:"Tenho ampla experiência"},
+{course:"en-pt",level:"C2",type:"situation",prompt:"Discussion: Education is essential",answer:"Educação é essencial"}
 ]
 
-let list=[]
-
 function start(){
-  course=document.getElementById("course").value
-  level=document.getElementById("level").value
-  list=exercises.filter(e=>e.course===course && e.level===level)
+  const c=document.getElementById("course").value
+  const l=document.getElementById("level").value
+
+  list=exercises.filter(e=>e.course===c && e.level===l)
+
   document.getElementById("start").classList.add("hidden")
   document.getElementById("app").classList.remove("hidden")
   i=0
@@ -96,8 +95,17 @@ function start(){
 }
 
 function show(){
+  if(list.length===0){
+    document.getElementById("prompt").innerText=
+      "⚠️ Ainda não há exercícios para este nível.\nEscolha outro nível."
+    quizBox.classList.add("hidden")
+    writeBox.classList.add("hidden")
+    return
+  }
+
   const e=list[i%list.length]
   prompt.innerText=e.prompt
+
   quizBox.classList.add("hidden")
   writeBox.classList.add("hidden")
 
@@ -117,5 +125,6 @@ function next(){
   show()
 }
 </script>
+
 </body>
 </html>
