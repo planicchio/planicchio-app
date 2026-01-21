@@ -9,6 +9,7 @@ body{font-family:sans-serif;background:#fff7ed;margin:0;padding:20px}
 .hidden{display:none}
 button{padding:10px;margin:5px 0;width:100%;border:none;border-radius:10px;background:#fb923c;color:white;font-size:16px}
 .card{background:white;padding:16px;border-radius:12px;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 </style>
 </head>
 
@@ -19,8 +20,14 @@ button{padding:10px;margin:5px 0;width:100%;border:none;border-radius:10px;backg
   <h1>PLANICCHIO 🐱</h1>
   <p id="chooseText"></p>
 
-  <button onclick="startCourse('it-en')">🇮🇹 Italiano → 🇬🇧 English</button>
-  <button onclick="startCourse('pt-it')">🇧🇷 Português → 🇮🇹 Italiano</button>
+  <div class="grid">
+    <button onclick="startCourse('it-en')">Italiano → English</button>
+    <button onclick="startCourse('it-pt')">Italiano → Português</button>
+    <button onclick="startCourse('pt-it')">Português → Italiano</button>
+    <button onclick="startCourse('pt-en')">Português → English</button>
+    <button onclick="startCourse('en-it')">English → Italiano</button>
+    <button onclick="startCourse('en-pt')">English → Português</button>
+  </div>
 
   <div style="margin-top:10px">
     <button onclick="setLang('it')">IT</button>
@@ -63,23 +70,20 @@ let uiLang="it"
 let course=""
 let index=0
 
-/* ===== CONTENT ===== */
+/* ===== CONTENT (EXEMPLOS PARA OS 6 CURSOS) ===== */
 const content=[
+
 /* IT → EN */
 {course:"it-en",type:"quiz",
  prompt:"Cosa significa 'Buongiorno'?",
  help:"Scegli la traduzione corretta",
  o1:"Good morning",o2:"Good night",c:"Good morning"},
 
-{course:"it-en",type:"write",
- prompt:"Traduci 'Grazie'",
- help:"Scrivi in inglese",
- c:"Thank you"},
-
-{course:"it-en",type:"quiz",
- prompt:"Come chiedi il conto?",
- help:"Situazione: ristorante",
- o1:"The bill, please",o2:"Where is the hotel?",c:"The bill, please"},
+/* IT → PT */
+{course:"it-pt",type:"quiz",
+ prompt:"Cosa significa 'Grazie'?",
+ help:"Escolha a tradução correta",
+ o1:"Obrigado",o2:"Desculpa",c:"Obrigado"},
 
 /* PT → IT */
 {course:"pt-it",type:"quiz",
@@ -87,15 +91,23 @@ const content=[
  help:"Escolha a opção correta",
  o1:"Bom dia",o2:"Boa noite",c:"Bom dia"},
 
-{course:"pt-it",type:"write",
- prompt:"Traduza 'Obrigado'",
- help:"Escreva em italiano",
- c:"Grazie"},
+/* PT → EN */
+{course:"pt-en",type:"quiz",
+ prompt:"O que significa 'Obrigado'?",
+ help:"Escolha a tradução correta",
+ o1:"Thank you",o2:"Please",c:"Thank you"},
 
-{course:"pt-it",type:"quiz",
- prompt:"Como pedir a conta?",
- help:"Situação: restaurante",
- o1:"Il conto, per favore",o2:"Dove è il bagno?",c:"Il conto, per favore"}
+/* EN → IT */
+{course:"en-it",type:"quiz",
+ prompt:"What does 'Good morning' mean?",
+ help:"Choose the correct translation",
+ o1:"Buongiorno",o2:"Buona notte",c:"Buongiorno"},
+
+/* EN → PT */
+{course:"en-pt",type:"quiz",
+ prompt:"What does 'Please' mean?",
+ help:"Choose the correct translation",
+ o1:"Por favor",o2:"Obrigado",c:"Por favor"}
 ]
 
 /* ===== FUNCTIONS ===== */
@@ -116,28 +128,26 @@ function startCourse(c){
 
 function showExercise(){
   const list=content.filter(e=>e.course===course)
-  if(list.length===0)return
+  if(list.length===0){
+    document.getElementById("prompt").innerText="Sem conteúdo ainda"
+    document.getElementById("help").innerText=""
+    return
+  }
 
   const e=list[index%list.length]
 
   document.getElementById("prompt").innerText=e.prompt
   document.getElementById("help").innerText=e.help
 
-  document.getElementById("quizBox").classList.add("hidden")
-  document.getElementById("writeBox").classList.add("hidden")
+  quizBox.classList.add("hidden")
+  writeBox.classList.add("hidden")
 
   if(e.type==="quiz"){
-    document.getElementById("quizBox").classList.remove("hidden")
+    quizBox.classList.remove("hidden")
     opt1.innerText=e.o1
     opt2.innerText=e.o2
     opt1.onclick=()=>next()
     opt2.onclick=()=>next()
-  }
-
-  if(e.type==="write"){
-    document.getElementById("writeBox").classList.remove("hidden")
-    writeInput.value=""
-    writeInput.dataset.c=e.c
   }
 }
 
