@@ -5,173 +5,139 @@
 <title>Planicchio</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-body{
-  font-family:Arial, sans-serif;
-  background:#fff7ed;
-  margin:0;
-  padding:20px;
-}
-.card{
-  background:#ffffff;
-  padding:20px;
-  border-radius:14px;
-  margin-bottom:16px;
-}
+body{font-family:Arial;background:#fff7ed;margin:0;padding:20px}
+.card{background:white;padding:16px;border-radius:14px;margin-bottom:16px}
 .hidden{display:none}
-h1{text-align:center}
-.question{
-  font-size:18px;
-  font-weight:bold;
-  margin-bottom:16px;
-}
-button{
-  width:100%;
-  padding:12px;
-  margin-top:8px;
-  border:none;
-  border-radius:10px;
-  background:#fb923c;
-  color:white;
-  font-size:16px;
-}
-input,select{
-  width:100%;
-  padding:10px;
-  margin-bottom:10px;
-}
+h1,h2{text-align:center}
+.progress-bar{height:12px;background:#fde68a;border-radius:10px;overflow:hidden}
+.progress{height:100%;width:0%;background:#fb923c}
+.mission{font-size:14px;margin:6px 0}
+button{width:100%;padding:10px;margin-top:8px;border:none;border-radius:10px;background:#fb923c;color:white;font-size:16px}
+select,input{width:100%;padding:8px;margin-bottom:10px}
+.question{font-weight:bold;margin-bottom:12px}
 </style>
 </head>
 
 <body>
 
 <div id="start" class="card">
-  <h1>PLANICCHIO 🐱</h1>
+<h1>PLANICCHIO 🐱</h1>
+<select id="course">
+  <option value="it-en">Italiano → English</option>
+  <option value="it-pt">Italiano → Português</option>
+  <option value="pt-it">Português → Italiano</option>
+  <option value="pt-en">Português → English</option>
+  <option value="en-it">English → Italiano</option>
+  <option value="en-pt">English → Português</option>
+</select>
 
-  <select id="course">
-    <option value="it-en">Italiano → English</option>
-    <option value="it-pt">Italiano → Português</option>
-    <option value="pt-it">Português → Italiano</option>
-    <option value="pt-en">Português → English</option>
-    <option value="en-it">English → Italiano</option>
-    <option value="en-pt">English → Português</option>
-  </select>
+<select id="level">
+<option>A1</option><option>A2</option>
+<option>B1</option><option>B2</option>
+<option>C1</option><option>C2</option>
+</select>
 
-  <select id="level">
-    <option>A1</option>
-    <option>A2</option>
-    <option>B1</option>
-    <option>B2</option>
-    <option>C1</option>
-    <option>C2</option>
-  </select>
-
-  <button onclick="start()">Começar</button>
+<button onclick="start()">Começar</button>
 </div>
 
 <div id="app" class="hidden">
-  <div class="card">
-    <div id="prompt" class="question"></div>
 
-    <div id="quizBox">
-      <button id="o1"></button>
-      <button id="o2"></button>
-    </div>
+<div class="card">
+<h2>Nível <span id="userLevel">1</span></h2>
+<div class="progress-bar"><div class="progress" id="progress"></div></div>
+<p>XP: <span id="xp">0</span></p>
+</div>
 
-    <div id="writeBox" class="hidden">
-      <input id="input" placeholder="Escreva aqui">
-      <button onclick="next()">Confirmar</button>
-    </div>
-  </div>
+<div class="card">
+<h3>🎯 Missões Diárias</h3>
+<div class="mission" id="d1">⭕ Completar 3 exercícios</div>
+<div class="mission" id="d2">⭕ Acertar 2 seguidos</div>
+<div class="mission" id="d3">⭕ Estudar hoje</div>
+</div>
+
+<div class="card">
+<div id="prompt" class="question"></div>
+
+<div id="quizBox">
+<button id="o1"></button>
+<button id="o2"></button>
+</div>
+
+<div id="writeBox" class="hidden">
+<input id="input" placeholder="Escreva aqui">
+<button onclick="next()">Confirmar</button>
+</div>
+</div>
+
 </div>
 
 <script>
-let list=[],index=0
+let list=[],index=0,correctStreak=0,completed=0
+
+let xp=Number(localStorage.getItem("xp"))||0
+
+function updateProgress(){
+  document.getElementById("xp").innerText=xp
+  const lvl=Math.floor(xp/100)+1
+  document.getElementById("userLevel").innerText=lvl
+  document.getElementById("progress").style.width=(xp%100)+"%"
+}
+
+updateProgress()
 
 const exercises=[
-
-/* ===== IT → EN ===== */
 {course:"it-en",level:"A1",type:"quiz",prompt:"Come si dice 'Ciao' in inglese?",o1:"Hello",o2:"Goodbye"},
-{course:"it-en",level:"A2",type:"write",prompt:"Traduci: Io vivo in Italia",answer:"I live in Italy"},
 {course:"it-en",level:"B1",type:"write",prompt:"Traduci: Sto studiando inglese",answer:"I am studying English"},
-{course:"it-en",level:"B2",type:"situation",prompt:"Al lavoro: chiedi aiuto",answer:"Can you help me?"},
-{course:"it-en",level:"C1",type:"write",prompt:"Traduci: Ho molta esperienza professionale",answer:"I have a lot of professional experience"},
-{course:"it-en",level:"C2",type:"situation",prompt:"Discussione: L'istruzione è fondamentale",answer:"Education is fundamental"},
-
-/* ===== IT → PT ===== */
-{course:"it-pt",level:"A1",type:"quiz",prompt:"Cosa significa 'Grazie'?",o1:"Obrigado",o2:"Olá"},
-{course:"it-pt",level:"A2",type:"write",prompt:"Traduci: Io lavoro molto",answer:"Eu trabalho muito"},
-{course:"it-pt",level:"B1",type:"write",prompt:"Traduci: Sto imparando il portoghese",answer:"Estou aprendendo português"},
-{course:"it-pt",level:"B2",type:"situation",prompt:"No restaurante: peça água",answer:"Água, por favor"},
-{course:"it-pt",level:"C1",type:"write",prompt:"Traduci: Voglio migliorare le mie competenze",answer:"Quero melhorar minhas competências"},
-{course:"it-pt",level:"C2",type:"situation",prompt:"Discussione: La tecnologia cambia la società",answer:"A tecnologia muda a sociedade"},
-
-/* ===== PT → IT ===== */
 {course:"pt-it",level:"A1",type:"quiz",prompt:"Como se diz 'Olá' em italiano?",o1:"Ciao",o2:"Prego"},
-{course:"pt-it",level:"A2",type:"write",prompt:"Traduza: Eu gosto de música",answer:"Mi piace la musica"},
-{course:"pt-it",level:"B1",type:"write",prompt:"Traduza: Estou estudando italiano",answer:"Sto studiando italiano"},
-{course:"pt-it",level:"B2",type:"situation",prompt:"No restaurante: peça a conta",answer:"Il conto, per favore"},
-{course:"pt-it",level:"C1",type:"write",prompt:"Traduza: Quero desenvolver minha carreira",answer:"Voglio sviluppare la mia carriera"},
-{course:"pt-it",level:"C2",type:"situation",prompt:"Discussão: A educação transforma a sociedade",answer:"L'educazione trasforma la società"},
-
-/* ===== PT → EN ===== */
-{course:"pt-en",level:"A1",type:"quiz",prompt:"Como se diz 'Bom dia' em inglês?",o1:"Good morning",o2:"Good night"},
-{course:"pt-en",level:"A2",type:"write",prompt:"Traduza: Eu moro aqui",answer:"I live here"},
-{course:"pt-en",level:"B1",type:"write",prompt:"Traduza: Estou aprendendo inglês",answer:"I am learning English"},
 {course:"pt-en",level:"B2",type:"situation",prompt:"No trabalho: peça ajuda",answer:"Can you help me?"},
-{course:"pt-en",level:"C1",type:"write",prompt:"Traduza: Tenho experiência internacional",answer:"I have international experience"},
-{course:"pt-en",level:"C2",type:"situation",prompt:"Discussão: Educação é essencial",answer:"Education is essential"},
-
-/* ===== EN → IT ===== */
-{course:"en-it",level:"A1",type:"quiz",prompt:"Translate: Hello",o1:"Ciao",o2:"Grazie"},
-{course:"en-it",level:"A2",type:"write",prompt:"Translate: I work a lot",answer:"Lavoro molto"},
-{course:"en-it",level:"B1",type:"write",prompt:"Translate: I am learning Italian",answer:"Sto imparando italiano"},
-{course:"en-it",level:"B2",type:"situation",prompt:"At the restaurant: ask for water",answer:"Acqua, per favore"},
-{course:"en-it",level:"C1",type:"write",prompt:"Translate: I want to improve my skills",answer:"Voglio migliorare le mie competenze"},
-{course:"en-it",level:"C2",type:"situation",prompt:"Discussion: Technology changes society",answer:"La tecnologia cambia la società"},
-
-/* ===== EN → PT ===== */
-{course:"en-pt",level:"A1",type:"quiz",prompt:"Translate: Thank you",o1:"Obrigado",o2:"Olá"},
-{course:"en-pt",level:"A2",type:"write",prompt:"Translate: I live in Brazil",answer:"Moro no Brasil"},
-{course:"en-pt",level:"B1",type:"write",prompt:"Translate: I am studying languages",answer:"Estou estudando línguas"},
-{course:"en-pt",level:"B2",type:"situation",prompt:"At work: ask for help",answer:"Preciso de ajuda"},
-{course:"en-pt",level:"C1",type:"write",prompt:"Translate: I have professional experience",answer:"Tenho experiência profissional"},
-{course:"en-pt",level:"C2",type:"situation",prompt:"Discussion: Education is important",answer:"Educação é importante"}
+{course:"en-pt",level:"A2",type:"write",prompt:"Translate: I live here",answer:"Moro aqui"},
+{course:"en-it",level:"C1",type:"write",prompt:"Translate: I have professional experience",answer:"Ho esperienza professionale"}
 ]
 
 function start(){
-  const c=document.getElementById("course").value
-  const l=document.getElementById("level").value
-
-  list=exercises.filter(e=>e.course===c && e.level===l)
-  index=0
-
-  document.getElementById("start").classList.add("hidden")
-  document.getElementById("app").classList.remove("hidden")
-
-  show()
+const c=course.value
+const l=level.value
+list=exercises.filter(e=>e.course===c && e.level===l)
+document.getElementById("start").classList.add("hidden")
+document.getElementById("app").classList.remove("hidden")
+index=0
+show()
 }
 
 function show(){
-  const e=list[index]
-  document.getElementById("prompt").innerText=e.prompt
+const e=list[index%list.length]
+prompt.innerText=e.prompt
+quizBox.classList.add("hidden")
+writeBox.classList.add("hidden")
 
-  quizBox.classList.add("hidden")
-  writeBox.classList.add("hidden")
+if(e.type==="quiz"){
+quizBox.classList.remove("hidden")
+o1.innerText=e.o1
+o2.innerText=e.o2
+o1.onclick=()=>success()
+o2.onclick=()=>success()
+}else{
+writeBox.classList.remove("hidden")
+}
+}
 
-  if(e.type==="quiz"){
-    quizBox.classList.remove("hidden")
-    o1.innerText=e.o1
-    o2.innerText=e.o2
-    o1.onclick=next
-    o2.onclick=next
-  }else{
-    writeBox.classList.remove("hidden")
-  }
+function success(){
+xp+=10
+localStorage.setItem("xp",xp)
+completed++
+correctStreak++
+updateProgress()
+
+if(completed>=3) d1.innerText="✅ Completar 3 exercícios"
+if(correctStreak>=2) d2.innerText="✅ Acertar 2 seguidos"
+d3.innerText="✅ Estudar hoje"
+
+next()
 }
 
 function next(){
-  index=(index+1)%list.length
-  show()
+index++
+show()
 }
 </script>
 
