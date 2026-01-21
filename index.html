@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>Planicchio</title>
@@ -10,11 +10,12 @@ body{font-family:Arial;background:#fff7ed;margin:0;padding:20px}
 .hidden{display:none}
 h1,h2{text-align:center}
 .progress-bar{height:12px;background:#fde68a;border-radius:10px;overflow:hidden}
-.progress{height:100%;width:0%;background:#fb923c}
+.progress{height:100%;width:0%;background:#fb923c;transition:width .3s}
 .mission{font-size:14px;margin:6px 0}
 button{width:100%;padding:10px;margin-top:8px;border:none;border-radius:10px;background:#fb923c;color:white;font-size:16px}
 select,input{width:100%;padding:8px;margin-bottom:10px}
-.question{font-weight:bold;margin-bottom:12px}
+.question{font-weight:bold;margin-bottom:12px;font-size:17px}
+.notice{font-size:14px;opacity:.8}
 </style>
 </head>
 
@@ -22,13 +23,14 @@ select,input{width:100%;padding:8px;margin-bottom:10px}
 
 <div id="start" class="card">
 <h1>PLANICCHIO 🐱</h1>
+
 <select id="course">
-  <option value="it-en">Italiano → English</option>
-  <option value="it-pt">Italiano → Português</option>
-  <option value="pt-it">Português → Italiano</option>
-  <option value="pt-en">Português → English</option>
-  <option value="en-it">English → Italiano</option>
-  <option value="en-pt">English → Português</option>
+<option value="it-en">Italiano → English</option>
+<option value="it-pt">Italiano → Português</option>
+<option value="pt-it">Português → Italiano</option>
+<option value="pt-en">Português → English</option>
+<option value="en-it">English → Italiano</option>
+<option value="en-pt">English → Português</option>
 </select>
 
 <select id="level">
@@ -37,107 +39,117 @@ select,input{width:100%;padding:8px;margin-bottom:10px}
 <option>C1</option><option>C2</option>
 </select>
 
-<button onclick="start()">Começar</button>
+<button onclick="start()">Start</button>
 </div>
 
 <div id="app" class="hidden">
 
 <div class="card">
-<h2>Nível <span id="userLevel">1</span></h2>
+<h2 id="levelLabel"></h2>
 <div class="progress-bar"><div class="progress" id="progress"></div></div>
-<p>XP: <span id="xp">0</span></p>
+<p id="xpLabel"></p>
 </div>
 
 <div class="card">
-<h3>🎯 Missões Diárias</h3>
-<div class="mission" id="d1">⭕ Completar 3 exercícios</div>
-<div class="mission" id="d2">⭕ Acertar 2 seguidos</div>
-<div class="mission" id="d3">⭕ Estudar hoje</div>
+<h3 id="missionTitle"></h3>
+<div class="mission" id="m1"></div>
+<div class="mission" id="m2"></div>
+<div class="mission" id="m3"></div>
 </div>
 
 <div class="card">
 <div id="prompt" class="question"></div>
+<div id="notice" class="notice"></div>
 
-<div id="quizBox">
-<button id="o1"></button>
-<button id="o2"></button>
-</div>
-
-<div id="writeBox" class="hidden">
-<input id="input" placeholder="Escreva aqui">
-<button onclick="next()">Confirmar</button>
-</div>
+<button id="o1" onclick="success()"></button>
+<button id="o2" onclick="success()"></button>
 </div>
 
 </div>
 
 <script>
-let list=[],index=0,correctStreak=0,completed=0
-
 let xp=Number(localStorage.getItem("xp"))||0
+let index=0,list=[]
 
-function updateProgress(){
-  document.getElementById("xp").innerText=xp
-  const lvl=Math.floor(xp/100)+1
-  document.getElementById("userLevel").innerText=lvl
-  document.getElementById("progress").style.width=(xp%100)+"%"
+const i18n={
+"it":{level:"Livello",xp:"XP",missions:"Missioni giornaliere",
+m1:"Completa 3 esercizi",m2:"Rispondi correttamente 2 volte",m3:"Studia oggi",
+no:"Nessun esercizio per questo livello"},
+"pt":{level:"Nível",xp:"XP",missions:"Missões diárias",
+m1:"Complete 3 exercícios",m2:"Acerte 2 seguidas",m3:"Estude hoje",
+no:"Ainda não há exercícios neste nível"},
+"en":{level:"Level",xp:"XP",missions:"Daily missions",
+m1:"Complete 3 exercises",m2:"Answer correctly twice",m3:"Study today",
+no:"No exercises for this level"}
 }
 
-updateProgress()
-
 const exercises=[
-{course:"it-en",level:"A1",type:"quiz",prompt:"Come si dice 'Ciao' in inglese?",o1:"Hello",o2:"Goodbye"},
-{course:"it-en",level:"B1",type:"write",prompt:"Traduci: Sto studiando inglese",answer:"I am studying English"},
-{course:"pt-it",level:"A1",type:"quiz",prompt:"Como se diz 'Olá' em italiano?",o1:"Ciao",o2:"Prego"},
-{course:"pt-en",level:"B2",type:"situation",prompt:"No trabalho: peça ajuda",answer:"Can you help me?"},
-{course:"en-pt",level:"A2",type:"write",prompt:"Translate: I live here",answer:"Moro aqui"},
-{course:"en-it",level:"C1",type:"write",prompt:"Translate: I have professional experience",answer:"Ho esperienza professionale"}
+{c:"it-en",l:"A1",q:"Come si dice 'Ciao' in inglese?",a:"Hello"},
+{c:"it-en",l:"A1",q:"Come si dice 'Grazie' in inglese?",a:"Thank you"},
+{c:"it-en",l:"A2",q:"Traduci: Sto lavorando",a:"I am working"},
+{c:"it-en",l:"B1",q:"Traduci: Vivo in Italia",a:"I live in Italy"},
+{c:"it-en",l:"B2",q:"Situazione: ordinare al ristorante",a:"I would like to order"},
+{c:"it-en",l:"C1",q:"Traduci: esperienza professionale",a:"Professional experience"},
+
+{c:"pt-it",l:"A1",q:"Como se diz Olá em italiano?",a:"Ciao"},
+{c:"pt-it",l:"A2",q:"Traduza: Bom dia",a:"Buongiorno"},
+{c:"pt-it",l:"B1",q:"Traduza: Eu moro aqui",a:"Io vivo qui"},
+{c:"pt-it",l:"B2",q:"Situação: pedir informação",a:"Scusi, dov'è"},
+{c:"pt-it",l:"C1",q:"Traduza: experiência profissional",a:"Esperienza professionale"},
+
+{c:"pt-en",l:"A1",q:"Como se diz Olá em inglês?",a:"Hello"},
+{c:"pt-en",l:"A2",q:"Traduza: Eu trabalho",a:"I work"},
+{c:"pt-en",l:"B1",q:"Traduza: Estou estudando",a:"I am studying"},
+{c:"pt-en",l:"B2",q:"Situação: entrevista",a:"I have experience"},
+{c:"pt-en",l:"C1",q:"Traduza: desenvolvimento profissional",a:"Professional development"}
 ]
+
+function langFromCourse(c){
+if(c.startsWith("it")) return "it"
+if(c.startsWith("pt")) return "pt"
+return "en"
+}
 
 function start(){
 const c=course.value
 const l=level.value
-list=exercises.filter(e=>e.course===c && e.level===l)
-document.getElementById("start").classList.add("hidden")
-document.getElementById("app").classList.remove("hidden")
+const lang=langFromCourse(c)
+const t=i18n[lang]
+
+levelLabel.innerText=`${t.level}`
+xpLabel.innerText=`${t.xp}: ${xp}`
+missionTitle.innerText=t.missions
+m1.innerText=t.m1
+m2.innerText=t.m2
+m3.innerText=t.m3
+
+list=exercises.filter(e=>e.c===c && e.l===l)
 index=0
-show()
+
+start.classList.add("hidden")
+app.classList.remove("hidden")
+
+show(t)
 }
 
-function show(){
+function show(t){
+if(list.length===0){
+prompt.innerText=t.no
+o1.style.display="none"
+o2.style.display="none"
+return
+}
 const e=list[index%list.length]
-prompt.innerText=e.prompt
-quizBox.classList.add("hidden")
-writeBox.classList.add("hidden")
-
-if(e.type==="quiz"){
-quizBox.classList.remove("hidden")
-o1.innerText=e.o1
-o2.innerText=e.o2
-o1.onclick=()=>success()
-o2.onclick=()=>success()
-}else{
-writeBox.classList.remove("hidden")
-}
+prompt.innerText=e.q
+o1.innerText=e.a
+o2.innerText="❌"
 }
 
 function success(){
 xp+=10
 localStorage.setItem("xp",xp)
-completed++
-correctStreak++
-updateProgress()
-
-if(completed>=3) d1.innerText="✅ Completar 3 exercícios"
-if(correctStreak>=2) d2.innerText="✅ Acertar 2 seguidos"
-d3.innerText="✅ Estudar hoje"
-
-next()
-}
-
-function next(){
 index++
-show()
+show(i18n.en)
 }
 </script>
 
