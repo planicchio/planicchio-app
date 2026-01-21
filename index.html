@@ -8,7 +8,7 @@
 body{font-family:Arial;background:#fff7ed;margin:0;padding:20px}
 .card{background:#fff;padding:16px;border-radius:14px;margin-bottom:16px}
 .hidden{display:none}
-h1,h2{text-align:center}
+h1{text-align:center}
 button{width:100%;padding:10px;margin-top:10px;border:none;border-radius:10px;background:#fb923c;color:white;font-size:16px}
 select,input{width:100%;padding:8px;margin-top:8px}
 .question{font-weight:bold;font-size:18px;margin-bottom:10px}
@@ -32,25 +32,27 @@ select,input{width:100%;padding:8px;margin-top:8px}
 </select>
 
 <select id="level">
-<option>A1</option><option>A2</option>
-<option>B1</option><option>B2</option>
-<option>C1</option><option>C2</option>
+<option>A1</option>
+<option>A2</option>
+<option>B1</option>
+<option>B2</option>
+<option>C1</option>
+<option>C2</option>
 </select>
 
-<button onclick="start()">Começar</button>
+<button id="startBtn">Começar</button>
 </div>
 
 <div id="app" class="card hidden">
 <div id="question" class="question"></div>
 <input id="input" placeholder="Escreva sua resposta (opcional)">
-<button onclick="handleClick()" id="actionBtn">Ver resposta</button>
+<button id="actionBtn">Ver resposta</button>
 <div id="answer" class="answer"></div>
 <div id="info" class="notice"></div>
 </div>
 
 <script>
 const exercises = [
-/* IT → EN */
 {c:"it-en",l:"A1",q:"Come si dice 'Ciao' in inglese?",a:"Hello"},
 {c:"it-en",l:"A1",q:"Come si dice 'Grazie' in inglese?",a:"Thank you"},
 {c:"it-en",l:"A2",q:"Traduci: Io lavoro",a:"I work"},
@@ -59,7 +61,6 @@ const exercises = [
 {c:"it-en",l:"C1",q:"Traduci: sviluppo professionale",a:"Professional development"},
 {c:"it-en",l:"C2",q:"Traduci: capacità di adattamento",a:"Adaptability skills"},
 
-/* PT → IT */
 {c:"pt-it",l:"A1",q:"Como se diz Olá em italiano?",a:"Ciao"},
 {c:"pt-it",l:"A2",q:"Traduza: Bom dia",a:"Buongiorno"},
 {c:"pt-it",l:"B1",q:"Traduza: Eu moro aqui",a:"Io vivo qui"},
@@ -67,7 +68,6 @@ const exercises = [
 {c:"pt-it",l:"C1",q:"Traduza: desenvolvimento pessoal",a:"Sviluppo personale"},
 {c:"pt-it",l:"C2",q:"Traduza: competências interpessoais",a:"Competenze interpersonali"},
 
-/* PT → EN */
 {c:"pt-en",l:"A1",q:"Como se diz Olá em inglês?",a:"Hello"},
 {c:"pt-en",l:"A2",q:"Traduza: Eu trabalho",a:"I work"},
 {c:"pt-en",l:"B1",q:"Traduza: Estou aprendendo inglês",a:"I am learning English"},
@@ -76,46 +76,52 @@ const exercises = [
 {c:"pt-en",l:"C2",q:"Traduza: pensamento estratégico",a:"Strategic thinking"}
 ];
 
-let list=[],i=0,showingAnswer=false;
+let list=[],index=0,showAnswer=false;
 
-function start(){
-const c=course.value;
-const l=level.value;
+const startDiv=document.getElementById("start");
+const appDiv=document.getElementById("app");
+const question=document.getElementById("question");
+const answer=document.getElementById("answer");
+const info=document.getElementById("info");
+const btn=document.getElementById("actionBtn");
+
+document.getElementById("startBtn").onclick=()=>{
+const c=document.getElementById("course").value;
+const l=document.getElementById("level").value;
 list=exercises.filter(e=>e.c===c && e.l===l);
+index=0;
 startDiv.classList.add("hidden");
-app.classList.remove("hidden");
-i=0;
-showingAnswer=false;
+appDiv.classList.remove("hidden");
+show();
+};
+
+btn.onclick=()=>{
+if(list.length===0) return;
+if(!showAnswer){
+answer.innerText="Resposta: "+list[index].a;
+btn.innerText="Próximo";
+showAnswer=true;
+}else{
+index=(index+1)%list.length;
 show();
 }
+};
 
 function show(){
 if(list.length===0){
 question.innerText="Ainda não há exercícios neste nível.";
 answer.innerText="";
 info.innerText="";
-actionBtn.style.display="none";
+btn.style.display="none";
 return;
 }
-const e=list[i];
+btn.style.display="block";
+const e=list[index];
 question.innerText=e.q;
 answer.innerText="";
-info.innerText=`Exercício ${i+1} de ${list.length}`;
-actionBtn.innerText="Ver resposta";
-showingAnswer=false;
-}
-
-function handleClick(){
-if(list.length===0) return;
-if(!showingAnswer){
-answer.innerText="Resposta: "+list[i].a;
-actionBtn.innerText="Próximo";
-showingAnswer=true;
-}else{
-i++;
-if(i>=list.length) i=0;
-show();
-}
+info.innerText=`Exercício ${index+1} de ${list.length}`;
+btn.innerText="Ver resposta";
+showAnswer=false;
 }
 </script>
 
