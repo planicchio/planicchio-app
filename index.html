@@ -8,7 +8,6 @@
 <style>
 :root{
   --orange:#fb923c;
-  --orange-soft:#fde68a;
   --bg:#fff7ed;
   --card:#ffffff;
   --text:#1f2937;
@@ -18,7 +17,7 @@
 
 body{
   margin:0;
-  font-family:'Arial',sans-serif;
+  font-family:Arial,sans-serif;
   background:var(--bg);
   color:var(--text);
 }
@@ -27,7 +26,7 @@ body{
 
 .container{
   padding:16px;
-  padding-bottom:100px;
+  padding-bottom:120px;
 }
 
 .card{
@@ -38,30 +37,17 @@ body{
   box-shadow:0 6px 18px rgba(0,0,0,.06);
 }
 
-/* ---------- TELA INICIAL ---------- */
-
+/* START */
 #start{
   background:var(--orange);
   min-height:100vh;
   color:white;
 }
 
-.slogan{
-  text-align:center;
-  opacity:.9;
-}
-
 .big-cat{
-  font-size:120px;
+  font-size:130px;
   text-align:center;
   margin:30px 0;
-  animation:float 2s infinite ease-in-out;
-}
-
-@keyframes float{
-  0%{transform:translateY(0)}
-  50%{transform:translateY(-8px)}
-  100%{transform:translateY(0)}
 }
 
 .courses{
@@ -72,21 +58,15 @@ body{
 
 .course{
   background:white;
-  color:var(--text);
+  color:#000;
   padding:16px;
   border-radius:18px;
   text-align:center;
-  font-weight:bold;
   cursor:pointer;
-  transition:.3s;
+  font-weight:bold;
 }
 
-.course:hover{
-  transform:translateY(-4px);
-}
-
-/* ---------- APP ---------- */
-
+/* HEADER */
 header{
   position:fixed;
   top:0;
@@ -96,28 +76,20 @@ header{
   color:white;
   padding:14px;
   text-align:center;
-  font-weight:bold;
   z-index:10;
 }
 
-.app{
-  padding-top:70px;
-}
-
-/* ---------- PET ---------- */
-
+/* PET */
 .pet-container{
   position:fixed;
   right:10px;
   bottom:120px;
   text-align:center;
-  z-index:10;
 }
 
 .pet{
-  font-size:80px;
+  font-size:90px;
   cursor:pointer;
-  animation:float 2.5s infinite ease-in-out;
 }
 
 .pet-speech{
@@ -126,12 +98,10 @@ header{
   padding:8px 12px;
   font-size:13px;
   margin-bottom:6px;
-  box-shadow:0 4px 10px rgba(0,0,0,.1);
   max-width:180px;
 }
 
-/* ---------- MENU ---------- */
-
+/* MENU */
 .menu{
   position:fixed;
   bottom:0;
@@ -145,8 +115,8 @@ header{
 }
 
 .menu-item{
-  text-align:center;
   font-size:12px;
+  text-align:center;
   cursor:pointer;
 }
 
@@ -154,94 +124,96 @@ header{
   font-size:20px;
   display:block;
 }
+
+button{
+  background:var(--orange);
+  border:none;
+  color:white;
+  padding:10px 16px;
+  border-radius:14px;
+  font-weight:bold;
+  cursor:pointer;
+  margin-top:10px;
+}
 </style>
 </head>
 
 <body>
 
-<!-- TELA INICIAL -->
+<!-- START -->
 <div id="start" class="container">
-  <h1 style="text-align:center">PLANICCHIO 🐱</h1>
-  <p class="slogan">Aprenda idiomas com carinho 🧡</p>
+<h1 style="text-align:center">PLANICCHIO 🐱</h1>
+<div class="big-cat">🐱</div>
 
-  <div class="big-cat">🐱</div>
-
-  <div class="courses">
-    <div class="course" onclick="enterApp()">Italiano → English</div>
-    <div class="course" onclick="enterApp()">Italiano → Português</div>
-    <div class="course" onclick="enterApp()">Português → Italiano</div>
-    <div class="course" onclick="enterApp()">Português → English</div>
-    <div class="course" onclick="enterApp()">English → Italiano</div>
-    <div class="course" onclick="enterApp()">English → Português</div>
-  </div>
+<div class="courses">
+  <div class="course" onclick="enterApp()">Italiano → English</div>
+  <div class="course" onclick="enterApp()">Italiano → Português</div>
+  <div class="course" onclick="enterApp()">Português → Italiano</div>
+  <div class="course" onclick="enterApp()">Português → English</div>
+  <div class="course" onclick="enterApp()">English → Italiano</div>
+  <div class="course" onclick="enterApp()">English → Português</div>
+</div>
 </div>
 
 <!-- APP -->
 <div id="app" class="hidden">
 
-<header>Planicchio 🐱</header>
+<header>Planicchio 🧡</header>
 
-<div class="container app">
+<div class="container" style="padding-top:70px">
 
 <div id="home" class="card">
-  <h3>🌱 Seu progresso</h3>
-  <p>Continue estudando hoje!</p>
+<h3>🌱 Progresso</h3>
+<p>Nível: <b id="level">A1</b></p>
+<p>Pontos: <b id="points">0</b></p>
+
+<h4>🎯 Missões</h4>
+<ul>
+<li>Acertar 1 exercício</li>
+<li>Completar uma lição</li>
+<li>Entrar no app</li>
+</ul>
 </div>
 
-<div id="ex" class="card hidden">
-  <h3>✏️ Exercícios</h3>
-</div>
-
-<div id="tips" class="card hidden">
-  <h3>💡 Dicas & Curiosidades</h3>
-</div>
-
-<div id="dict" class="card hidden">
-  <h3>📖 Dicionário</h3>
-</div>
-
-<div id="com" class="card hidden">
-  <h3>💬 Comunidade</h3>
+<div id="exercise" class="card hidden">
+<h3>✏️ Exercício</h3>
+<p id="question">Traduza: Hello</p>
+<button onclick="answer(true)">Resposta certa</button>
+<button onclick="answer(false)">Resposta errada</button>
 </div>
 
 <div id="profile" class="card hidden">
-  <h3>👤 Perfil</h3>
+<h3>👤 Perfil</h3>
+<p>Escolha seu pet:</p>
+<button onclick="changePet('🐱')">🐱</button>
+<button onclick="changePet('🦊')">🦊</button>
+<button onclick="changePet('🐼')">🐼</button>
 </div>
 
 </div>
 
 <!-- PET -->
 <div class="pet-container">
-  <div id="petSpeech" class="pet-speech">Oi! Eu sou o Planicchio 😸</div>
-  <div class="pet" onclick="talk()">🐱</div>
+<div id="petSpeech" class="pet-speech">Oi! Vamos estudar 😸</div>
+<div id="pet" class="pet" onclick="meow()">🐱</div>
 </div>
 
 <!-- MENU -->
 <div class="menu">
-  <div class="menu-item" onclick="openTab('home')"><span>🏠</span>Home</div>
-  <div class="menu-item" onclick="openTab('ex')"><span>✏️</span>Exercícios</div>
-  <div class="menu-item" onclick="openTab('tips')"><span>💡</span>Dicas</div>
-  <div class="menu-item" onclick="openTab('dict')"><span>📖</span>Dict</div>
-  <div class="menu-item" onclick="openTab('com')"><span>💬</span>Comu</div>
-  <div class="menu-item" onclick="openTab('profile')"><span>👤</span>Perfil</div>
+<div class="menu-item" onclick="openTab('home')"><span>🏠</span>Home</div>
+<div class="menu-item" onclick="openTab('exercise')"><span>✏️</span>Ex</div>
+<div class="menu-item" onclick="openTab('profile')"><span>👤</span>Perfil</div>
 </div>
 
-</div>
+<audio id="okSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
+<audio id="errSound" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"></audio>
+<audio id="lvlSound" src="https://actions.google.com/sounds/v1/cartoon/celebration.ogg"></audio>
+<audio id="meowSound" src="https://actions.google.com/sounds/v1/animals/cat_purr_close.ogg"></audio>
 
 <script>
-const phrases=[
-  "Você está indo muito bem 🧡",
-  "Que tal mais um exercício?",
-  "Miau! Aprender pode ser divertido 😸",
-  "Estou orgulhoso de você!",
-  "Vamos subir de nível juntos?",
-  "Aprender um pouquinho todo dia faz milagres ✨"
-];
-
-function talk(){
-  const p=phrases[Math.floor(Math.random()*phrases.length)];
-  petSpeech.innerText=p;
-}
+let points=0;
+let level="A1";
+let petEmoji="🐱";
 
 function enterApp(){
   start.classList.add("hidden");
@@ -252,6 +224,42 @@ function openTab(id){
   document.querySelectorAll(".card").forEach(c=>c.classList.add("hidden"));
   document.getElementById(id).classList.remove("hidden");
 }
+
+function answer(correct){
+  if(correct){
+    points++;
+    okSound.play();
+    pet.innerText="😸";
+    petSpeech.innerText="Muito bem! Continue assim 🧡";
+  }else{
+    errSound.play();
+    pet.innerText="😿";
+    petSpeech.innerText="Errar faz parte! Vamos tentar de novo 💪";
+  }
+
+  pointsEl.innerText=points;
+
+  if(points===3){
+    level="A2";
+    levelEl.innerText=level;
+    lvlSound.play();
+    pet.innerText="🎉😺";
+    petSpeech.innerText="LEVEL UP! Você subiu para A2!";
+  }
+}
+
+function changePet(p){
+  petEmoji=p;
+  pet.innerText=p;
+  petSpeech.innerText="Adorei meu novo visual 😻";
+}
+
+function meow(){
+  meowSound.play();
+}
+
+const pointsEl=document.getElementById("points");
+const levelEl=document.getElementById("level");
 </script>
 
 </body>
