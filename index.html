@@ -1,17 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Planicchio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+:root{
+  --orange:#ff8c2b;
+  --orange-dark:#e57200;
+  --bg:#fff4ea;
+}
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:system-ui, Arial;
+  background:var(--bg);
+  color:#333;
+  overflow-x:hidden;
+}
+
+/* ===== SPLASH ===== */
+#splash{
+  height:100vh;
+  background:linear-gradient(180deg,var(--orange),var(--orange-dark));
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  color:white;
+}
+
+#splash h1{
+  font-size:36px;
+  margin:10px 0 0;
+}
+
+#splash p{
+  font-size:16px;
+  opacity:.9;
+}
+
+#startBtn{
+  margin-top:24px;
+  padding:14px 28px;
+  border:none;
+  border-radius:30px;
+  font-size:16px;
+  font-weight:600;
+  background:white;
+  color:var(--orange-dark);
+  cursor:pointer;
+}
+
+/* ===== CAT ===== */
+.cat{
+  font-size:120px;
+  animation:dance 2s infinite ease-in-out;
+}
+
+@keyframes dance{
+  0%{transform:translateY(0) rotate(0deg)}
+  50%{transform:translateY(-10px) rotate(2deg)}
+  100%{transform:translateY(0) rotate(0deg)}
+}
+
+/* ===== COURSE SELECT ===== */
+#courses{
+  display:none;
+  min-height:100vh;
+  padding:20px;
+}
+
+#courses h2{
+  text-align:center;
+  color:var(--orange-dark);
+  margin-bottom:20px;
+}
+
+.course-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+
+.course-card{
+  background:white;
+  border-radius:20px;
+  padding:20px;
+  text-align:center;
+  font-weight:600;
+  box-shadow:0 6px 14px rgba(0,0,0,.08);
+  cursor:pointer;
+  transition:.2s;
+}
+
+.course-card:hover{
+  transform:translateY(-4px);
+}
+
+/* RESPONSIVE */
+@media(min-width:600px){
+  .course-grid{grid-template-columns:repeat(3,1fr)}
+}
+</style>
+</head>
+
 <body>
-  <div id="splash"></div>
-  <div id="course-select"></div>
-  <div id="level-quiz"></div>
 
-  <div id="app">
-    <header></header>
-    <main id="home"></main>
-    <main id="exercises"></main>
-    <main id="tips"></main>
-    <main id="dictionary"></main>
-    <main id="profile"></main>
-    <nav></nav>
+<!-- SPLASH -->
+<div id="splash">
+  <div class="cat">🐱</div>
+  <h1>Planicchio</h1>
+  <p>learn to think globally</p>
+  <button id="startBtn" onclick="openCourses()">Começar</button>
+</div>
+
+<!-- COURSES -->
+<div id="courses">
+  <h2>Escolha seu curso</h2>
+
+  <div class="course-grid">
+    <div class="course-card">🇮🇹 → 🇺🇸<br>Italiano · English</div>
+    <div class="course-card">🇮🇹 → 🇧🇷<br>Italiano · Português</div>
+    <div class="course-card">🇧🇷 → 🇮🇹<br>Português · Italiano</div>
+    <div class="course-card">🇧🇷 → 🇺🇸<br>Português · English</div>
+    <div class="course-card">🇺🇸 → 🇮🇹<br>English · Italiano</div>
+    <div class="course-card">🇺🇸 → 🇧🇷<br>English · Português</div>
   </div>
+</div>
 
-  <div id="pet"></div>
+<script>
+function openCourses(){
+  document.getElementById("splash").style.display="none";
+  document.getElementById("courses").style.display="block";
+}
+</script>
+
 </body>
+</html>
