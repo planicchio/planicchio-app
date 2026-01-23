@@ -8,7 +8,6 @@
 <style>
 :root{
   --orange:#fb923c;
-  --orange-soft:#fff1e6;
   --bg:#fff7ed;
   --card:#ffffff;
   --text:#1f2937;
@@ -30,8 +29,7 @@ body{
   padding-bottom:140px;
 }
 
-/* ---------- START ---------- */
-
+/* START */
 #start{
   min-height:100vh;
   background:linear-gradient(180deg,var(--orange),#ffb26b);
@@ -63,16 +61,9 @@ body{
   text-align:center;
   font-weight:600;
   cursor:pointer;
-  transition:.3s;
 }
 
-.course:hover{
-  transform:scale(1.05);
-  background:var(--orange-soft);
-}
-
-/* ---------- HEADER ---------- */
-
+/* HEADER */
 header{
   position:fixed;
   top:0;
@@ -83,27 +74,18 @@ header{
   padding:14px;
   text-align:center;
   z-index:10;
-  font-weight:700;
 }
 
-/* ---------- CARDS ---------- */
-
+/* CARDS */
 .card{
   background:var(--card);
   border-radius:26px;
   padding:18px;
   margin-bottom:18px;
   box-shadow:0 10px 30px rgba(0,0,0,.08);
-  animation:fadeUp .5s;
 }
 
-@keyframes fadeUp{
-  from{opacity:0; transform:translateY(20px)}
-  to{opacity:1; transform:translateY(0)}
-}
-
-/* ---------- PET ---------- */
-
+/* PET */
 .pet-container{
   position:fixed;
   right:14px;
@@ -115,7 +97,6 @@ header{
 .pet{
   font-size:96px;
   animation:float 3s ease-in-out infinite;
-  cursor:pointer;
 }
 
 @keyframes float{
@@ -130,11 +111,9 @@ header{
   font-size:13px;
   margin-bottom:6px;
   max-width:200px;
-  box-shadow:0 6px 16px rgba(0,0,0,.15);
 }
 
-/* ---------- MENU ---------- */
-
+/* MENU */
 .menu{
   position:fixed;
   bottom:0;
@@ -151,15 +130,12 @@ header{
   font-size:12px;
   text-align:center;
   cursor:pointer;
-  color:#555;
 }
 
 .menu-item span{
   font-size:22px;
   display:block;
 }
-
-/* ---------- BUTTON ---------- */
 
 button{
   background:var(--orange);
@@ -169,15 +145,9 @@ button{
   border-radius:18px;
   font-weight:bold;
   cursor:pointer;
-  transition:.3s;
 }
 
-button:hover{
-  transform:scale(1.05);
-}
-
-/* ---------- APP ---------- */
-
+/* APP */
 .app{
   padding-top:70px;
 }
@@ -208,47 +178,71 @@ button:hover{
 
 <div class="container app">
 
-<div class="card">
-<h3>🌱 Seu progresso</h3>
-<p>Nível: <b>A1</b></p>
-<p>Sequência: 🔥 3 dias</p>
+<div id="home" class="card">
+<h3>🏠 Home</h3>
+<p>Nível: A1</p>
+<p>Missão: Fazer 1 exercício hoje</p>
 </div>
 
-<div class="card">
-<h3>🎯 Missões de hoje</h3>
-<ul>
-<li>✔ Fazer 1 exercício</li>
-<li>✔ Aprender 5 palavras</li>
-<li>⬜ Entrar na comunidade</li>
-</ul>
+<div id="exercises" class="card hidden">
+<h3>✏️ Exercício A1</h3>
+<p><b>Traduza:</b> Hello</p>
+<button onclick="correct()">Hello → Ciao</button>
+<button onclick="wrong()">Hello → Bye</button>
 </div>
 
-<div class="card">
-<h3>🏆 Ranking</h3>
-<p>Você está no top 20% hoje 🚀</p>
+<div id="tips" class="card hidden">
+<h3>📖 Dica</h3>
+<p>Em italiano, “Ciao” pode significar Oi ou Tchau.</p>
+</div>
+
+<div id="community" class="card hidden">
+<h3>👥 Comunidade</h3>
+<p>Em breve você poderá conversar com outros alunos 😸</p>
+</div>
+
+<div id="profile" class="card hidden">
+<h3>👤 Perfil</h3>
+<p>Nome: Planicchio Lover</p>
+<p>Nível atual: A1</p>
 </div>
 
 </div>
 
 <!-- PET -->
 <div class="pet-container">
-<div class="pet-speech">Oi! Vamos estudar juntos? 😸</div>
-<div class="pet">🐱</div>
+<div id="petSpeech" class="pet-speech">Escolha um exercício 😸</div>
+<div id="pet" class="pet">🐱</div>
 </div>
 
 <!-- MENU -->
 <div class="menu">
-<div class="menu-item"><span>🏠</span>Home</div>
-<div class="menu-item"><span>✏️</span>Exercícios</div>
-<div class="menu-item"><span>📖</span>Dicas</div>
-<div class="menu-item"><span>👥</span>Comunidade</div>
-<div class="menu-item"><span>👤</span>Perfil</div>
+<div class="menu-item" onclick="openTab('home')"><span>🏠</span>Home</div>
+<div class="menu-item" onclick="openTab('exercises')"><span>✏️</span>Ex</div>
+<div class="menu-item" onclick="openTab('tips')"><span>📖</span>Dicas</div>
+<div class="menu-item" onclick="openTab('community')"><span>👥</span>Comunidade</div>
+<div class="menu-item" onclick="openTab('profile')"><span>👤</span>Perfil</div>
 </div>
 
 <script>
 function enterApp(){
   start.classList.add("hidden");
   app.classList.remove("hidden");
+}
+
+function openTab(id){
+  document.querySelectorAll(".card").forEach(c=>c.classList.add("hidden"));
+  document.getElementById(id).classList.remove("hidden");
+}
+
+function correct(){
+  pet.innerText="😸";
+  petSpeech.innerText="Perfeito! Você acertou 🧡";
+}
+
+function wrong(){
+  pet.innerText="😿";
+  petSpeech.innerText="Quase! Tente novamente 💪";
 }
 </script>
 
