@@ -322,9 +322,24 @@ function check(ans,correct){
 function closeGame(){
  document.getElementById("minigame").style.display="none";
 }
+  let xp = Number(localStorage.getItem("xp")) || 0;
+
+document.querySelectorAll(".mission-card").forEach(mission=>{
+  mission.addEventListener("click", ()=>{
+    if(!mission.classList.contains("done")){
+      mission.classList.add("done");
+      mission.innerHTML += " ✅";
+      xp += 10;
+      localStorage.setItem("xp", xp);
+      alert("🎉 Missão concluída! +10 XP");
+    }
+  });
+});
+
 </script>
 
 </body>
 </html>
+
 
 
