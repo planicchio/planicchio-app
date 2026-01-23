@@ -4,169 +4,223 @@
 <meta charset="UTF-8">
 <title>Planicchio</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <style>
 :root{
-  --orange:#fb923c;
-  --bg:#fff7ed;
+  --orange:#ff8c2b;
+  --light:#fff7ee;
 }
-body{margin:0;font-family:Arial,sans-serif;background:var(--bg)}
-header{background:var(--orange);color:white;padding:14px;text-align:center}
-.container{padding:16px;padding-bottom:160px}
-.card{background:white;border-radius:26px;padding:20px;margin-bottom:18px;box-shadow:0 8px 20px rgba(0,0,0,.08)}
-button{width:100%;padding:12px;border:none;border-radius:16px;background:var(--orange);color:white;font-weight:bold;margin-top:10px}
-.pet{position:fixed;right:16px;bottom:130px;text-align:center}
-.pet div{background:white;border-radius:14px;padding:8px 12px;font-size:13px;margin-bottom:6px}
-.pet span{font-size:90px}
-.menu{position:fixed;bottom:0;left:0;right:0;background:white;display:flex;justify-content:space-around;padding:10px 0}
-.menu span{font-size:22px}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,Arial;
+  background:var(--light);
+}
+header{
+  background:var(--orange);
+  color:white;
+  padding:14px;
+  text-align:center;
+  font-size:20px;
+  font-weight:bold;
+}
+.container{padding:16px}
+.card{
+  background:white;
+  border-radius:22px;
+  padding:18px;
+  margin-bottom:16px;
+  box-shadow:0 8px 18px rgba(0,0,0,.08);
+}
+button{
+  width:100%;
+  padding:12px;
+  margin-top:8px;
+  border:none;
+  border-radius:14px;
+  background:var(--orange);
+  color:white;
+  font-size:15px;
+  font-weight:600;
+  cursor:pointer;
+}
+button.secondary{
+  background:#ffd8b2;
+  color:#a94f00;
+}
+.hidden{display:none}
+.pet{
+  position:fixed;
+  right:10px;
+  bottom:90px;
+  font-size:90px;
+}
+footer{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:white;
+  border-top:1px solid #eee;
+  display:flex;
+}
+footer button{
+  flex:1;
+  border-radius:0;
+  background:white;
+  color:#444;
+}
+footer button.active{
+  color:var(--orange);
+  font-weight:bold;
+}
 </style>
 </head>
 
 <body>
 
-<header id="title"></header>
+<header>Planicchio 🧡</header>
 
 <div class="container">
 
-<!-- SELEÇÃO -->
+<!-- SETUP -->
 <div class="card" id="setup">
-<h3 id="chooseCourse"></h3>
+<h3>Escolha o curso</h3>
+<button onclick="selectCourse('it-en')">Italiano → English</button>
+<button onclick="selectCourse('it-pt')">Italiano → Português</button>
+<button onclick="selectCourse('pt-it')">Português → Italiano</button>
+<button onclick="selectCourse('pt-en')">Português → English</button>
+<button onclick="selectCourse('en-it')">English → Italiano</button>
+<button onclick="selectCourse('en-pt')">English → Português</button>
 
-<button onclick="setCourse('it-en')">Italiano → English</button>
-<button onclick="setCourse('it-pt')">Italiano → Português</button>
-<button onclick="setCourse('pt-it')">Português → Italiano</button>
-<button onclick="setCourse('pt-en')">Português → English</button>
-<button onclick="setCourse('en-it')">English → Italiano</button>
-<button onclick="setCourse('en-pt')">English → Português</button>
+<h3 style="margin-top:20px">Escolha o nível</h3>
+<button class="secondary" onclick="selectLevel('A1')">A1</button>
+<button class="secondary" onclick="selectLevel('A2')">A2</button>
+<button class="secondary" onclick="selectLevel('B1')">B1</button>
+<button class="secondary" onclick="selectLevel('B2')">B2</button>
+<button class="secondary" onclick="selectLevel('C1')">C1</button>
+<button class="secondary" onclick="selectLevel('C2')">C2</button>
 </div>
 
-<!-- EXERCÍCIO -->
-<div class="card hidden" id="exerciseCard">
-<h3 id="exerciseTitle"></h3>
+<!-- HOME -->
+<div class="card hidden" id="home">
+<h3>Missão do dia</h3>
+<p>Complete 3 exercícios 🎯</p>
+<p><b>Curso:</b> <span id="infoCourse"></span></p>
+<p><b>Nível:</b> <span id="infoLevel"></span></p>
+<button onclick="openExercises()">Começar</button>
+</div>
+
+<!-- EXERCISES -->
+<div class="card hidden" id="exercise">
+<h3 id="exTitle"></h3>
 <p id="question"></p>
 <div id="answers"></div>
+<button onclick="nextExercise()">Próximo</button>
 </div>
 
 </div>
 
-<!-- PET -->
-<div class="pet">
-<div id="petSpeech"></div>
-<span>🐱</span>
-</div>
+<div class="pet">🐱</div>
+
+<footer>
+<button class="active" onclick="goHome()">Home</button>
+<button onclick="openExercises()">Exercícios</button>
+<button onclick="alert('Em breve 😸')">Dicas</button>
+<button onclick="alert('Em breve 📚')">Dicionário</button>
+<button onclick="alert('Em breve 👥')">Perfil</button>
+</footer>
 
 <script>
-// 🌍 IDIOMA DA UI
-let currentUILang="pt";
+let course="",level="",index=0;
 
-// 📘 TEXTOS DA INTERFACE
-const uiText={
-pt:{
-title:"Planicchio 🧡",
-chooseCourse:"Escolha seu curso",
-exercise:"Exercício",
-correct:"Muito bem!",
-wrong:"Tente novamente!"
-},
-it:{
-title:"Planicchio 🧡",
-chooseCourse:"Scegli il tuo corso",
-exercise:"Esercizio",
-correct:"Perfetto!",
-wrong:"Riprova!"
-},
-en:{
-title:"Planicchio 🧡",
-chooseCourse:"Choose your course",
-exercise:"Exercise",
-correct:"Great job!",
-wrong:"Try again!"
-}
-};
-
-// 📚 CONTEÚDO PEDAGÓGICO
-const content={
+const DATA={
 "it-en":{
 A1:[
-{q:"Hello in inglese è…",a:["Hello","Bye"],c:0}
+{q:"Ciao significa…",a:["Hello","Bye"],c:0},
+{q:"Grazie significa…",a:["Thanks","Sorry"],c:0}
+],
+A2:[
+{q:"Come stai?",a:["How are you?","Where are you?"],c:0}
+],
+B1:[
+{q:"Sto studiando inglese",a:["I am studying English","I studied English"],c:0}
+],
+B2:[
+{q:"Greeting formal",a:["Good morning","Hey bro"],c:0}
+],
+C1:[
+{q:"Nevertheless significa…",a:["Mesmo assim","Nunca"],c:0}
+],
+C2:[
+{q:"Advanced synonym of 'important'",a:["Crucial","Small"],c:0}
 ]
 },
+
 "pt-it":{
 A1:[
-{q:"Olá em italiano é…",a:["Ciao","Arrivederci"],c:0}
-]
-},
-"pt-en":{
-A1:[
-{q:"Bom dia em inglês é…",a:["Good morning","Good night"],c:0}
-]
-},
-"en-it":{
-A1:[
-{q:"Hello in italiano è…",a:["Ciao","Salve"],c:0}
-]
-},
-"en-pt":{
-A1:[
-{q:"Hello em português é…",a:["Olá","Tchau"],c:0}
-]
-},
-"it-pt":{
-A1:[
-{q:"Ciao em português é…",a:["Olá","Adeus"],c:0}
+{q:"Olá em italiano",a:["Ciao","Buona notte"],c:0}
+],
+A2:[
+{q:"Buongiorno significa",a:["Bom dia","Boa noite"],c:0}
+],
+B1:[
+{q:"Sto imparando italiano",a:["Estou aprendendo italiano","Eu ensino italiano"],c:0}
+],
+B2:[
+{q:"Forma formal de tchau",a:["Arrivederci","Ciao"],c:0}
+],
+C1:[
+{q:"A prescindere da",a:["Independentemente de","Depois de"],c:0}
+],
+C2:[
+{q:"Sinonimo de 'veloce'",a:["Rapido","Lento"],c:0}
 ]
 }
 };
 
-let course="",level="A1",index=0;
-
-// 🌍 DETECTA IDIOMA DA UI
-function detectUILang(course){
-  if(course.startsWith("it")) currentUILang="it";
-  if(course.startsWith("pt")) currentUILang="pt";
-  if(course.startsWith("en")) currentUILang="en";
-  applyUI();
-}
-
-// 🎨 APLICA UI
-function applyUI(){
-  title.innerText=uiText[currentUILang].title;
-  chooseCourse.innerText=uiText[currentUILang].chooseCourse;
-}
-
-// 🎯 SELECIONA CURSO
-function setCourse(c){
-  course=c;
-  detectUILang(c);
+function selectCourse(c){course=c}
+function selectLevel(l){
+  if(!course){alert("Escolha o curso");return;}
+  level=l;
   setup.classList.add("hidden");
-  exerciseCard.classList.remove("hidden");
+  home.classList.remove("hidden");
+  infoCourse.innerText=course.toUpperCase();
+  infoLevel.innerText=level;
+}
+
+function goHome(){
+  exercise.classList.add("hidden");
+  home.classList.remove("hidden");
+}
+
+function openExercises(){
+  home.classList.add("hidden");
+  exercise.classList.remove("hidden");
+  index=0;
   loadExercise();
 }
 
-// ✏️ EXERCÍCIO
 function loadExercise(){
-  let ex=content[course][level][index];
-  exerciseTitle.innerText=uiText[currentUILang].exercise;
+  let ex=DATA[course][level][index];
+  exTitle.innerText=course.toUpperCase()+" • "+level;
   question.innerText=ex.q;
   answers.innerHTML="";
-  ex.a.forEach((txt,i)=>{
+  ex.a.forEach((t,i)=>{
     let b=document.createElement("button");
-    b.innerText=txt;
+    b.innerText=t;
     b.onclick=()=>check(i);
     answers.appendChild(b);
   });
-  petSpeech.innerText="🐱 "+uiText[currentUILang].exercise;
 }
 
 function check(i){
-  let ex=content[course][level][index];
-  if(i===ex.c){
-    petSpeech.innerText="😸 "+uiText[currentUILang].correct;
-  }else{
-    petSpeech.innerText="😿 "+uiText[currentUILang].wrong;
-  }
+  let ex=DATA[course][level][index];
+  alert(i===ex.c?"Correto 😸":"Errado 😿");
 }
-</script>
 
-</body>
-</html>
+function nextExercise(){
+  index++;
+  if(index>=DATA[course][level].length){
+    alert("Missão concluída 🎉");
+    goHome();
