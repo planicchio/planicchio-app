@@ -162,6 +162,17 @@ nav button.active{color:var(--orange-dark)}
     <div class="progress"><span></span></div>
   </div>
 
+  <button onclick="startGame()" style="
+  background:#ff8c2b;
+  border:none;
+  padding:14px 20px;
+  border-radius:20px;
+  color:white;
+  font-weight:bold;
+  margin-top:16px">
+  🎮 Jogar minigame
+</button>
+
   <div class="card">
     <h3>🎯 Missão do dia</h3>
     <p>Complete 3 exercícios</p>
@@ -206,5 +217,91 @@ function openHome(){
 }
 </script>
 
+  <!-- MINIGAME MODAL -->
+<div id="minigame" style="display:none;
+position:fixed;inset:0;
+background:rgba(0,0,0,.5);
+z-index:99;
+align-items:center;
+justify-content:center;">
+
+<div style="background:white;
+padding:24px;
+border-radius:24px;
+width:90%;
+max-width:360px;
+text-align:center;
+box-shadow:0 10px 30px rgba(0,0,0,.2)">
+
+<h3>🎮 5 Segundos</h3>
+<p id="question">Hello significa?</p>
+
+<div id="options"></div>
+
+<p id="timer">⏱️ 5</p>
+<div id="reaction" style="font-size:50px;margin-top:10px"></div>
+
+<button onclick="closeGame()" style="
+margin-top:14px;
+background:#ff8c2b;
+border:none;
+color:white;
+padding:10px 20px;
+border-radius:20px">Fechar</button>
+</div>
+</div>
+
+<script>
+const questions=[
+ {q:"Hello significa?", a:"Olá", options:["Tchau","Olá","Obrigado"]},
+ {q:"Goodbye significa?", a:"Tchau", options:["Bom","Tchau","Oi"]},
+ {q:"Cat em inglês?", a:"Gato", options:["Cão","Gato","Pássaro"]}
+];
+
+let time=5;
+let timerInterval;
+
+function startGame(){
+ document.getElementById("minigame").style.display="flex";
+ loadQuestion();
+}
+
+function loadQuestion(){
+ const q=questions[Math.floor(Math.random()*questions.length)];
+ document.getElementById("question").innerText=q.q;
+ const opt=document.getElementById("options");
+ opt.innerHTML="";
+ q.options.forEach(o=>{
+   const b=document.createElement("button");
+   b.innerText=o;
+   b.style="margin:6px;padding:10px 16px;border-radius:20px;border:none;background:#ffe1c4";
+   b.onclick=()=>check(o,q.a);
+   opt.appendChild(b);
+ });
+ time=5;
+ document.getElementById("reaction").innerText="";
+ document.getElementById("timer").innerText="⏱️ "+time;
+ timerInterval=setInterval(()=>{
+   time--;
+   document.getElementById("timer").innerText="⏱️ "+time;
+   if(time===0){
+     clearInterval(timerInterval);
+     document.getElementById("reaction").innerText="😿";
+   }
+ },1000);
+}
+
+function check(ans,correct){
+ clearInterval(timerInterval);
+ document.getElementById("reaction").innerText=
+   ans===correct?"😸 +10 XP":"😿";
+}
+
+function closeGame(){
+ document.getElementById("minigame").style.display="none";
+}
+</script>
+
 </body>
 </html>
+
