@@ -4,210 +4,260 @@
 <meta charset="UTF-8">
 <title>Planicchio</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <style>
 :root{
---orange:#fb923c;
---light:#fff7ed;
---card:#ffffff;
---text:#1f2937;
+  --orange:#fb923c;
+  --orange-soft:#fde68a;
+  --bg:#fff7ed;
+  --card:#ffffff;
+  --text:#1f2937;
 }
+
+*{box-sizing:border-box}
+
 body{
-margin:0;
-font-family:Arial, sans-serif;
-background:var(--light);
-color:var(--text);
+  margin:0;
+  font-family:'Arial',sans-serif;
+  background:var(--bg);
+  color:var(--text);
 }
+
 .hidden{display:none}
-header{
-background:var(--orange);
-color:white;
-padding:16px;
-text-align:center;
-font-size:22px;
-font-weight:bold;
+
+h1,h2,h3{margin:0 0 10px}
+
+.container{
+  padding:16px;
+  padding-bottom:90px;
 }
-.container{padding:16px}
+
 .card{
-background:var(--card);
-border-radius:18px;
-padding:16px;
-margin-bottom:16px;
-box-shadow:0 4px 10px rgba(0,0,0,.05);
+  background:var(--card);
+  border-radius:22px;
+  padding:16px;
+  margin-bottom:16px;
+  box-shadow:0 6px 18px rgba(0,0,0,.06);
 }
-button{
-background:var(--orange);
-border:none;
-color:white;
-padding:12px;
-border-radius:14px;
-width:100%;
-font-size:16px;
-margin-top:10px;
-cursor:pointer;
+
+/* ---------- TELA INICIAL ---------- */
+
+#start{
+  background:var(--orange);
+  min-height:100vh;
+  color:white;
 }
-select{
-width:100%;
-padding:10px;
-border-radius:12px;
-margin-top:8px;
+
+.slogan{
+  text-align:center;
+  opacity:.9;
+  margin-bottom:20px;
 }
-.tabs{
-display:flex;
-gap:6px;
-overflow-x:auto;
-margin-bottom:16px;
+
+.courses{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
 }
-.tab{
-flex:1;
-background:#fde68a;
-padding:8px;
-border-radius:12px;
-text-align:center;
-font-size:14px;
-cursor:pointer;
-white-space:nowrap;
+
+.course{
+  background:white;
+  color:var(--text);
+  padding:16px;
+  border-radius:18px;
+  text-align:center;
+  font-weight:bold;
+  cursor:pointer;
+  transition:.3s;
 }
-.tab.active{
-background:var(--orange);
-color:white;
+
+.course:hover{
+  transform:translateY(-4px);
 }
+
+.big-cat{
+  font-size:120px;
+  text-align:center;
+  margin:30px 0;
+}
+
+/* ---------- APP ---------- */
+
+header{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  background:var(--orange);
+  color:white;
+  padding:14px;
+  text-align:center;
+  font-weight:bold;
+  z-index:10;
+}
+
+.app{
+  padding-top:70px;
+}
+
+/* ---------- HOME ---------- */
+
 .progress-bar{
-height:10px;
-background:#fde68a;
-border-radius:10px;
-overflow:hidden;
-margin-top:6px;
+  height:10px;
+  background:var(--orange-soft);
+  border-radius:10px;
+  overflow:hidden;
+  margin:6px 0;
 }
+
 .progress{
-height:100%;
-width:40%;
-background:var(--orange);
+  height:100%;
+  width:40%;
+  background:var(--orange);
 }
+
+.mission{
+  font-size:14px;
+  margin:6px 0;
+}
+
+/* ---------- PET ---------- */
+
 .pet{
-position:fixed;
-bottom:16px;
-right:16px;
-background:white;
-border-radius:50%;
-width:70px;
-height:70px;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:32px;
-box-shadow:0 6px 14px rgba(0,0,0,.15);
-cursor:pointer;
+  position:fixed;
+  right:10px;
+  bottom:110px;
+  font-size:80px;
+  z-index:5;
+}
+
+/* ---------- MENU ---------- */
+
+.menu{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:white;
+  display:flex;
+  justify-content:space-around;
+  padding:10px 0;
+  border-top:1px solid #eee;
+}
+
+.menu-item{
+  text-align:center;
+  font-size:12px;
+  cursor:pointer;
+}
+
+.menu-item span{
+  font-size:20px;
+  display:block;
 }
 </style>
 </head>
 
 <body>
 
-<header>PLANICCHIO 🐱</header>
-
 <!-- TELA INICIAL -->
 <div id="start" class="container">
-<div class="card">
-<h2 style="text-align:center">Escolha seu curso</h2>
+  <h1 style="text-align:center">PLANICCHIO 🐱</h1>
+  <p class="slogan">Aprenda idiomas com carinho 🧡</p>
 
-<select id="course">
-<option value="it-en">Italiano → English</option>
-<option value="it-pt">Italiano → Português</option>
-<option value="pt-it">Português → Italiano</option>
-<option value="pt-en">Português → English</option>
-<option value="en-it">English → Italiano</option>
-<option value="en-pt">English → Português</option>
-</select>
+  <div class="big-cat">🐱</div>
 
-<button onclick="enterApp()">Entrar</button>
-</div>
+  <div class="courses">
+    <div class="course" onclick="enterApp()">Italiano → English</div>
+    <div class="course" onclick="enterApp()">Italiano → Português</div>
+    <div class="course" onclick="enterApp()">Português → Italiano</div>
+    <div class="course" onclick="enterApp()">Português → English</div>
+    <div class="course" onclick="enterApp()">English → Italiano</div>
+    <div class="course" onclick="enterApp()">English → Português</div>
+  </div>
 </div>
 
 <!-- APP -->
 <div id="app" class="hidden">
 
-<div class="container">
+<header>Planicchio 🐱</header>
 
-<!-- PROGRESSO -->
-<div class="card">
-<strong>Nível do usuário</strong>
-<div class="progress-bar"><div class="progress"></div></div>
-<p>XP: 120</p>
-</div>
-
-<!-- TABS -->
-<div class="tabs">
-<div class="tab active" onclick="openTab('home')">🏠 Home</div>
-<div class="tab" onclick="openTab('ex')">✏️ Exercícios</div>
-<div class="tab" onclick="openTab('tips')">💡 Dicas</div>
-<div class="tab" onclick="openTab('dict')">📖 Dicionário</div>
-<div class="tab" onclick="openTab('com')">💬 Comunidade</div>
-<div class="tab" onclick="openTab('profile')">👤 Perfil</div>
-</div>
+<div class="container app">
 
 <!-- HOME -->
 <div id="home" class="card">
-<h3>🎯 Missões</h3>
-<p>✔ Complete 3 exercícios</p>
-<p>✔ Estude hoje</p>
-<p>✔ Ganhe XP</p>
+  <h3>🌱 Seu progresso</h3>
+  <div class="progress-bar"><div class="progress"></div></div>
+  <p>Nível do usuário: 3 · XP: 120</p>
+
+  <h3>🎯 Missões</h3>
+  <div class="mission">✔ Complete 3 exercícios</div>
+  <div class="mission">✔ Estude hoje</div>
+  <div class="mission">✔ Ganhe XP</div>
+
+  <h3>📅 Calendário</h3>
+  <p>Dias estudados esta semana</p>
+
+  <h3>🏆 Ranking</h3>
+  <p>Ranking do seu curso e nível</p>
 </div>
 
 <!-- EXERCICIOS -->
 <div id="ex" class="card hidden">
-<h3>✏️ Exercícios</h3>
-<p>Aqui entram quizzes, escrita, fala, escuta…</p>
-<button>Começar exercício</button>
+  <h3>✏️ Exercícios</h3>
+  <p>Quizzes, escrita, fala, escuta.</p>
 </div>
 
 <!-- DICAS -->
 <div id="tips" class="card hidden">
-<h3>💡 Dicas & Curiosidades</h3>
-<p>Curiosidades culturais do idioma.</p>
+  <h3>💡 Dicas & Curiosidades</h3>
+  <p>Cultura, costumes e curiosidades.</p>
 </div>
 
 <!-- DICIONARIO -->
 <div id="dict" class="card hidden">
-<h3>📖 Dicionário & Flashcards</h3>
-<p>Palavras, gírias e exemplos.</p>
+  <h3>📖 Dicionário</h3>
+  <p>Palavras, gírias e flashcards.</p>
 </div>
 
 <!-- COMUNIDADE -->
 <div id="com" class="card hidden">
-<h3>💬 Comunidade</h3>
-<p>Converse com outros alunos.</p>
+  <h3>💬 Comunidade</h3>
+  <p>Falar com IA, nativos e alunos.</p>
 </div>
 
 <!-- PERFIL -->
 <div id="profile" class="card hidden">
-<h3>👤 Perfil</h3>
-<p>Nome, foto, progresso, trocar curso.</p>
-<button onclick="back()">Trocar curso</button>
+  <h3>👤 Perfil</h3>
+  <p>Nome, avatar, trocar curso.</p>
 </div>
 
 </div>
 
 <!-- PET -->
-<div class="pet" onclick="alert('Miau! 😺')">🐱</div>
+<div class="pet">🐱</div>
+
+<!-- MENU -->
+<div class="menu">
+  <div class="menu-item" onclick="openTab('home')"><span>🏠</span>Home</div>
+  <div class="menu-item" onclick="openTab('ex')"><span>✏️</span>Exercícios</div>
+  <div class="menu-item" onclick="openTab('tips')"><span>💡</span>Dicas</div>
+  <div class="menu-item" onclick="openTab('dict')"><span>📖</span>Dict</div>
+  <div class="menu-item" onclick="openTab('com')"><span>💬</span>Comu</div>
+  <div class="menu-item" onclick="openTab('profile')"><span>👤</span>Perfil</div>
+</div>
 
 </div>
 
 <script>
 function enterApp(){
-start.classList.add("hidden");
-app.classList.remove("hidden");
+  start.classList.add("hidden");
+  app.classList.remove("hidden");
 }
-function back(){
-app.classList.add("hidden");
-start.classList.remove("hidden");
-}
+
 function openTab(id){
-document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-event.target.classList.add("active");
-document.querySelectorAll(".card").forEach(c=>{
-if(c.id && c.id!==""){c.classList.add("hidden")}
-});
-document.getElementById(id).classList.remove("hidden");
+  document.querySelectorAll(".card").forEach(c=>c.classList.add("hidden"));
+  document.getElementById(id).classList.remove("hidden");
 }
 </script>
 
