@@ -173,6 +173,28 @@ nav button.active{color:var(--orange-dark)}
   🎮 Jogar minigame
 </button>
 
+  <div id="missions" style="margin-top:20px">
+  <h3>🔥 Missões de Hoje</h3>
+
+  <div class="mission-card">🎮 Jogar 1 minigame</div>
+  <div class="mission-card">📖 Completar 1 exercício</div>
+  <div class="mission-card">🧠 Aprender 3 palavras novas</div>
+</div>
+
+  <style>
+.mission-card{
+  background:white;
+  padding:14px;
+  border-radius:18px;
+  margin-top:10px;
+  box-shadow:0 6px 12px rgba(0,0,0,.1);
+  cursor:pointer;
+}
+.mission-card:hover{
+  transform:scale(1.03);
+}
+</style>
+
   <div class="card">
     <h3>🎯 Missão do dia</h3>
     <p>Complete 3 exercícios</p>
@@ -304,4 +326,5 @@ function closeGame(){
 
 </body>
 </html>
+
 
