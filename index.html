@@ -8,135 +8,42 @@
 :root{
   --orange:#fb923c;
   --bg:#fff7ed;
-  --card:#ffffff;
-  --text:#1f2937;
 }
-body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:var(--bg);
-}
-.hidden{display:none}
-header{
-  background:var(--orange);
-  color:white;
-  padding:14px;
-  text-align:center;
-}
-.container{
-  padding:16px;
-  padding-bottom:140px;
-}
-.card{
-  background:white;
-  border-radius:26px;
-  padding:20px;
-  margin-bottom:18px;
-  box-shadow:0 8px 20px rgba(0,0,0,.08);
-}
-button{
-  width:100%;
-  margin-top:10px;
-  padding:12px;
-  border:none;
-  border-radius:16px;
-  background:var(--orange);
-  color:white;
-  font-weight:bold;
-}
-.pet{
-  position:fixed;
-  right:16px;
-  bottom:120px;
-  text-align:center;
-}
-.pet div{
-  background:white;
-  border-radius:14px;
-  padding:8px 12px;
-  font-size:13px;
-  margin-bottom:6px;
-}
-.pet span{
-  font-size:80px;
-}
-.menu{
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  background:white;
-  display:flex;
-  justify-content:space-around;
-  padding:10px 0;
-  box-shadow:0 -5px 15px rgba(0,0,0,.1);
-}
-.menu div{
-  text-align:center;
-  font-size:12px;
-}
-.menu span{
-  font-size:22px;
-}
-.calendar{
-  display:grid;
-  grid-template-columns:repeat(7,1fr);
-  gap:6px;
-}
-.day{
-  background:#fed7aa;
-  padding:10px;
-  text-align:center;
-  border-radius:10px;
-  font-size:12px;
-}
-.day.active{
-  background:var(--orange);
-  color:white;
-}
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg)}
+header{background:var(--orange);color:white;padding:14px;text-align:center}
+.container{padding:16px;padding-bottom:160px}
+.card{background:white;border-radius:26px;padding:20px;margin-bottom:18px;box-shadow:0 8px 20px rgba(0,0,0,.08)}
+button{width:100%;padding:12px;border:none;border-radius:16px;background:var(--orange);color:white;font-weight:bold;margin-top:10px}
+.pet{position:fixed;right:16px;bottom:130px;text-align:center}
+.pet div{background:white;border-radius:14px;padding:8px 12px;font-size:13px;margin-bottom:6px}
+.pet span{font-size:90px}
+.menu{position:fixed;bottom:0;left:0;right:0;background:white;display:flex;justify-content:space-around;padding:10px 0}
+.menu span{font-size:22px}
 </style>
 </head>
 
 <body>
 
-<header>Planicchio 🧡</header>
+<header id="title"></header>
 
 <div class="container">
 
-<!-- NÍVEL -->
-<div class="card" id="levelSelect">
-<h3>Escolha seu nível</h3>
-<button onclick="setLevel('A1')">A1</button>
-<button onclick="setLevel('A2')">A2</button>
-<button onclick="setLevel('B1')">B1</button>
-<button onclick="setLevel('B2')">B2</button>
-<button onclick="setLevel('C1')">C1</button>
-<button onclick="setLevel('C2')">C2</button>
-</div>
+<!-- SELEÇÃO -->
+<div class="card" id="setup">
+<h3 id="chooseCourse"></h3>
 
-<!-- HOME -->
-<div class="hidden" id="home">
-
-<div class="card">
-<h3>🔥 Streak</h3>
-<p><b id="streakCount">0</b> dias seguidos</p>
-</div>
-
-<div class="card">
-<h3>📆 Calendário</h3>
-<div class="calendar" id="calendar"></div>
-</div>
-
-<div class="card">
-<h3>🏆 Ranking (local)</h3>
-<p>XP: <b id="xp">0</b></p>
-</div>
-
+<button onclick="setCourse('it-en')">Italiano → English</button>
+<button onclick="setCourse('it-pt')">Italiano → Português</button>
+<button onclick="setCourse('pt-it')">Português → Italiano</button>
+<button onclick="setCourse('pt-en')">Português → English</button>
+<button onclick="setCourse('en-it')">English → Italiano</button>
+<button onclick="setCourse('en-pt')">English → Português</button>
 </div>
 
 <!-- EXERCÍCIO -->
 <div class="card hidden" id="exerciseCard">
-<h3 id="question"></h3>
+<h3 id="exerciseTitle"></h3>
+<p id="question"></p>
 <div id="answers"></div>
 </div>
 
@@ -144,66 +51,102 @@ button{
 
 <!-- PET -->
 <div class="pet">
-<div id="petSpeech">Vamos aprender 😸</div>
-<span id="petFace">🐱</span>
-</div>
-
-<!-- MENU -->
-<div class="menu">
-<div onclick="openHome()"><span>🏠</span><br>Home</div>
-<div onclick="openExercise()"><span>✏️</span><br>Exercícios</div>
-<div onclick="nextExercise()"><span>▶️</span><br>Próximo</div>
+<div id="petSpeech"></div>
+<span>🐱</span>
 </div>
 
 <script>
-let level="",index=0;
-let xp=Number(localStorage.getItem("xp")||0);
-let streak=Number(localStorage.getItem("streak")||0);
-let lastDate=localStorage.getItem("lastDate");
+// 🌍 IDIOMA DA UI
+let currentUILang="pt";
 
-const exercises={
-A1:[
-{q:"Hello em italiano é…",a:["Ciao","Bye"],c:0},
-{q:"Goodbye em inglês é…",a:["Hello","Bye"],c:1}
-],
-A2:[
-{q:"I am learning English = ?",a:["Estou aprendendo inglês","Eu falo inglês"],c:0}
-],
-B1:[
-{q:"Choose:",a:["I have been studying","I has been studying"],c:0}
-],
-B2:[
-{q:"Formal ending:",a:["Kind regards","See ya"],c:0}
-],
-C1:[
-{q:"Meaning of 'Nevertheless'?",a:["Mesmo assim","De repente"],c:0}
-],
-C2:[
-{q:"'Beat around the bush'?",a:["Evitar o assunto","Ser direto"],c:0}
-]
+// 📘 TEXTOS DA INTERFACE
+const uiText={
+pt:{
+title:"Planicchio 🧡",
+chooseCourse:"Escolha seu curso",
+exercise:"Exercício",
+correct:"Muito bem!",
+wrong:"Tente novamente!"
+},
+it:{
+title:"Planicchio 🧡",
+chooseCourse:"Scegli il tuo corso",
+exercise:"Esercizio",
+correct:"Perfetto!",
+wrong:"Riprova!"
+},
+en:{
+title:"Planicchio 🧡",
+chooseCourse:"Choose your course",
+exercise:"Exercise",
+correct:"Great job!",
+wrong:"Try again!"
+}
 };
 
-function setLevel(l){
-  level=l;
-  levelSelect.classList.add("hidden");
-  home.classList.remove("hidden");
-  updateStats();
-  renderCalendar();
+// 📚 CONTEÚDO PEDAGÓGICO
+const content={
+"it-en":{
+A1:[
+{q:"Hello in inglese è…",a:["Hello","Bye"],c:0}
+]
+},
+"pt-it":{
+A1:[
+{q:"Olá em italiano é…",a:["Ciao","Arrivederci"],c:0}
+]
+},
+"pt-en":{
+A1:[
+{q:"Bom dia em inglês é…",a:["Good morning","Good night"],c:0}
+]
+},
+"en-it":{
+A1:[
+{q:"Hello in italiano è…",a:["Ciao","Salve"],c:0}
+]
+},
+"en-pt":{
+A1:[
+{q:"Hello em português é…",a:["Olá","Tchau"],c:0}
+]
+},
+"it-pt":{
+A1:[
+{q:"Ciao em português é…",a:["Olá","Adeus"],c:0}
+]
+}
+};
+
+let course="",level="A1",index=0;
+
+// 🌍 DETECTA IDIOMA DA UI
+function detectUILang(course){
+  if(course.startsWith("it")) currentUILang="it";
+  if(course.startsWith("pt")) currentUILang="pt";
+  if(course.startsWith("en")) currentUILang="en";
+  applyUI();
 }
 
-function openHome(){
-  exerciseCard.classList.add("hidden");
-  home.classList.remove("hidden");
+// 🎨 APLICA UI
+function applyUI(){
+  title.innerText=uiText[currentUILang].title;
+  chooseCourse.innerText=uiText[currentUILang].chooseCourse;
 }
 
-function openExercise(){
-  home.classList.add("hidden");
+// 🎯 SELECIONA CURSO
+function setCourse(c){
+  course=c;
+  detectUILang(c);
+  setup.classList.add("hidden");
   exerciseCard.classList.remove("hidden");
   loadExercise();
 }
 
+// ✏️ EXERCÍCIO
 function loadExercise(){
-  let ex=exercises[level][index];
+  let ex=content[course][level][index];
+  exerciseTitle.innerText=uiText[currentUILang].exercise;
   question.innerText=ex.q;
   answers.innerHTML="";
   ex.a.forEach((txt,i)=>{
@@ -212,58 +155,15 @@ function loadExercise(){
     b.onclick=()=>check(i);
     answers.appendChild(b);
   });
+  petSpeech.innerText="🐱 "+uiText[currentUILang].exercise;
 }
 
 function check(i){
-  let ex=exercises[level][index];
+  let ex=content[course][level][index];
   if(i===ex.c){
-    xp+=10;
-    petSpeech.innerText="Perfeito! 🧡";
-    petFace.innerText="😸";
-    updateStreak();
+    petSpeech.innerText="😸 "+uiText[currentUILang].correct;
   }else{
-    petSpeech.innerText="Errou, mas segue 😼";
-    petFace.innerText="😿";
-  }
-  localStorage.setItem("xp",xp);
-  updateStats();
-}
-
-function nextExercise(){
-  index++;
-  if(index>=exercises[level].length) index=0;
-  loadExercise();
-}
-
-function updateStats(){
-  xpEl.innerText=xp;
-  streakCount.innerText=streak;
-}
-
-function updateStreak(){
-  let today=new Date().toDateString();
-  if(lastDate!==today){
-    let yesterday=new Date();
-    yesterday.setDate(yesterday.getDate()-1);
-    if(lastDate===yesterday.toDateString()){
-      streak++;
-    }else{
-      streak=1;
-    }
-    lastDate=today;
-    localStorage.setItem("streak",streak);
-    localStorage.setItem("lastDate",lastDate);
-  }
-}
-
-function renderCalendar(){
-  calendar.innerHTML="";
-  for(let i=1;i<=30;i++){
-    let d=document.createElement("div");
-    d.className="day";
-    d.innerText=i;
-    if(i<=streak) d.classList.add("active");
-    calendar.appendChild(d);
+    petSpeech.innerText="😿 "+uiText[currentUILang].wrong;
   }
 }
 </script>
