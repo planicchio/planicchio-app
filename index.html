@@ -25,11 +25,9 @@ body{
 
 .hidden{display:none}
 
-h1,h2,h3{margin:0 0 10px}
-
 .container{
   padding:16px;
-  padding-bottom:90px;
+  padding-bottom:100px;
 }
 
 .card{
@@ -51,7 +49,19 @@ h1,h2,h3{margin:0 0 10px}
 .slogan{
   text-align:center;
   opacity:.9;
-  margin-bottom:20px;
+}
+
+.big-cat{
+  font-size:120px;
+  text-align:center;
+  margin:30px 0;
+  animation:float 2s infinite ease-in-out;
+}
+
+@keyframes float{
+  0%{transform:translateY(0)}
+  50%{transform:translateY(-8px)}
+  100%{transform:translateY(0)}
 }
 
 .courses{
@@ -75,12 +85,6 @@ h1,h2,h3{margin:0 0 10px}
   transform:translateY(-4px);
 }
 
-.big-cat{
-  font-size:120px;
-  text-align:center;
-  margin:30px 0;
-}
-
 /* ---------- APP ---------- */
 
 header{
@@ -100,35 +104,30 @@ header{
   padding-top:70px;
 }
 
-/* ---------- HOME ---------- */
-
-.progress-bar{
-  height:10px;
-  background:var(--orange-soft);
-  border-radius:10px;
-  overflow:hidden;
-  margin:6px 0;
-}
-
-.progress{
-  height:100%;
-  width:40%;
-  background:var(--orange);
-}
-
-.mission{
-  font-size:14px;
-  margin:6px 0;
-}
-
 /* ---------- PET ---------- */
 
-.pet{
+.pet-container{
   position:fixed;
   right:10px;
-  bottom:110px;
+  bottom:120px;
+  text-align:center;
+  z-index:10;
+}
+
+.pet{
   font-size:80px;
-  z-index:5;
+  cursor:pointer;
+  animation:float 2.5s infinite ease-in-out;
+}
+
+.pet-speech{
+  background:white;
+  border-radius:14px;
+  padding:8px 12px;
+  font-size:13px;
+  margin-bottom:6px;
+  box-shadow:0 4px 10px rgba(0,0,0,.1);
+  max-width:180px;
 }
 
 /* ---------- MENU ---------- */
@@ -184,58 +183,38 @@ header{
 
 <div class="container app">
 
-<!-- HOME -->
 <div id="home" class="card">
   <h3>🌱 Seu progresso</h3>
-  <div class="progress-bar"><div class="progress"></div></div>
-  <p>Nível do usuário: 3 · XP: 120</p>
-
-  <h3>🎯 Missões</h3>
-  <div class="mission">✔ Complete 3 exercícios</div>
-  <div class="mission">✔ Estude hoje</div>
-  <div class="mission">✔ Ganhe XP</div>
-
-  <h3>📅 Calendário</h3>
-  <p>Dias estudados esta semana</p>
-
-  <h3>🏆 Ranking</h3>
-  <p>Ranking do seu curso e nível</p>
+  <p>Continue estudando hoje!</p>
 </div>
 
-<!-- EXERCICIOS -->
 <div id="ex" class="card hidden">
   <h3>✏️ Exercícios</h3>
-  <p>Quizzes, escrita, fala, escuta.</p>
 </div>
 
-<!-- DICAS -->
 <div id="tips" class="card hidden">
   <h3>💡 Dicas & Curiosidades</h3>
-  <p>Cultura, costumes e curiosidades.</p>
 </div>
 
-<!-- DICIONARIO -->
 <div id="dict" class="card hidden">
   <h3>📖 Dicionário</h3>
-  <p>Palavras, gírias e flashcards.</p>
 </div>
 
-<!-- COMUNIDADE -->
 <div id="com" class="card hidden">
   <h3>💬 Comunidade</h3>
-  <p>Falar com IA, nativos e alunos.</p>
 </div>
 
-<!-- PERFIL -->
 <div id="profile" class="card hidden">
   <h3>👤 Perfil</h3>
-  <p>Nome, avatar, trocar curso.</p>
 </div>
 
 </div>
 
 <!-- PET -->
-<div class="pet">🐱</div>
+<div class="pet-container">
+  <div id="petSpeech" class="pet-speech">Oi! Eu sou o Planicchio 😸</div>
+  <div class="pet" onclick="talk()">🐱</div>
+</div>
 
 <!-- MENU -->
 <div class="menu">
@@ -250,6 +229,20 @@ header{
 </div>
 
 <script>
+const phrases=[
+  "Você está indo muito bem 🧡",
+  "Que tal mais um exercício?",
+  "Miau! Aprender pode ser divertido 😸",
+  "Estou orgulhoso de você!",
+  "Vamos subir de nível juntos?",
+  "Aprender um pouquinho todo dia faz milagres ✨"
+];
+
+function talk(){
+  const p=phrases[Math.floor(Math.random()*phrases.length)];
+  petSpeech.innerText=p;
+}
+
 function enterApp(){
   start.classList.add("hidden");
   app.classList.remove("hidden");
