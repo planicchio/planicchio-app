@@ -12,16 +12,14 @@
   --bg:#fff4ea;
 }
 *{box-sizing:border-box}
-
 body{
   margin:0;
   font-family:system-ui, Arial;
   background:var(--bg);
   color:#333;
-  overflow-x:hidden;
 }
 
-/* ===== SPLASH ===== */
+/* SPLASH */
 #splash{
   height:100vh;
   background:linear-gradient(180deg,var(--orange),var(--orange-dark));
@@ -32,79 +30,105 @@ body{
   text-align:center;
   color:white;
 }
-
-#splash h1{
-  font-size:36px;
-  margin:10px 0 0;
+.cat-big{
+  font-size:120px;
+  animation:dance 2s infinite ease-in-out;
 }
-
-#splash p{
-  font-size:16px;
-  opacity:.9;
+@keyframes dance{
+  0%{transform:translateY(0)}
+  50%{transform:translateY(-10px)}
+  100%{transform:translateY(0)}
 }
-
 #startBtn{
-  margin-top:24px;
-  padding:14px 28px;
+  margin-top:20px;
+  padding:14px 30px;
   border:none;
   border-radius:30px;
   font-size:16px;
   font-weight:600;
   background:white;
   color:var(--orange-dark);
-  cursor:pointer;
 }
 
-/* ===== CAT ===== */
-.cat{
-  font-size:120px;
-  animation:dance 2s infinite ease-in-out;
-}
-
-@keyframes dance{
-  0%{transform:translateY(0) rotate(0deg)}
-  50%{transform:translateY(-10px) rotate(2deg)}
-  100%{transform:translateY(0) rotate(0deg)}
-}
-
-/* ===== COURSE SELECT ===== */
-#courses{
-  display:none;
-  min-height:100vh;
-  padding:20px;
-}
-
-#courses h2{
-  text-align:center;
-  color:var(--orange-dark);
-  margin-bottom:20px;
-}
-
+/* COURSE */
+#courses{display:none;padding:20px}
 .course-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:14px;
 }
-
 .course-card{
   background:white;
-  border-radius:20px;
-  padding:20px;
+  padding:18px;
+  border-radius:18px;
   text-align:center;
   font-weight:600;
   box-shadow:0 6px 14px rgba(0,0,0,.08);
   cursor:pointer;
-  transition:.2s;
 }
 
-.course-card:hover{
-  transform:translateY(-4px);
+/* HOME */
+#home{display:none;padding-bottom:90px}
+.top{
+  padding:16px;
+}
+.level{
+  font-weight:700;
+  color:var(--orange-dark);
+}
+.progress{
+  background:#ffd8b2;
+  height:10px;
+  border-radius:20px;
+  margin-top:6px;
+}
+.progress span{
+  display:block;
+  height:100%;
+  width:40%;
+  background:var(--orange);
+  border-radius:20px;
+}
+.card{
+  background:white;
+  border-radius:20px;
+  padding:16px;
+  margin:14px;
+  box-shadow:0 6px 14px rgba(0,0,0,.08);
+}
+.card h3{margin:0 0 8px}
+
+/* PET */
+.pet{
+  position:fixed;
+  right:10px;
+  bottom:90px;
+  font-size:70px;
+  animation:bounce 2s infinite;
+}
+@keyframes bounce{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-8px)}
 }
 
-/* RESPONSIVE */
-@media(min-width:600px){
-  .course-grid{grid-template-columns:repeat(3,1fr)}
+/* MENU */
+nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:white;
+  display:flex;
+  border-top:1px solid #eee;
 }
+nav button{
+  flex:1;
+  padding:12px;
+  background:none;
+  border:none;
+  font-weight:600;
+}
+nav button.active{color:var(--orange-dark)}
 </style>
 </head>
 
@@ -112,7 +136,7 @@ body{
 
 <!-- SPLASH -->
 <div id="splash">
-  <div class="cat">🐱</div>
+  <div class="cat-big">🐱</div>
   <h1>Planicchio</h1>
   <p>learn to think globally</p>
   <button id="startBtn" onclick="openCourses()">Começar</button>
@@ -121,21 +145,64 @@ body{
 <!-- COURSES -->
 <div id="courses">
   <h2>Escolha seu curso</h2>
-
   <div class="course-grid">
-    <div class="course-card">🇮🇹 → 🇺🇸<br>Italiano · English</div>
-    <div class="course-card">🇮🇹 → 🇧🇷<br>Italiano · Português</div>
-    <div class="course-card">🇧🇷 → 🇮🇹<br>Português · Italiano</div>
-    <div class="course-card">🇧🇷 → 🇺🇸<br>Português · English</div>
-    <div class="course-card">🇺🇸 → 🇮🇹<br>English · Italiano</div>
-    <div class="course-card">🇺🇸 → 🇧🇷<br>English · Português</div>
+    <div class="course-card" onclick="openHome()">🇮🇹 → 🇺🇸 Italiano · English</div>
+    <div class="course-card" onclick="openHome()">🇮🇹 → 🇧🇷 Italiano · Português</div>
+    <div class="course-card" onclick="openHome()">🇧🇷 → 🇮🇹 Português · Italiano</div>
+    <div class="course-card" onclick="openHome()">🇧🇷 → 🇺🇸 Português · English</div>
+    <div class="course-card" onclick="openHome()">🇺🇸 → 🇮🇹 English · Italiano</div>
+    <div class="course-card" onclick="openHome()">🇺🇸 → 🇧🇷 English · Português</div>
   </div>
 </div>
 
+<!-- HOME -->
+<div id="home">
+  <div class="top">
+    <div class="level">Nível A1 • 🔥 3 dias</div>
+    <div class="progress"><span></span></div>
+  </div>
+
+  <div class="card">
+    <h3>🎯 Missão do dia</h3>
+    <p>Complete 3 exercícios</p>
+    <button>Jogar agora</button>
+  </div>
+
+  <div class="card">
+    <h3>📅 Missões semanais</h3>
+    <p>2 de 5 concluídas</p>
+  </div>
+
+  <div class="card">
+    <h3>🎮 Minigame</h3>
+    <p>Palavra em 5 segundos</p>
+    <button>Jogar</button>
+  </div>
+
+  <div class="card">
+    <h3>🏆 Ranking</h3>
+    <p>Você está em 12º lugar</p>
+  </div>
+</div>
+
+<div class="pet">🐱</div>
+
+<nav>
+  <button class="active">Home</button>
+  <button>Exercícios</button>
+  <button>Dicas</button>
+  <button>Dicionário</button>
+  <button>Perfil</button>
+</nav>
+
 <script>
 function openCourses(){
-  document.getElementById("splash").style.display="none";
-  document.getElementById("courses").style.display="block";
+  splash.style.display="none";
+  courses.style.display="block";
+}
+function openHome(){
+  courses.style.display="none";
+  home.style.display="block";
 }
 </script>
 
