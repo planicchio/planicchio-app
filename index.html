@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <title>Planicchio</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <style>
 :root{
   --orange:#fb923c;
@@ -12,108 +11,55 @@
   --card:#ffffff;
   --text:#1f2937;
 }
-
-*{box-sizing:border-box}
-
 body{
   margin:0;
-  font-family:'Segoe UI',Arial,sans-serif;
+  font-family:Arial, sans-serif;
   background:var(--bg);
-  color:var(--text);
 }
-
 .hidden{display:none}
-
-.container{
-  padding:16px;
-  padding-bottom:140px;
-}
-
-/* START */
-#start{
-  min-height:100vh;
-  background:linear-gradient(180deg,var(--orange),#ffb26b);
-  color:white;
-}
-
-.start-cat{
-  font-size:160px;
-  text-align:center;
-  animation:dance 2.5s infinite;
-}
-
-@keyframes dance{
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-15px)}
-}
-
-.courses{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
-}
-
-.course{
-  background:white;
-  color:#000;
-  padding:16px;
-  border-radius:20px;
-  text-align:center;
-  font-weight:600;
-  cursor:pointer;
-}
-
-/* HEADER */
 header{
-  position:fixed;
-  top:0;
-  left:0;
-  right:0;
   background:var(--orange);
   color:white;
   padding:14px;
   text-align:center;
-  z-index:10;
 }
-
-/* CARDS */
+.container{
+  padding:16px;
+  padding-bottom:140px;
+}
 .card{
-  background:var(--card);
+  background:white;
   border-radius:26px;
-  padding:18px;
+  padding:20px;
   margin-bottom:18px;
-  box-shadow:0 10px 30px rgba(0,0,0,.08);
+  box-shadow:0 8px 20px rgba(0,0,0,.08);
 }
-
-/* PET */
-.pet-container{
+button{
+  width:100%;
+  margin-top:10px;
+  padding:12px;
+  border:none;
+  border-radius:16px;
+  background:var(--orange);
+  color:white;
+  font-weight:bold;
+}
+.pet{
   position:fixed;
-  right:14px;
-  bottom:110px;
-  z-index:9;
+  right:16px;
+  bottom:120px;
   text-align:center;
 }
-
-.pet{
-  font-size:96px;
-  animation:float 3s ease-in-out infinite;
-}
-
-@keyframes float{
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-18px)}
-}
-
-.pet-speech{
+.pet div{
   background:white;
-  border-radius:16px;
-  padding:10px 14px;
+  border-radius:14px;
+  padding:8px 12px;
   font-size:13px;
   margin-bottom:6px;
-  max-width:200px;
 }
-
-/* MENU */
+.pet span{
+  font-size:80px;
+}
 .menu{
   position:fixed;
   bottom:0;
@@ -122,127 +68,203 @@ header{
   background:white;
   display:flex;
   justify-content:space-around;
-  padding:12px 0;
-  border-top:1px solid #eee;
+  padding:10px 0;
+  box-shadow:0 -5px 15px rgba(0,0,0,.1);
 }
-
-.menu-item{
-  font-size:12px;
+.menu div{
   text-align:center;
-  cursor:pointer;
+  font-size:12px;
 }
-
-.menu-item span{
+.menu span{
   font-size:22px;
-  display:block;
 }
-
-button{
+.calendar{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:6px;
+}
+.day{
+  background:#fed7aa;
+  padding:10px;
+  text-align:center;
+  border-radius:10px;
+  font-size:12px;
+}
+.day.active{
   background:var(--orange);
-  border:none;
   color:white;
-  padding:12px 18px;
-  border-radius:18px;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-/* APP */
-.app{
-  padding-top:70px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- START -->
-<div id="start" class="container">
-<h1 style="text-align:center">PLANICCHIO</h1>
-<div class="start-cat">🐱</div>
-
-<div class="courses">
-  <div class="course" onclick="enterApp()">Italiano → English</div>
-  <div class="course" onclick="enterApp()">Italiano → Português</div>
-  <div class="course" onclick="enterApp()">Português → Italiano</div>
-  <div class="course" onclick="enterApp()">Português → English</div>
-  <div class="course" onclick="enterApp()">English → Italiano</div>
-  <div class="course" onclick="enterApp()">English → Português</div>
-</div>
-</div>
-
-<!-- APP -->
-<div id="app" class="hidden">
-
 <header>Planicchio 🧡</header>
 
-<div class="container app">
+<div class="container">
 
-<div id="home" class="card">
-<h3>🏠 Home</h3>
-<p>Nível: A1</p>
-<p>Missão: Fazer 1 exercício hoje</p>
+<!-- NÍVEL -->
+<div class="card" id="levelSelect">
+<h3>Escolha seu nível</h3>
+<button onclick="setLevel('A1')">A1</button>
+<button onclick="setLevel('A2')">A2</button>
+<button onclick="setLevel('B1')">B1</button>
+<button onclick="setLevel('B2')">B2</button>
+<button onclick="setLevel('C1')">C1</button>
+<button onclick="setLevel('C2')">C2</button>
 </div>
 
-<div id="exercises" class="card hidden">
-<h3>✏️ Exercício A1</h3>
-<p><b>Traduza:</b> Hello</p>
-<button onclick="correct()">Hello → Ciao</button>
-<button onclick="wrong()">Hello → Bye</button>
+<!-- HOME -->
+<div class="hidden" id="home">
+
+<div class="card">
+<h3>🔥 Streak</h3>
+<p><b id="streakCount">0</b> dias seguidos</p>
 </div>
 
-<div id="tips" class="card hidden">
-<h3>📖 Dica</h3>
-<p>Em italiano, “Ciao” pode significar Oi ou Tchau.</p>
+<div class="card">
+<h3>📆 Calendário</h3>
+<div class="calendar" id="calendar"></div>
 </div>
 
-<div id="community" class="card hidden">
-<h3>👥 Comunidade</h3>
-<p>Em breve você poderá conversar com outros alunos 😸</p>
+<div class="card">
+<h3>🏆 Ranking (local)</h3>
+<p>XP: <b id="xp">0</b></p>
 </div>
 
-<div id="profile" class="card hidden">
-<h3>👤 Perfil</h3>
-<p>Nome: Planicchio Lover</p>
-<p>Nível atual: A1</p>
+</div>
+
+<!-- EXERCÍCIO -->
+<div class="card hidden" id="exerciseCard">
+<h3 id="question"></h3>
+<div id="answers"></div>
 </div>
 
 </div>
 
 <!-- PET -->
-<div class="pet-container">
-<div id="petSpeech" class="pet-speech">Escolha um exercício 😸</div>
-<div id="pet" class="pet">🐱</div>
+<div class="pet">
+<div id="petSpeech">Vamos aprender 😸</div>
+<span id="petFace">🐱</span>
 </div>
 
 <!-- MENU -->
 <div class="menu">
-<div class="menu-item" onclick="openTab('home')"><span>🏠</span>Home</div>
-<div class="menu-item" onclick="openTab('exercises')"><span>✏️</span>Ex</div>
-<div class="menu-item" onclick="openTab('tips')"><span>📖</span>Dicas</div>
-<div class="menu-item" onclick="openTab('community')"><span>👥</span>Comunidade</div>
-<div class="menu-item" onclick="openTab('profile')"><span>👤</span>Perfil</div>
+<div onclick="openHome()"><span>🏠</span><br>Home</div>
+<div onclick="openExercise()"><span>✏️</span><br>Exercícios</div>
+<div onclick="nextExercise()"><span>▶️</span><br>Próximo</div>
 </div>
 
 <script>
-function enterApp(){
-  start.classList.add("hidden");
-  app.classList.remove("hidden");
+let level="",index=0;
+let xp=Number(localStorage.getItem("xp")||0);
+let streak=Number(localStorage.getItem("streak")||0);
+let lastDate=localStorage.getItem("lastDate");
+
+const exercises={
+A1:[
+{q:"Hello em italiano é…",a:["Ciao","Bye"],c:0},
+{q:"Goodbye em inglês é…",a:["Hello","Bye"],c:1}
+],
+A2:[
+{q:"I am learning English = ?",a:["Estou aprendendo inglês","Eu falo inglês"],c:0}
+],
+B1:[
+{q:"Choose:",a:["I have been studying","I has been studying"],c:0}
+],
+B2:[
+{q:"Formal ending:",a:["Kind regards","See ya"],c:0}
+],
+C1:[
+{q:"Meaning of 'Nevertheless'?",a:["Mesmo assim","De repente"],c:0}
+],
+C2:[
+{q:"'Beat around the bush'?",a:["Evitar o assunto","Ser direto"],c:0}
+]
+};
+
+function setLevel(l){
+  level=l;
+  levelSelect.classList.add("hidden");
+  home.classList.remove("hidden");
+  updateStats();
+  renderCalendar();
 }
 
-function openTab(id){
-  document.querySelectorAll(".card").forEach(c=>c.classList.add("hidden"));
-  document.getElementById(id).classList.remove("hidden");
+function openHome(){
+  exerciseCard.classList.add("hidden");
+  home.classList.remove("hidden");
 }
 
-function correct(){
-  pet.innerText="😸";
-  petSpeech.innerText="Perfeito! Você acertou 🧡";
+function openExercise(){
+  home.classList.add("hidden");
+  exerciseCard.classList.remove("hidden");
+  loadExercise();
 }
 
-function wrong(){
-  pet.innerText="😿";
-  petSpeech.innerText="Quase! Tente novamente 💪";
+function loadExercise(){
+  let ex=exercises[level][index];
+  question.innerText=ex.q;
+  answers.innerHTML="";
+  ex.a.forEach((txt,i)=>{
+    let b=document.createElement("button");
+    b.innerText=txt;
+    b.onclick=()=>check(i);
+    answers.appendChild(b);
+  });
+}
+
+function check(i){
+  let ex=exercises[level][index];
+  if(i===ex.c){
+    xp+=10;
+    petSpeech.innerText="Perfeito! 🧡";
+    petFace.innerText="😸";
+    updateStreak();
+  }else{
+    petSpeech.innerText="Errou, mas segue 😼";
+    petFace.innerText="😿";
+  }
+  localStorage.setItem("xp",xp);
+  updateStats();
+}
+
+function nextExercise(){
+  index++;
+  if(index>=exercises[level].length) index=0;
+  loadExercise();
+}
+
+function updateStats(){
+  xpEl.innerText=xp;
+  streakCount.innerText=streak;
+}
+
+function updateStreak(){
+  let today=new Date().toDateString();
+  if(lastDate!==today){
+    let yesterday=new Date();
+    yesterday.setDate(yesterday.getDate()-1);
+    if(lastDate===yesterday.toDateString()){
+      streak++;
+    }else{
+      streak=1;
+    }
+    lastDate=today;
+    localStorage.setItem("streak",streak);
+    localStorage.setItem("lastDate",lastDate);
+  }
+}
+
+function renderCalendar(){
+  calendar.innerHTML="";
+  for(let i=1;i<=30;i++){
+    let d=document.createElement("div");
+    d.className="day";
+    d.innerText=i;
+    if(i<=streak) d.classList.add("active");
+    calendar.appendChild(d);
+  }
 }
 </script>
 
