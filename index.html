@@ -313,11 +313,21 @@ function loadQuestion(){
  },1000);
 }
 
-function check(ans,correct){
- clearInterval(timerInterval);
- document.getElementById("reaction").innerText=
-   ans===correct?"😸 +10 XP":"😿";
+function check(ans, correct){
+  clearInterval(timerInterval);
+
+  if(ans === correct){
+    document.getElementById("reaction").innerText = "😸 +10 XP";
+    xp += 10;
+    localStorage.setItem("xp", xp);
+
+    let done = Number(localStorage.getItem("missionsDone")) || 0;
+    localStorage.setItem("missionsDone", done + 1);
+  } else {
+    document.getElementById("reaction").innerText = "😿";
+  }
 }
+
 
 function closeGame(){
  document.getElementById("minigame").style.display="none";
@@ -340,6 +350,7 @@ document.querySelectorAll(".mission-card").forEach(mission=>{
 
 </body>
 </html>
+
 
 
 
