@@ -133,6 +133,35 @@ nav button.active{color:var(--orange-dark)}
 </head>
 
 <body>
+<!-- TELA INICIAL -->
+<div id="screen-start">
+
+  <h1 style="color:#ff8c2b">Planicchio</h1>
+  <p>Thinking globally 🌍</p>
+
+  <div style="margin:20px 0">
+    <button onclick="startQuiz()">Italiano → Inglês</button>
+    <button onclick="startQuiz()">Italiano → Português</button>
+    <button onclick="startQuiz()">Português → Italiano</button>
+    <button onclick="startQuiz()">Português → Inglês</button>
+    <button onclick="startQuiz()">Inglês → Italiano</button>
+    <button onclick="startQuiz()">Inglês → Português</button>
+  </div>
+
+</div>
+<!-- TELA QUIZ -->
+<div id="screen-quiz" style="display:none">
+
+  <h2>Vamos descobrir seu nível 👀</h2>
+  <p>Responda rapidinho:</p>
+
+  <p><strong>Hello</strong> significa:</p>
+
+  <button onclick="finishQuiz('A1')">Olá</button>
+  <button onclick="finishQuiz('A1')">Tchau</button>
+  <button onclick="finishQuiz('A1')">Obrigado</button>
+
+</div>
 
 <!-- SPLASH -->
 <div id="splash">
@@ -156,7 +185,10 @@ nav button.active{color:var(--orange-dark)}
 </div>
 
 <!-- HOME -->
-<div id="home">
+<div id="screen-app" style="display:none">
+  <div id="home">
+</div>
+
   <div class="top">
     <div class="level">Nível A1 • 🔥 3 dias</div>
     <div class="progress"><span></span></div>
@@ -345,11 +377,22 @@ document.querySelectorAll(".mission-card").forEach(mission=>{
     }
   });
 });
+function startQuiz(){
+  document.getElementById("screen-start").style.display = "none";
+  document.getElementById("screen-quiz").style.display = "block";
+}
+
+function finishQuiz(level){
+  localStorage.setItem("level", level);
+  document.getElementById("screen-quiz").style.display = "none";
+  document.getElementById("screen-app").style.display = "block";
+}
 
 </script>
 
 </body>
 </html>
+
 
 
 
