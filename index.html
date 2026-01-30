@@ -134,7 +134,7 @@ nav button.active{color:var(--orange-dark)}
 
 <body>
 <!-- TELA INICIAL -->
-<div id="screen-start">
+<div id="screen-start" style="display:none">
 
   <h1 style="color:#ff8c2b">Planicchio</h1>
   <p>Thinking globally 🌍</p>
@@ -166,16 +166,33 @@ nav button.active{color:var(--orange-dark)}
 <!-- HOME -->
 <div id="screen-app" style="display:none">
 
-  <div class="top">
-    <div class="level">Nível A1 • 🔥 3 dias</div>
-    <div class="progress"><span></span></div>
+  <div id="home">
+    <div class="top">
+      <div class="level">Nível A1 • 🔥 3 dias</div>
+      <div class="progress"><span></span></div>
+    </div>
+
+    <button onclick="startGame()" style="
+      background:#ff8c2b;
+      border:none;
+      padding:14px 20px;
+      border-radius:20px;
+      color:white;
+      font-weight:bold;
+      margin:16px">
+      🎮 Jogar minigame
+    </button>
+
+    <div id="missions">
+      <h3>🔥 Missões de Hoje</h3>
+      <div class="mission-card">🎮 Jogar 1 minigame</div>
+      <div class="mission-card">📖 Completar 1 exercício</div>
+      <div class="mission-card">🧠 Aprender 3 palavras novas</div>
+    </div>
   </div>
 
+</div>
 
-  <div class="top">
-    <div class="level">Nível A1 • 🔥 3 dias</div>
-    <div class="progress"><span></span></div>
-  </div>
 
   <button onclick="startGame()" style="
   background:#ff8c2b;
@@ -236,12 +253,13 @@ nav button.active{color:var(--orange-dark)}
 <div class="pet">🐱</div>
 
 <nav id="bottom-menu" style="display:none">
-  <button class="active">Home</button>
-  <button>Exercícios</button>
-  <button>Dicas</button>
-  <button>Dicionário</button>
-  <button>Perfil</button>
+  <button onclick="showTab('home')" class="active">Home</button>
+  <button onclick="showTab('exercicios')">Exercícios</button>
+  <button onclick="showTab('dicas')">Dicas</button>
+  <button onclick="showTab('dicionario')">Dicionário</button>
+  <button onclick="showTab('perfil')">Perfil</button>
 </nav>
+
 
 <script>
   
@@ -366,10 +384,15 @@ function finishQuiz(level){
 
 }
 
+  function showTab(tab){
+  alert("Em breve: " + tab);
+}
+
 </script>
 
 </body>
 </html>
+
 
 
 
