@@ -163,31 +163,14 @@ nav button.active{color:var(--orange-dark)}
 
 </div>
 
-<!-- SPLASH -->
-<div id="splash">
-  <div class="cat-big">🐱</div>
-  <h1>Planicchio</h1>
-  <p>learn to think globally</p>
-  <button id="startBtn" onclick="openCourses()">Começar</button>
-</div>
-
-<!-- COURSES -->
-<div id="courses">
-  <h2>Escolha seu curso</h2>
-  <div class="course-grid">
-    <div class="course-card" onclick="openHome()">🇮🇹 → 🇺🇸 Italiano · English</div>
-    <div class="course-card" onclick="openHome()">🇮🇹 → 🇧🇷 Italiano · Português</div>
-    <div class="course-card" onclick="openHome()">🇧🇷 → 🇮🇹 Português · Italiano</div>
-    <div class="course-card" onclick="openHome()">🇧🇷 → 🇺🇸 Português · English</div>
-    <div class="course-card" onclick="openHome()">🇺🇸 → 🇮🇹 English · Italiano</div>
-    <div class="course-card" onclick="openHome()">🇺🇸 → 🇧🇷 English · Português</div>
-  </div>
-</div>
-
 <!-- HOME -->
 <div id="screen-app" style="display:none">
-  <div id="home">
-</div>
+
+  <div class="top">
+    <div class="level">Nível A1 • 🔥 3 dias</div>
+    <div class="progress"><span></span></div>
+  </div>
+
 
   <div class="top">
     <div class="level">Nível A1 • 🔥 3 dias</div>
@@ -252,7 +235,7 @@ nav button.active{color:var(--orange-dark)}
 
 <div class="pet">🐱</div>
 
-<nav>
+<nav id="bottom-menu" style="display:none">
   <button class="active">Home</button>
   <button>Exercícios</button>
   <button>Dicas</button>
@@ -261,14 +244,7 @@ nav button.active{color:var(--orange-dark)}
 </nav>
 
 <script>
-function openCourses(){
-  splash.style.display="none";
-  courses.style.display="block";
-}
-function openHome(){
-  courses.style.display="none";
-  home.style.display="block";
-}
+  
 </script>
 
   <!-- MINIGAME MODAL -->
@@ -386,12 +362,15 @@ function finishQuiz(level){
   localStorage.setItem("level", level);
   document.getElementById("screen-quiz").style.display = "none";
   document.getElementById("screen-app").style.display = "block";
+  document.getElementById("bottom-menu").style.display = "flex";
+
 }
 
 </script>
 
 </body>
 </html>
+
 
 
 
