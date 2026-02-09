@@ -19,66 +19,66 @@ body{
   color:#333;
 }
 
-/* SPLASH */
+/* ---------- TELAS ---------- */
+.screen{display:none;min-height:100vh;padding-bottom:90px}
+
+/* ---------- SPLASH ---------- */
 #splash{
-  height:100vh;
-  background:linear-gradient(180deg,var(--orange),var(--orange-dark));
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
   text-align:center;
+  background:linear-gradient(180deg,var(--orange),var(--orange-dark));
   color:white;
 }
 .cat-big{
   font-size:120px;
-  animation:dance 2s infinite ease-in-out;
+  animation:dance 2s infinite;
 }
 @keyframes dance{
   0%{transform:translateY(0)}
-  50%{transform:translateY(-10px)}
+  50%{transform:translateY(-12px)}
   100%{transform:translateY(0)}
 }
-#startBtn{
-  margin-top:20px;
-  padding:14px 30px;
-  border:none;
-  border-radius:30px;
-  font-size:16px;
-  font-weight:600;
+.btn{
   background:white;
   color:var(--orange-dark);
+  border:none;
+  padding:14px 26px;
+  border-radius:30px;
+  font-weight:700;
+  margin-top:20px;
 }
 
-/* COURSE */
-#courses{display:none;padding:20px}
+/* ---------- CURSOS ---------- */
 .course-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:14px;
+  padding:20px;
 }
 .course-card{
   background:white;
-  padding:18px;
   border-radius:18px;
+  padding:16px;
   text-align:center;
-  font-weight:600;
+  font-weight:700;
   box-shadow:0 6px 14px rgba(0,0,0,.08);
   cursor:pointer;
 }
 
-/* HOME */
-#home{display:none;padding-bottom:90px}
+/* ---------- HOME ---------- */
 .top{
   padding:16px;
 }
 .level{
-  font-weight:700;
+  font-weight:800;
   color:var(--orange-dark);
 }
 .progress{
-  background:#ffd8b2;
   height:10px;
+  background:#ffd8b2;
   border-radius:20px;
   margin-top:6px;
 }
@@ -96,9 +96,18 @@ body{
   margin:14px;
   box-shadow:0 6px 14px rgba(0,0,0,.08);
 }
-.card h3{margin:0 0 8px}
 
-/* PET */
+/* ---------- MISSÕES ---------- */
+.mission{
+  background:white;
+  border-radius:18px;
+  padding:14px;
+  margin-top:10px;
+  cursor:pointer;
+}
+.mission.done{opacity:.5}
+
+/* ---------- PET ---------- */
 .pet{
   position:fixed;
   right:10px;
@@ -111,7 +120,7 @@ body{
   50%{transform:translateY(-8px)}
 }
 
-/* MENU */
+/* ---------- MENU ---------- */
 nav{
   position:fixed;
   bottom:0;
@@ -124,278 +133,117 @@ nav{
 nav button{
   flex:1;
   padding:12px;
-  background:none;
   border:none;
-  font-weight:600;
+  background:none;
+  font-weight:700;
 }
 nav button.active{color:var(--orange-dark)}
 </style>
 </head>
 
 <body>
-<!-- TELA INICIAL -->
-<div id="screen-start" style="display:none">
 
-  <h1 style="color:#ff8c2b">Planicchio</h1>
-  <p>Thinking globally 🌍</p>
+<!-- SPLASH -->
+<div id="splash" class="screen" style="display:flex">
+  <div class="cat-big">🐱</div>
+  <h1>Planicchio</h1>
+  <p>thinking globally 🌍</p>
+  <button class="btn" onclick="go('courses')">Começar</button>
+</div>
 
-  <div style="margin:20px 0">
-    <button onclick="startQuiz()">Italiano → Inglês</button>
-    <button onclick="startQuiz()">Italiano → Português</button>
-    <button onclick="startQuiz()">Português → Italiano</button>
-    <button onclick="startQuiz()">Português → Inglês</button>
-    <button onclick="startQuiz()">Inglês → Italiano</button>
-    <button onclick="startQuiz()">Inglês → Português</button>
+<!-- CURSOS -->
+<div id="courses" class="screen">
+  <h2 style="text-align:center">Escolha seu curso</h2>
+  <div class="course-grid">
+    <div class="course-card" onclick="startQuiz()">🇮🇹 → 🇺🇸 Italiano · Inglês</div>
+    <div class="course-card" onclick="startQuiz()">🇮🇹 → 🇧🇷 Italiano · Português</div>
+    <div class="course-card" onclick="startQuiz()">🇧🇷 → 🇮🇹 Português · Italiano</div>
+    <div class="course-card" onclick="startQuiz()">🇧🇷 → 🇺🇸 Português · Inglês</div>
+    <div class="course-card" onclick="startQuiz()">🇺🇸 → 🇮🇹 Inglês · Italiano</div>
+    <div class="course-card" onclick="startQuiz()">🇺🇸 → 🇧🇷 Inglês · Português</div>
   </div>
-
-</div>
-<!-- TELA QUIZ -->
-<div id="screen-quiz" style="display:none">
-
-  <h2>Vamos descobrir seu nível 👀</h2>
-  <p>Responda rapidinho:</p>
-
-  <p><strong>Hello</strong> significa:</p>
-
-  <button onclick="finishQuiz('A1')">Olá</button>
-  <button onclick="finishQuiz('A1')">Tchau</button>
-  <button onclick="finishQuiz('A1')">Obrigado</button>
-
 </div>
 
-<!-- HOME -->
-<div id="screen-app" style="display:none">
-
-  <div id="home">
-    <div class="top">
-      <div class="level">Nível A1 • 🔥 3 dias</div>
-      <div class="progress"><span></span></div>
-    </div>
-
-    <button onclick="startGame()" style="
-      background:#ff8c2b;
-      border:none;
-      padding:14px 20px;
-      border-radius:20px;
-      color:white;
-      font-weight:bold;
-      margin:16px">
-      🎮 Jogar minigame
-    </button>
-
-    <div id="missions">
-      <h3>🔥 Missões de Hoje</h3>
-      <div class="mission-card">🎮 Jogar 1 minigame</div>
-      <div class="mission-card">📖 Completar 1 exercício</div>
-      <div class="mission-card">🧠 Aprender 3 palavras novas</div>
-    </div>
+<!-- QUIZ -->
+<div id="quiz" class="screen">
+  <h2 style="text-align:center">Vamos descobrir seu nível 👀</h2>
+  <p style="text-align:center"><b>Hello</b> significa:</p>
+  <div style="text-align:center">
+    <button class="btn" onclick="finishQuiz('A1')">Olá</button><br><br>
+    <button class="btn" onclick="finishQuiz('A1')">Tchau</button>
   </div>
-
 </div>
 
-
-  <button onclick="startGame()" style="
-  background:#ff8c2b;
-  border:none;
-  padding:14px 20px;
-  border-radius:20px;
-  color:white;
-  font-weight:bold;
-  margin-top:16px">
-  🎮 Jogar minigame
-</button>
-
-  <div id="missions" style="margin-top:20px">
-  <h3>🔥 Missões de Hoje</h3>
-
-  <div class="mission-card">🎮 Jogar 1 minigame</div>
-  <div class="mission-card">📖 Completar 1 exercício</div>
-  <div class="mission-card">🧠 Aprender 3 palavras novas</div>
-</div>
-
-  <style>
-.mission-card{
-  background:white;
-  padding:14px;
-  border-radius:18px;
-  margin-top:10px;
-  box-shadow:0 6px 12px rgba(0,0,0,.1);
-  cursor:pointer;
-}
-.mission-card:hover{
-  transform:scale(1.03);
-}
-</style>
-
-  <div class="card">
-    <h3>🎯 Missão do dia</h3>
-    <p>Complete 3 exercícios</p>
-    <button>Jogar agora</button>
+<!-- APP -->
+<div id="app" class="screen">
+  <div class="top">
+    <div class="level" id="levelText">Nível A1 • 🔥 1 dia</div>
+    <div class="progress"><span></span></div>
   </div>
 
   <div class="card">
-    <h3>📅 Missões semanais</h3>
-    <p>2 de 5 concluídas</p>
+    <h3>🔥 Missões de hoje</h3>
+    <div class="mission" onclick="complete(this)">🎮 Jogar minigame</div>
+    <div class="mission" onclick="complete(this)">📖 Completar exercício</div>
+    <div class="mission" onclick="complete(this)">🧠 Aprender 3 palavras</div>
   </div>
 
   <div class="card">
     <h3>🎮 Minigame</h3>
-    <p>Palavra em 5 segundos</p>
-    <button>Jogar</button>
-  </div>
-
-  <div class="card">
-    <h3>🏆 Ranking</h3>
-    <p>Você está em 12º lugar</p>
+    <button class="btn" onclick="openGame()">Jogar</button>
   </div>
 </div>
 
 <div class="pet">🐱</div>
 
-<nav id="bottom-menu" style="display:none">
-  <button onclick="showTab('home')" class="active">Home</button>
-  <button onclick="showTab('exercicios')">Exercícios</button>
-  <button onclick="showTab('dicas')">Dicas</button>
-  <button onclick="showTab('dicionario')">Dicionário</button>
-  <button onclick="showTab('perfil')">Perfil</button>
+<nav id="menu" style="display:none">
+  <button class="active" onclick="tab('home')">Home</button>
+  <button onclick="tab('ex')">Exercícios</button>
+  <button onclick="tab('tips')">Dicas</button>
+  <button onclick="tab('dic')">Dicionário</button>
+  <button onclick="tab('profile')">Perfil</button>
 </nav>
 
-
-<script>
-  
-</script>
-
-  <!-- MINIGAME MODAL -->
-<div id="minigame" style="display:none;
-position:fixed;inset:0;
-background:rgba(0,0,0,.5);
-z-index:99;
-align-items:center;
-justify-content:center;">
-
-<div style="background:white;
-padding:24px;
-border-radius:24px;
-width:90%;
-max-width:360px;
-text-align:center;
-box-shadow:0 10px 30px rgba(0,0,0,.2)">
-
-<h3>🎮 5 Segundos</h3>
-<p id="question">Hello significa?</p>
-
-<div id="options"></div>
-
-<p id="timer">⏱️ 5</p>
-<div id="reaction" style="font-size:50px;margin-top:10px"></div>
-
-<button onclick="closeGame()" style="
-margin-top:14px;
-background:#ff8c2b;
-border:none;
-color:white;
-padding:10px 20px;
-border-radius:20px">Fechar</button>
-</div>
+<!-- MINIGAME -->
+<div id="game" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);align-items:center;justify-content:center">
+  <div style="background:white;padding:20px;border-radius:20px;text-align:center">
+    <p><b>Hello</b> significa?</p>
+    <button onclick="answer(true)">Olá</button>
+    <button onclick="answer(false)">Tchau</button>
+    <p id="result"></p>
+    <button onclick="closeGame()">Fechar</button>
+  </div>
 </div>
 
 <script>
-const questions=[
- {q:"Hello significa?", a:"Olá", options:["Tchau","Olá","Obrigado"]},
- {q:"Goodbye significa?", a:"Tchau", options:["Bom","Tchau","Oi"]},
- {q:"Cat em inglês?", a:"Gato", options:["Cão","Gato","Pássaro"]}
-];
-
-let time=5;
-let timerInterval;
-
-function startGame(){
- document.getElementById("minigame").style.display="flex";
- loadQuestion();
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.style.display='none');
+  document.getElementById(id).style.display='block';
 }
-
-function loadQuestion(){
- const q=questions[Math.floor(Math.random()*questions.length)];
- document.getElementById("question").innerText=q.q;
- const opt=document.getElementById("options");
- opt.innerHTML="";
- q.options.forEach(o=>{
-   const b=document.createElement("button");
-   b.innerText=o;
-   b.style="margin:6px;padding:10px 16px;border-radius:20px;border:none;background:#ffe1c4";
-   b.onclick=()=>check(o,q.a);
-   opt.appendChild(b);
- });
- time=5;
- document.getElementById("reaction").innerText="";
- document.getElementById("timer").innerText="⏱️ "+time;
- timerInterval=setInterval(()=>{
-   time--;
-   document.getElementById("timer").innerText="⏱️ "+time;
-   if(time===0){
-     clearInterval(timerInterval);
-     document.getElementById("reaction").innerText="😿";
-   }
- },1000);
+function startQuiz(){go('quiz')}
+function finishQuiz(level){
+  localStorage.setItem('level',level);
+  document.getElementById('levelText').innerText='Nível '+level+' • 🔥 1 dia';
+  go('app');
+  document.getElementById('menu').style.display='flex';
 }
-
-function check(ans, correct){
-  clearInterval(timerInterval);
-
-  if(ans === correct){
-    document.getElementById("reaction").innerText = "😸 +10 XP";
-    xp += 10;
-    localStorage.setItem("xp", xp);
-
-    let done = Number(localStorage.getItem("missionsDone")) || 0;
-    localStorage.setItem("missionsDone", done + 1);
-  } else {
-    document.getElementById("reaction").innerText = "😿";
+function tab(t){alert("Em breve: "+t)}
+function complete(el){
+  if(!el.classList.contains('done')){
+    el.classList.add('done');
+    el.innerHTML+=" ✅";
   }
 }
-
-
+function openGame(){
+  document.getElementById('game').style.display='flex';
+}
 function closeGame(){
- document.getElementById("minigame").style.display="none";
+  document.getElementById('game').style.display='none';
 }
-  let xp = Number(localStorage.getItem("xp")) || 0;
-
-document.querySelectorAll(".mission-card").forEach(mission=>{
-  mission.addEventListener("click", ()=>{
-    if(!mission.classList.contains("done")){
-      mission.classList.add("done");
-      mission.innerHTML += " ✅";
-      xp += 10;
-      localStorage.setItem("xp", xp);
-      alert("🎉 Missão concluída! +10 XP");
-    }
-  });
-});
-function startQuiz(){
-  document.getElementById("screen-start").style.display = "none";
-  document.getElementById("screen-quiz").style.display = "block";
+function answer(ok){
+  document.getElementById('result').innerText= ok ? "😸 Acertou!" : "😿 Errou!";
 }
-
-function finishQuiz(level){
-  localStorage.setItem("level", level);
-  document.getElementById("screen-quiz").style.display = "none";
-  document.getElementById("screen-app").style.display = "block";
-  document.getElementById("bottom-menu").style.display = "flex";
-
-}
-
-  function showTab(tab){
-  alert("Em breve: " + tab);
-}
-
 </script>
 
 </body>
 </html>
-
-
-
-
-
-
-
