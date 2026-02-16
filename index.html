@@ -6,27 +6,7 @@
     <title>Planicchio Premium</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-#spell-input {
-    width: 100%;
-    padding: 15px;
-    border-radius: 15px;
-    border: 2px solid var(--p-gray);
-    margin-bottom: 10px;
-    font-size: 16px;
-    outline: none;
-}
-#spell-input:focus { border-color: var(--p-orange); }
-
-.btn-audio {
-    background: #e1f5fe;
-    color: #03a9f4;
-    border: none;
-    padding: 10px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: bold;
-    margin-bottom: 15px;
-}oot {
+        :root {
             --p-orange: #ff7a00; --p-light: #fff7ed; --p-dark: #2d2d2d;
             --p-white: #ffffff; --p-gray: #f0f0f0; --p-success: #58cc02;
             --p-vip: linear-gradient(45deg, #ffd700, #ff8c00);
@@ -39,41 +19,32 @@
         * { margin:0; padding:0; box-sizing:border-box; font-family:'Nunito', sans-serif; }
         body { background: var(--p-light); color: var(--p-dark); overflow-x: hidden; }
 
-        /* Layout Estrutural */
         .screen { display: none; padding: 20px; padding-bottom: 100px; min-height: 100vh; animation: slideUp 0.4s ease; }
         .active { display: block; }
         @keyframes slideUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
 
-        /* HEADER PREMIUM */
         .top-bar { display: flex; align-items: center; justify-content: space-between; padding: 15px; background: var(--p-white); border-radius: 0 0 25px 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
         .lvl-badge { background: var(--p-orange); color: white; padding: 5px 15px; border-radius: 20px; font-weight: 900; }
         
         .xp-bar-container { flex-grow: 1; height: 12px; background: var(--p-gray); border-radius: 10px; margin: 0 15px; overflow: hidden; }
-        .xp-bar-fill { height: 100%; background: var(--p-orange); width: 0%; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .xp-bar-fill { height: 100%; background: var(--p-orange); width: 0%; transition: 0.5s; }
 
-        /* PET INTERATIVO DINÂMICO */
         .pet-stage { text-align: center; margin: 30px 0; }
         .pet-bubble { background: var(--p-white); padding: 12px; border-radius: 18px; border: 3px solid var(--p-orange); display: inline-block; margin-bottom: 15px; position: relative; font-weight: 700; max-width: 80%; }
         .pet-avatar { font-size: 100px; cursor: pointer; display: inline-block; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1)); }
-        .pet-avatar:active { transform: scale(0.9) rotate(5deg); }
 
-        /* CARDS & BOTOES */
         .card { background: var(--p-white); padding: 20px; border-radius: 24px; box-shadow: 0 6px 20px rgba(0,0,0,0.04); margin-bottom: 20px; border-bottom: 5px solid var(--p-gray); }
         .btn-course { background: var(--p-white); border: 2px solid var(--p-gray); padding: 20px; border-radius: 18px; width: 100%; text-align: left; margin-bottom: 10px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 15px; }
-        .btn-course:hover { border-color: var(--p-orange); background: var(--p-light); }
         
-        .btn-main { background: var(--p-orange); color: white; border: none; padding: 18px; border-radius: 18px; width: 100%; font-weight: 900; font-size: 16px; cursor: pointer; box-shadow: 0 4px 0 #d36500; transition: 0.1s; }
-        .btn-main:active { transform: translateY(4px); box-shadow: none; }
+        .btn-main { background: var(--p-orange); color: white; border: none; padding: 18px; border-radius: 18px; width: 100%; font-weight: 900; font-size: 16px; cursor: pointer; box-shadow: 0 4px 0 #d36500; }
 
-        /* NAVEGAÇÃO BOTTOM */
+        #spell-input { width: 100%; padding: 15px; border-radius: 15px; border: 2px solid var(--p-gray); margin-bottom: 10px; font-size: 16px; outline: none; }
+
         nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--p-white); display: flex; justify-content: space-around; padding: 15px; border-top: 3px solid var(--p-gray); }
         .nav-item { font-size: 26px; cursor: pointer; color: #ccc; transition: 0.3s; }
         .nav-item.active-tab { color: var(--p-orange); transform: translateY(-5px); }
 
-        /* MODAIS/POPUPS */
-        .sos-float { position: fixed; bottom: 100px; right: 20px; background: #25d366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; text-decoration: none; box-shadow: 0 8px 20px rgba(37,211,102,0.3); z-index: 1000; }
-
-        /* GRID DE SKIN NO PERFIL */
+        .sos-float { position: fixed; bottom: 100px; right: 20px; background: #25d366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; text-decoration: none; z-index: 1000; }
         .skin-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px; }
         .skin-item { font-size: 35px; background: var(--p-gray); padding: 10px; border-radius: 15px; cursor: pointer; text-align: center; }
     </style>
@@ -84,11 +55,10 @@
 
     <div id="screen-intro" class="screen active">
         <div class="pet-stage">
-            <div class="pet-bubble" id="intro-msg">Ciao! Escolha seu curso:</div><br>
+            <div class="pet-bubble" id="intro-msg">Escolha seu curso:</div><br>
             <div class="pet-avatar" onclick="petSpeak('ciao')">🐱</div>
         </div>
-        <div id="course-list">
-            </div>
+        <div id="course-list"></div>
     </div>
 
     <div id="screen-app" class="screen">
@@ -103,45 +73,28 @@
                 <div class="pet-bubble" id="pet-tip">Vamos aprender algo novo hoje?</div><br>
                 <div class="pet-avatar main-pet-icon" onclick="petSpeak('random')">🐱</div>
             </div>
-
             <div class="card">
-                <h3 style="margin-bottom:10px;">📅 Missões Semanais</h3>
+                <h3>📅 Missões Semanais</h3>
                 <p>🎯 Lições completas: <b id="ui-missao-1">0/5</b></p>
                 <p>⭐ XP acumulado: <b id="ui-missao-2">0/500</b></p>
-            </div>
-
-            <div class="card" style="border-bottom-color: #ffd700;">
-                <h3>👑 Planicchio VIP</h3>
-                <p style="font-size: 14px; color: #666;">Acesso a nativos e Language Reactor</p>
-                <button class="btn-main" style="background: var(--p-vip); border:none; margin-top:10px;">DESBLOQUEAR AGORA</button>
             </div>
         </div>
 
         <div id="tab-learn" class="tab-content" style="display:none;">
             <h2>Exercícios</h2>
-            <div id="quiz-container" class="card">
-                </div>
+            <div id="quiz-container" class="card"></div>
         </div>
 
         <div id="tab-profile" class="tab-content" style="display:none;">
             <h2>Meu Perfil</h2>
             <div class="card">
                 <p><b>Nome:</b> <span id="prof-name">Estudante</span></p>
-                <p><b>Título:</b> <span id="prof-title" style="color: var(--p-orange);">Novato</span></p>
                 <hr style="margin: 15px 0; opacity: 0.2;">
-                <p>Trocar Pet Interativo:</p>
-                <div class="skin-grid">
-                    <div class="skin-item" onclick="changeSkin('🐱')">🐱</div>
-                    <div class="skin-item" onclick="changeSkin('🐶')">🐶</div>
-                    <div class="skin-item" onclick="changeSkin('🦊')">🦊</div>
-                    <div class="skin-item" onclick="changeSkin('🦁')">🦁</div>
-                    <div class="skin-item" onclick="changeSkin('🐷')">🐷</div>
-                    <div class="skin-item" onclick="changeSkin('🐼')">🐼</div>
-                </div>
+                <p>Trocar Pet:</p>
+                <div class="skin-grid" id="skin-selector"></div>
             </div>
-            
-            <button class="btn-main" onclick="toggleTheme()" style="background: var(--p-dark); margin-bottom: 10px;">Alternar Modo Escuro</button>
-            <button class="btn-main" style="background: #ff4b4b; box-shadow: 0 4px 0 #b10000;" onclick="location.reload()">Mudar de Curso</button>
+            <button class="btn-main" onclick="toggleTheme()" style="background: var(--p-dark); margin-bottom: 10px;">Modo Escuro</button>
+            <button class="btn-main" style="background: #ff4b4b;" onclick="location.reload()">Mudar de Curso</button>
         </div>
 
         <nav>
@@ -152,7 +105,20 @@
     </div>
 
     <script>
-        // CONFIGURAÇÕES DE IDIOMAS
+        // BANCO DE DADOS
+        const contentDatabase = {
+            'it-pt': [
+                { type: 'translate', question: 'Como se diz "Bom dia"?', options: ['Buongiorno', 'Buonanotte', 'Prego'], answer: 'Buongiorno', audio: 'Buongiorno' },
+                { type: 'spelling', question: 'Escreva "Gato" em Italiano:', answer: 'gatto', audio: 'gatto' },
+                { type: 'situation', title: 'No Restaurante 🍝', question: 'Como pedir a conta?', options: ['Il conto, per favore', 'Ciao, bella', 'Dove il bagno?'], answer: 'Il conto, per favore', audio: 'Il conto, per favore' }
+            ],
+            'pt-it': [
+                { type: 'translate', question: 'Como se diz "Obrigado"?', options: ['Grazie', 'Prego', 'Per favore'], answer: 'Grazie', audio: 'Grazie' }
+            ],
+            'it-en': [{ type: 'translate', question: 'Translate "Gatto":', options: ['Dog', 'Cat', 'Bird'], answer: 'Cat', audio: 'Gatto' }],
+            'en-it': [{ type: 'translate', question: 'How to say "Thank you"?', options: ['Grazie', 'Prego', 'Mela'], answer: 'Grazie', audio: 'Grazie' }]
+        };
+
         const courses = [
             { id: 'it-en', name: 'Ital-Eng', flag: '🇮🇹 ➔ 🇬🇧', msg: 'Scegli il tuo corso' },
             { id: 'it-pt', name: 'Ital-Port', flag: '🇮🇹 ➔ 🇧🇷', msg: 'Scegli il tuo corso' },
@@ -161,126 +127,99 @@
         ];
 
         let state = {
-const contentDatabase = {
-    'it-pt': [
-        { type: 'translate', question: 'Como se diz "Bom dia"?', options: ['Buongiorno', 'Buonanotte', 'Prego'], answer: 'Buongiorno', audio: 'Buongiorno' },
-        { type: 'spelling', question: 'Escreva "Gato" em Italiano:', answer: 'gatto', audio: 'gatto' },
-        { type: 'situation', title: 'No Restaurante 🍝', question: 'Como pedir a conta?', options: ['Il conto, per favore', 'Ciao, bella', 'Dove il bagno?'], answer: 'Il conto, per favore', audio: 'Il conto, per favore' }
-    ],
-    'pt-it': [
-        { type: 'translate', question: 'Como se diz "Obrigado"?', options: ['Grazie', 'Prego', 'Per favore'], answer: 'Grazie', audio: 'Grazie' }
-    ]
-    // Para adicionar mais línguas, basta seguir o padrão acima!
-};
-
-let currentExerciseIndex = 0; // Isso controla em qual questão o aluno está
             xp: 0, lvl: 1, streak: 0,
             skin: '🐱',
             currentCourse: '',
             theme: 'light'
         };
 
-        // INICIALIZAR LISTA DE CURSOS
-        const courseDiv = document.getElementById('course-list');
-        courses.forEach(c => {
-            courseDiv.innerHTML += `
-                <button class="btn-course" onclick="startCourse('${c.id}')">
-                    <span style="font-size:24px">${c.flag}</span>
-                    <div>
-                        <div style="font-size:12px; opacity:0.6">${c.msg}</div>
-                        <div>${c.name}</div>
-                    </div>
-                </button>
-            `;
-        });
+        let currentExerciseIndex = 0;
+
+        // INICIALIZAR
+        window.onload = () => {
+            const courseDiv = document.getElementById('course-list');
+            courses.forEach(c => {
+                courseDiv.innerHTML += `<button class="btn-course" onclick="startCourse('${c.id}')"><span>${c.flag}</span><div><small>${c.msg}</small><br>${c.name}</div></button>`;
+            });
+
+            const skins = ['🐱','🐶','🦊','🦁','🐷','🐼','🐰','🐯'];
+            const skinGrid = document.getElementById('skin-selector');
+            skins.forEach(s => {
+                skinGrid.innerHTML += `<div class="skin-item" onclick="changeSkin('${s}')">${s}</div>`;
+            });
+        };
 
         function startCourse(id) {
             state.currentCourse = id;
             document.getElementById('screen-intro').classList.remove('active');
             document.getElementById('screen-app').classList.add('active');
-            save();
             updateUI();
         }
 
-        // SUBSTITUA sua função changeTab por esta:
-function changeTab(tabId, el) {
-    document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
-    document.getElementById('tab-' + tabId).style.display = 'block';
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-tab'));
-    el.classList.add('active-tab');
-    
-    // Se clicar no alvo (exercícios), ele carrega a primeira pergunta
-    if (tabId === 'learn') loadExercise();
-}
+        function changeTab(tabId, el) {
+            document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+            document.getElementById('tab-' + tabId).style.display = 'block';
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-tab'));
+            el.classList.add('active-tab');
+            if (tabId === 'learn') loadExercise();
+        }
 
-// COLE estas funções novas em qualquer lugar do seu <script>
-function loadExercise() {
-    const container = document.getElementById('quiz-container');
-    const db = contentDatabase[state.currentCourse] || contentDatabase['it-pt'];
-    const ex = db[currentExerciseIndex];
+        function loadExercise() {
+            const container = document.getElementById('quiz-container');
+            const db = contentDatabase[state.currentCourse] || contentDatabase['it-pt'];
+            const ex = db[currentExerciseIndex];
 
-    if (!ex) {
-        container.innerHTML = `<h3>🎉 Fim das lições!</h3><p>Você detonou!</p>
-                               <button class="btn-main" onclick="currentExerciseIndex=0; loadExercise()">Refazer</button>`;
-        return;
-    }
+            if (!ex) {
+                container.innerHTML = `<h3>🎉 Lições concluídas!</h3><button class="btn-main" onclick="currentExerciseIndex=0; loadExercise()">Reiniciar</button>`;
+                return;
+            }
 
-    let html = `<small style="color:var(--p-orange); font-weight:900;">${ex.type.toUpperCase()}</small>`;
-    if (ex.title) html += `<h3>${ex.title}</h3>`;
-    html += `<p style="font-size:18px; margin:15px 0; font-weight:700;">${ex.question}</p>`;
+            let html = `<small style="color:var(--p-orange); font-weight:900;">${ex.type.toUpperCase()}</small>`;
+            if (ex.title) html += `<h3>${ex.title}</h3>`;
+            html += `<p style="font-size:18px; margin:15px 0; font-weight:700;">${ex.question}</p>`;
 
-    if (ex.type === 'translate' || ex.type === 'situation') {
-        ex.options.forEach(opt => {
-            html += `<button class="btn-course" onclick="checkAnswer('${opt}', '${ex.answer}')">${opt}</button>`;
-        });
-    } else if (ex.type === 'spelling') {
-        html += `<input type="text" id="spell-input" placeholder="Sua resposta...">
-                 <button class="btn-main" onclick="checkAnswer(document.getElementById('spell-input').value, '${ex.answer}')">Verificar</button>`;
-    }
+            if (ex.type === 'translate' || ex.type === 'situation') {
+                ex.options.forEach(opt => {
+                    html += `<button class="btn-course" onclick="checkAnswer('${opt}', '${ex.answer}')">${opt}</button>`;
+                });
+            } else if (ex.type === 'spelling') {
+                html += `<input type="text" id="spell-input" placeholder="Digite em italiano...">
+                         <button class="btn-main" onclick="checkAnswer(document.getElementById('spell-input').value, '${ex.answer}')">Verificar</button>`;
+            }
 
-    container.innerHTML = html;
-    if (ex.audio) speak(ex.audio); // Faz o pet falar a palavra assim que abre
-}
+            container.innerHTML = html;
+            if (ex.audio) speak(ex.audio);
+        }
 
-function checkAnswer(input, correct) {
-    if (input.toLowerCase().trim() === correct.toLowerCase().trim()) {
-        state.xp += 20;
-        currentExerciseIndex++;
-        petSpeak('success'); // O gato dá parabéns
-        // Aqui você pode colocar um som de acerto
-    } else {
-        petSpeak('error'); // O gato fica triste
-        alert("Resposta errada! Tente novamente.");
-    }
-    save();
-    updateUI();
-    loadExercise();
-}
+        function checkAnswer(input, correct) {
+            if (input.toLowerCase().trim() === correct.toLowerCase().trim()) {
+                state.xp += 20;
+                currentExerciseIndex++;
+                petSpeak('success');
+                if(state.xp >= 100) { state.xp = 0; state.lvl++; }
+            } else {
+                petSpeak('error');
+                alert("Errado! Resposta: " + correct);
+            }
+            updateUI();
+            loadExercise();
+        }
 
-function speak(text) {
-    const msg = new SpeechSynthesisUtterance(text);
-    // Se o curso tiver "it", ele fala italiano, senão fala inglês
-    msg.lang = state.currentCourse.includes('it') ? 'it-IT' : 'en-US';
-    window.speechSynthesis.speak(msg);
-}
+        function speak(text) {
+            const msg = new SpeechSynthesisUtterance(text);
+            msg.lang = state.currentCourse.includes('it') ? 'it-IT' : 'en-US';
+            window.speechSynthesis.speak(msg);
+        }
+
+        function petSpeak(type) {
+            const phrases = ["Miau! Ótimo!", "Continue assim!", "Planicchio feliz!", "Bravo!"];
+            const text = phrases[Math.floor(Math.random()*phrases.length)];
+            document.querySelectorAll('.pet-bubble').forEach(b => b.innerText = text);
         }
 
         function changeSkin(emoji) {
             state.skin = emoji;
-            document.querySelectorAll('.main-pet-icon').forEach(p => p.innerText = emoji);
-            document.querySelectorAll('.pet-avatar').forEach(p => p.innerText = emoji);
-            playAudio('https://www.soundjay.com/buttons/sounds/button-3.mp3');
-        }
-
-        function petSpeak(type) {
-            const phrases = ["Miau! Vamos estudar!", "Você está indo bem!", "Não desista!", "Planicchio ama você!"];
-            const text = type === 'ciao' ? "Ciao! Bem-vindo!" : phrases[Math.floor(Math.random()*phrases.length)];
-            document.querySelectorAll('.pet-bubble').forEach(b => b.innerText = text);
-            
-            // API DE VOZ
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'it-IT';
-            speechSynthesis.speak(utterance);
+            document.querySelectorAll('.main-pet-icon, .pet-avatar').forEach(p => p.innerText = emoji);
         }
 
         function updateUI() {
@@ -293,16 +232,6 @@ function speak(text) {
             state.theme = state.theme === 'light' ? 'dark' : 'light';
             document.body.setAttribute('data-theme', state.theme);
         }
-
-        function playAudio(url) {
-            new Audio(url).play().catch(() => {});
-        }
-
-        function save() {
-            localStorage.setItem('planicchio_data', JSON.stringify(state));
-        }
-
     </script>
 </body>
 </html>
-
