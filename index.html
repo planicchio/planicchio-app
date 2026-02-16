@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planicchio Premium</title>
+    <title>Planicchio Premium v3</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -23,40 +23,47 @@
         .active { display: block; }
         @keyframes slideUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
 
+        /* HEADER */
         .top-bar { display: flex; align-items: center; justify-content: space-between; padding: 15px; background: var(--p-white); border-radius: 0 0 25px 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
         .lvl-badge { background: var(--p-orange); color: white; padding: 5px 15px; border-radius: 20px; font-weight: 900; }
-        
         .xp-bar-container { flex-grow: 1; height: 12px; background: var(--p-gray); border-radius: 10px; margin: 0 15px; overflow: hidden; }
         .xp-bar-fill { height: 100%; background: var(--p-orange); width: 0%; transition: 0.5s; }
 
-        .pet-stage { text-align: center; margin: 30px 0; }
+        /* PET */
+        .pet-stage { text-align: center; margin: 20px 0; }
         .pet-bubble { background: var(--p-white); padding: 12px; border-radius: 18px; border: 3px solid var(--p-orange); display: inline-block; margin-bottom: 15px; position: relative; font-weight: 700; max-width: 80%; }
-        .pet-avatar { font-size: 100px; cursor: pointer; display: inline-block; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1)); }
+        .pet-avatar { font-size: 80px; cursor: pointer; display: inline-block; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1)); }
 
+        /* CARDS */
         .card { background: var(--p-white); padding: 20px; border-radius: 24px; box-shadow: 0 6px 20px rgba(0,0,0,0.04); margin-bottom: 20px; border-bottom: 5px solid var(--p-gray); }
-        .btn-course { background: var(--p-white); border: 2px solid var(--p-gray); padding: 20px; border-radius: 18px; width: 100%; text-align: left; margin-bottom: 10px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 15px; }
-        
+        .btn-course { background: var(--p-white); border: 2px solid var(--p-gray); padding: 15px; border-radius: 18px; width: 100%; text-align: left; margin-bottom: 10px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 15px; }
         .btn-main { background: var(--p-orange); color: white; border: none; padding: 18px; border-radius: 18px; width: 100%; font-weight: 900; font-size: 16px; cursor: pointer; box-shadow: 0 4px 0 #d36500; }
+        
+        /* FLASHCARDS */
+        .flashcard { width: 100%; height: 150px; perspective: 1000px; cursor: pointer; margin-bottom: 20px; }
+        .flashcard-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; }
+        .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+        .flashcard-front, .flashcard-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; border-radius: 20px; font-size: 24px; font-weight: 900; border: 3px solid var(--p-orange); background: white; }
+        .flashcard-back { background: var(--p-orange); color: white; transform: rotateY(180deg); }
 
-        #spell-input { width: 100%; padding: 15px; border-radius: 15px; border: 2px solid var(--p-gray); margin-bottom: 10px; font-size: 16px; outline: none; }
-
-        nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--p-white); display: flex; justify-content: space-around; padding: 15px; border-top: 3px solid var(--p-gray); }
-        .nav-item { font-size: 26px; cursor: pointer; color: #ccc; transition: 0.3s; }
+        /* NAV */
+        nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--p-white); display: flex; justify-content: space-around; padding: 15px; border-top: 3px solid var(--p-gray); z-index: 1000; }
+        .nav-item { font-size: 24px; cursor: pointer; color: #ccc; transition: 0.3s; }
         .nav-item.active-tab { color: var(--p-orange); transform: translateY(-5px); }
 
-        .sos-float { position: fixed; bottom: 100px; right: 20px; background: #25d366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; text-decoration: none; z-index: 1000; }
-        .skin-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px; }
-        .skin-item { font-size: 35px; background: var(--p-gray); padding: 10px; border-radius: 15px; cursor: pointer; text-align: center; }
+        .sos-float { position: fixed; bottom: 90px; right: 20px; background: #25d366; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 25px; text-decoration: none; z-index: 900; }
+        .skin-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .skin-item { font-size: 30px; background: var(--p-gray); padding: 10px; border-radius: 12px; cursor: pointer; text-align: center; }
     </style>
 </head>
 <body>
 
-    <a href="https://wa.me/393716755981" class="sos-float">💬</a>
+    <a href="https://wa.me/393716755981" class="sos-float">🆘</a>
 
     <div id="screen-intro" class="screen active">
         <div class="pet-stage">
-            <div class="pet-bubble" id="intro-msg">Escolha seu curso:</div><br>
-            <div class="pet-avatar" onclick="petSpeak('ciao')">🐱</div>
+            <div class="pet-bubble">Ciao! Vamos aprender?</div><br>
+            <div class="pet-avatar">🐱</div>
         </div>
         <div id="course-list"></div>
     </div>
@@ -70,90 +77,119 @@
 
         <div id="tab-home" class="tab-content">
             <div class="pet-stage">
-                <div class="pet-bubble" id="pet-tip">Vamos aprender algo novo hoje?</div><br>
-                <div class="pet-avatar main-pet-icon" onclick="petSpeak('random')">🐱</div>
+                <div class="pet-bubble" id="pet-tip">Aperte o play e bons estudos!</div><br>
+                <div class="pet-avatar main-pet-icon">🐱</div>
             </div>
             <div class="card">
-                <h3>📅 Missões Semanais</h3>
-                <p>🎯 Lições completas: <b id="ui-missao-1">0/5</b></p>
-                <p>⭐ XP acumulado: <b id="ui-missao-2">0/500</b></p>
+                <h3>📅 Missão de Hoje</h3>
+                <p>Completar 3 exercícios (+50 XP)</p>
+                <button class="btn-main" onclick="changeTab('learn', document.querySelectorAll('.nav-item')[1])" style="margin-top:10px;">COMEÇAR AGORA</button>
             </div>
         </div>
 
         <div id="tab-learn" class="tab-content" style="display:none;">
-            <h2>Exercícios</h2>
+            <h2>Lições</h2>
             <div id="quiz-container" class="card"></div>
+        </div>
+
+        <div id="tab-extra" class="tab-content" style="display:none;">
+            <h2>Gírias & Flashcards</h2>
+            <div class="card">
+                <h3>🎴 Flashcard do Dia</h3>
+                <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                    <div class="flashcard-inner">
+                        <div class="flashcard-front" id="flash-front">Mela</div>
+                        <div class="flashcard-back" id="flash-back">Maçã</div>
+                    </div>
+                </div>
+                <button class="btn-main" onclick="nextFlashcard()" style="font-size:12px; padding:10px;">PRÓXIMO FLASHCARD</button>
+            </div>
+
+            <div class="card">
+                <h3>🗣️ Dicionário de Gírias</h3>
+                <div id="slang-list">
+                    </div>
+            </div>
         </div>
 
         <div id="tab-profile" class="tab-content" style="display:none;">
             <h2>Meu Perfil</h2>
             <div class="card">
-                <p><b>Nome:</b> <span id="prof-name">Estudante</span></p>
-                <hr style="margin: 15px 0; opacity: 0.2;">
-                <p>Trocar Pet:</p>
+                <p><b>Status:</b> <span id="prof-title" style="color:var(--p-orange)">Novato</span></p>
+                <hr style="margin: 15px 0; opacity: 0.1;">
+                <p>Escolher Pet:</p>
                 <div class="skin-grid" id="skin-selector"></div>
             </div>
-            <button class="btn-main" onclick="toggleTheme()" style="background: var(--p-dark); margin-bottom: 10px;">Modo Escuro</button>
-            <button class="btn-main" style="background: #ff4b4b;" onclick="location.reload()">Mudar de Curso</button>
+            <button class="btn-main" onclick="toggleTheme()" style="background: var(--p-dark); margin-bottom: 10px;">MODO ESCURO</button>
+            <button class="btn-main" style="background: #ff4b4b;" onclick="location.reload()">MUDAR CURSO</button>
         </div>
 
         <nav>
             <div class="nav-item active-tab" onclick="changeTab('home', this)">🏠</div>
             <div class="nav-item" onclick="changeTab('learn', this)">🎯</div>
+            <div class="nav-item" onclick="changeTab('extra', this)">📖</div>
             <div class="nav-item" onclick="changeTab('profile', this)">👤</div>
         </nav>
     </div>
 
     <script>
-        // BANCO DE DADOS
+        // BANCO DE DADOS COMPLETO
         const contentDatabase = {
             'it-pt': [
-                { type: 'translate', question: 'Como se diz "Bom dia"?', options: ['Buongiorno', 'Buonanotte', 'Prego'], answer: 'Buongiorno', audio: 'Buongiorno' },
-                { type: 'spelling', question: 'Escreva "Gato" em Italiano:', answer: 'gatto', audio: 'gatto' },
-                { type: 'situation', title: 'No Restaurante 🍝', question: 'Como pedir a conta?', options: ['Il conto, per favore', 'Ciao, bella', 'Dove il bagno?'], answer: 'Il conto, per favore', audio: 'Il conto, per favore' }
+                { type: 'translate', question: 'Como se diz "Maçã"?', options: ['Mela', 'Pera', 'Uva'], answer: 'Mela', audio: 'Mela' },
+                { type: 'spelling', question: 'Escreva "Cão" em Italiano:', answer: 'cane', audio: 'cane' },
+                { type: 'situation', title: 'No Café ☕', question: 'Como pedir um café?', options: ['Un caffè, per favore', 'Ciao bella', 'Grazie'], answer: 'Un caffè, per favore', audio: 'Un caffè, per favore' }
             ],
             'pt-it': [
                 { type: 'translate', question: 'Como se diz "Obrigado"?', options: ['Grazie', 'Prego', 'Per favore'], answer: 'Grazie', audio: 'Grazie' }
-            ],
-            'it-en': [{ type: 'translate', question: 'Translate "Gatto":', options: ['Dog', 'Cat', 'Bird'], answer: 'Cat', audio: 'Gatto' }],
-            'en-it': [{ type: 'translate', question: 'How to say "Thank you"?', options: ['Grazie', 'Prego', 'Mela'], answer: 'Grazie', audio: 'Grazie' }]
+            ]
         };
 
-        const courses = [
-            { id: 'it-en', name: 'Ital-Eng', flag: '🇮🇹 ➔ 🇬🇧', msg: 'Scegli il tuo corso' },
-            { id: 'it-pt', name: 'Ital-Port', flag: '🇮🇹 ➔ 🇧🇷', msg: 'Scegli il tuo corso' },
-            { id: 'pt-it', name: 'Port-Ital', flag: '🇧🇷 ➔ 🇮🇹', msg: 'Escolha seu curso' },
-            { id: 'en-it', name: 'Eng-Ital', flag: '🇬🇧 ➔ 🇮🇹', msg: 'Choose your course' }
+        const flashcards = [
+            { it: 'Gatto', pt: 'Gato' },
+            { it: 'Cane', pt: 'Cão' },
+            { it: 'Acqua', pt: 'Água' },
+            { it: 'Pane', pt: 'Pão' }
         ];
 
-        let state = {
-            xp: 0, lvl: 1, streak: 0,
-            skin: '🐱',
-            currentCourse: '',
-            theme: 'light'
+        const slangs = {
+            'it': [
+                { term: 'Che cavolo!', mean: 'Que droga! / Que caramba!' },
+                { term: 'Meno male!', mean: 'Ainda bem!' }
+            ],
+            'en': [
+                { term: 'Chill out', mean: 'Relaxa' },
+                { term: 'My bad', mean: 'Foi mal' }
+            ]
         };
 
+        let state = { xp: 0, lvl: 1, streak: 0, currentCourse: 'it-pt', theme: 'light' };
         let currentExerciseIndex = 0;
+        let currentFlashIndex = 0;
 
-        // INICIALIZAR
         window.onload = () => {
             const courseDiv = document.getElementById('course-list');
+            const courses = [
+                { id: 'it-pt', flag: '🇮🇹 ➔ 🇧🇷', name: 'Ital-Port' },
+                { id: 'pt-it', flag: '🇧🇷 ➔ 🇮🇹', name: 'Port-Ital' },
+                { id: 'it-en', flag: '🇮🇹 ➔ 🇬🇧', name: 'Ital-Eng' }
+            ];
             courses.forEach(c => {
-                courseDiv.innerHTML += `<button class="btn-course" onclick="startCourse('${c.id}')"><span>${c.flag}</span><div><small>${c.msg}</small><br>${c.name}</div></button>`;
+                courseDiv.innerHTML += `<button class="btn-course" onclick="startCourse('${c.id}')"><span>${c.flag}</span><b>${c.name}</b></button>`;
             });
 
-            const skins = ['🐱','🐶','🦊','🦁','🐷','🐼','🐰','🐯'];
             const skinGrid = document.getElementById('skin-selector');
-            skins.forEach(s => {
+            ['🐱','🐶','🦊','🦁','🐷','🐼'].forEach(s => {
                 skinGrid.innerHTML += `<div class="skin-item" onclick="changeSkin('${s}')">${s}</div>`;
             });
+
+            updateSlangs();
         };
 
         function startCourse(id) {
             state.currentCourse = id;
             document.getElementById('screen-intro').classList.remove('active');
             document.getElementById('screen-app').classList.add('active');
-            updateUI();
         }
 
         function changeTab(tabId, el) {
@@ -161,7 +197,7 @@
             document.getElementById('tab-' + tabId).style.display = 'block';
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-tab'));
             el.classList.add('active-tab');
-            if (tabId === 'learn') loadExercise();
+            if(tabId === 'learn') loadExercise();
         }
 
         function loadExercise() {
@@ -169,63 +205,71 @@
             const db = contentDatabase[state.currentCourse] || contentDatabase['it-pt'];
             const ex = db[currentExerciseIndex];
 
-            if (!ex) {
-                container.innerHTML = `<h3>🎉 Lições concluídas!</h3><button class="btn-main" onclick="currentExerciseIndex=0; loadExercise()">Reiniciar</button>`;
+            if(!ex) {
+                container.innerHTML = `<h3>🎉 Parabéns!</h3><button class="btn-main" onclick="currentExerciseIndex=0;loadExercise()">Recomeçar</button>`;
                 return;
             }
 
-            let html = `<small style="color:var(--p-orange); font-weight:900;">${ex.type.toUpperCase()}</small>`;
-            if (ex.title) html += `<h3>${ex.title}</h3>`;
-            html += `<p style="font-size:18px; margin:15px 0; font-weight:700;">${ex.question}</p>`;
-
-            if (ex.type === 'translate' || ex.type === 'situation') {
-                ex.options.forEach(opt => {
-                    html += `<button class="btn-course" onclick="checkAnswer('${opt}', '${ex.answer}')">${opt}</button>`;
-                });
-            } else if (ex.type === 'spelling') {
-                html += `<input type="text" id="spell-input" placeholder="Digite em italiano...">
-                         <button class="btn-main" onclick="checkAnswer(document.getElementById('spell-input').value, '${ex.answer}')">Verificar</button>`;
+            let html = `<h4>${ex.type.toUpperCase()}</h4><p style="margin:15px 0; font-size:18px;">${ex.question}</p>`;
+            if(ex.options) {
+                ex.options.forEach(o => html += `<button class="btn-course" onclick="checkAnswer('${o}','${ex.answer}')">${o}</button>`);
+            } else {
+                html += `<input type="text" id="spell-in" style="width:100%; padding:10px; margin-bottom:10px;">
+                         <button class="btn-main" onclick="checkAnswer(document.getElementById('spell-in').value,'${ex.answer}')">CONFERIR</button>`;
             }
-
             container.innerHTML = html;
-            if (ex.audio) speak(ex.audio);
+            if(ex.audio) speak(ex.audio);
         }
 
-        function checkAnswer(input, correct) {
-            if (input.toLowerCase().trim() === correct.toLowerCase().trim()) {
-                state.xp += 20;
+        function checkAnswer(ans, corr) {
+            if(ans.toLowerCase().trim() === corr.toLowerCase().trim()) {
+                state.xp += 25; 
                 currentExerciseIndex++;
-                petSpeak('success');
-                if(state.xp >= 100) { state.xp = 0; state.lvl++; }
+                petTalk("Bravo! +25 XP");
             } else {
-                petSpeak('error');
-                alert("Errado! Resposta: " + correct);
+                alert("Ops! Era: " + corr);
             }
+            if(state.xp >= 100) { state.xp=0; state.lvl++; }
             updateUI();
             loadExercise();
         }
 
-        function speak(text) {
-            const msg = new SpeechSynthesisUtterance(text);
-            msg.lang = state.currentCourse.includes('it') ? 'it-IT' : 'en-US';
-            window.speechSynthesis.speak(msg);
+        function nextFlashcard() {
+            currentFlashIndex = (currentFlashIndex + 1) % flashcards.length;
+            document.querySelector('.flashcard').classList.remove('flipped');
+            setTimeout(() => {
+                document.getElementById('flash-front').innerText = flashcards[currentFlashIndex].it;
+                document.getElementById('flash-back').innerText = flashcards[currentFlashIndex].pt;
+            }, 200);
         }
 
-        function petSpeak(type) {
-            const phrases = ["Miau! Ótimo!", "Continue assim!", "Planicchio feliz!", "Bravo!"];
-            const text = phrases[Math.floor(Math.random()*phrases.length)];
-            document.querySelectorAll('.pet-bubble').forEach(b => b.innerText = text);
+        function updateSlangs() {
+            const list = document.getElementById('slang-list');
+            const lang = state.currentCourse.includes('it') ? 'it' : 'en';
+            list.innerHTML = '';
+            slangs[lang].forEach(s => {
+                list.innerHTML += `<div style="margin-bottom:10px;"><b>${s.term}</b>: <small>${s.mean}</small></div>`;
+            });
         }
 
-        function changeSkin(emoji) {
-            state.skin = emoji;
-            document.querySelectorAll('.main-pet-icon, .pet-avatar').forEach(p => p.innerText = emoji);
+        function speak(t) {
+            const m = new SpeechSynthesisUtterance(t);
+            m.lang = state.currentCourse.includes('it') ? 'it-IT' : 'en-US';
+            window.speechSynthesis.speak(m);
+        }
+
+        function petTalk(t) {
+            document.querySelectorAll('.pet-bubble').forEach(b => b.innerText = t);
+        }
+
+        function changeSkin(s) {
+            document.querySelectorAll('.main-pet-icon, .pet-avatar').forEach(p => p.innerText = s);
         }
 
         function updateUI() {
             document.getElementById('ui-lvl').innerText = state.lvl;
             document.getElementById('ui-xp-fill').style.width = state.xp + '%';
-            document.getElementById('ui-streak').innerText = state.streak;
+            document.getElementById('prof-title').innerText = state.lvl > 5 ? "Mestre" : "Novato";
         }
 
         function toggleTheme() {
