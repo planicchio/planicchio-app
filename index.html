@@ -4,103 +4,174 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Planicchio</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 
 <style>
-body{
-  margin:0;
-  font-family: Arial, sans-serif;
-  background:#fef6e4;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{background:#fff7ed;color:#222;}
 
-.screen{ display:none; padding:20px; }
-.active{ display:block; }
+.screen{display:none;padding:25px 20px 90px;}
+.active{display:block;}
 
-h1{ color:#ff7a00; }
+h1{font-weight:800;color:#ff7a00;margin-bottom:15px;}
+h2{font-weight:600;margin-bottom:10px;}
 
 button{
-  padding:10px 15px;
-  margin:5px 0;
-  border:none;
-  border-radius:8px;
-  background:#ff7a00;
-  color:white;
-  cursor:pointer;
+width:100%;
+padding:14px;
+margin:8px 0;
+border:none;
+border-radius:14px;
+background:#ff7a00;
+color:white;
+font-weight:600;
+cursor:pointer;
+transition:.2s;
+}
+
+button:hover{transform:scale(1.02);}
+
+.card{
+background:white;
+padding:15px;
+border-radius:18px;
+box-shadow:0 6px 18px rgba(0,0,0,0.08);
+margin-bottom:15px;
 }
 
 nav{
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  background:white;
-  display:flex;
-  justify-content:space-around;
-  border-top:2px solid #ff7a00;
-  padding:10px 0;
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+background:white;
+display:flex;
+justify-content:space-around;
+padding:12px 0;
+border-top:3px solid #ff7a00;
 }
 
 nav button{
-  background:none;
-  color:#ff7a00;
-  font-weight:bold;
+background:none;
+color:#ff7a00;
+font-size:20px;
 }
+
+.cat{
+font-size:70px;
+text-align:center;
+margin:10px 0 20px;
+}
+
+textarea{
+width:100%;
+height:120px;
+padding:10px;
+border-radius:14px;
+border:1px solid #ddd;
+}
+
+.progress{
+height:10px;
+background:#ffe0c2;
+border-radius:10px;
+margin-top:10px;
+overflow:hidden;
+}
+
+.progress-bar{
+height:100%;
+background:#ff7a00;
+width:0%;
+transition:.3s;
+}
+
+.small{font-size:14px;color:#777;}
 </style>
 </head>
-
 <body>
 
-<!-- ESCOLHA IDIOMA -->
-<div id="languageScreen" class="screen active">
+<!-- SPLASH -->
+<div id="splash" class="screen active">
+  <div class="cat">🐱</div>
+  <h1>Planicchio</h1>
+  <button onclick="goToLanguage()">Começar</button>
+</div>
+
+<!-- IDIOMA -->
+<div id="language" class="screen">
   <h1>Escolha seu idioma</h1>
-  <button onclick="selectLanguage('italiano')">Italiano</button>
-  <button onclick="selectLanguage('ingles')">Inglês</button>
-  <button onclick="selectLanguage('espanhol')">Espanhol</button>
+  <button onclick="setLanguage('Italiano')">Italiano</button>
+  <button onclick="setLanguage('Inglês')">Inglês</button>
+  <button onclick="setLanguage('Espanhol')">Espanhol</button>
 </div>
 
 <!-- QUIZ -->
-<div id="quizScreen" class="screen">
-  <h1>Quiz de Nivelamento</h1>
-  <p>Traduza: "Gatto"</p>
-  <button onclick="setLevel(1)">Dog</button>
-  <button onclick="setLevel(2)">Cat</button>
+<div id="quiz" class="screen">
+  <h1>Quiz Rápido</h1>
+  <div class="card">
+    <p>Traduza: <b>Gatto</b></p>
+    <button onclick="startApp(1)">Dog</button>
+    <button onclick="startApp(2)">Cat</button>
+  </div>
 </div>
 
-<!-- APP PRINCIPAL -->
-<div id="appScreen" class="screen">
+<!-- APP -->
+<div id="app" class="screen">
 
   <!-- HOME -->
   <div id="home" class="tab active">
+    <div class="cat">🐱</div>
     <h1>Home</h1>
-    <p>XP: <span id="xp">0</span></p>
-    <p>Nível: <span id="level">1</span></p>
-    <p>Streak: <span id="streak">0</span> 🔥</p>
+    <div class="card">
+      <h2>Missão Diária</h2>
+      <p>Complete 3 exercícios hoje</p>
+    </div>
+
+    <div class="card">
+      <h2>Progresso</h2>
+      <p>Nível <span id="level">1</span></p>
+      <div class="progress"><div id="progressBar" class="progress-bar"></div></div>
+      <p class="small"><span id="xp">0</span>/100 XP</p>
+    </div>
+
+    <div class="card">
+      🔥 Streak: <span id="streak">0</span> dias
+    </div>
   </div>
 
   <!-- EXERCICIOS -->
   <div id="exercicios" class="tab">
     <h1>Exercícios</h1>
-    <p>Traduza: "Cane"</p>
-    <button onclick="ganharXP()">Dog</button>
-    <button>Cat</button>
+    <div class="card">
+      <p>Traduza: <b>Cane</b></p>
+      <button onclick="correctAnswer()">Dog</button>
+      <button onclick="wrongAnswer()">Cat</button>
+    </div>
   </div>
 
   <!-- DICAS -->
   <div id="dicas" class="tab">
     <h1>Dicas</h1>
-    <p>Dica do dia: pratique 10 minutos diariamente!</p>
+    <div class="card">Estude 10 minutos por dia.</div>
+    <div class="card">Repita palavras em voz alta.</div>
   </div>
 
   <!-- DICIONARIO -->
   <div id="dicionario" class="tab">
     <h1>Dicionário</h1>
-    <p>Gatto = Cat</p>
-    <p>Cane = Dog</p>
+    <div class="card">Gatto = Cat</div>
+    <div class="card">Cane = Dog</div>
   </div>
 
   <!-- PERFIL -->
   <div id="perfil" class="tab">
     <h1>Perfil</h1>
-    <textarea placeholder="Escreva no seu diário..." style="width:100%; height:100px;"></textarea>
+    <div class="card">
+      <p>Idioma: <span id="userLang"></span></p>
+      <p>Nível: <span id="profileLevel"></span></p>
+    </div>
+    <textarea placeholder="Seu diário..."></textarea>
   </div>
 
   <!-- MENU -->
@@ -116,50 +187,70 @@ nav button{
 
 <script>
 
-let xp = 0;
-let level = 1;
-let streak = 0;
+let xp = parseInt(localStorage.getItem("xp")) || 0;
+let level = parseInt(localStorage.getItem("level")) || 1;
+let streak = parseInt(localStorage.getItem("streak")) || 0;
+let language = localStorage.getItem("language") || "";
 
-function selectLanguage(lang){
-  localStorage.setItem("language", lang);
-  document.getElementById("languageScreen").classList.remove("active");
-  document.getElementById("quizScreen").classList.add("active");
+function goToLanguage(){
+  switchScreen("language");
 }
 
-function setLevel(lv){
-  level = lv;
-  document.getElementById("quizScreen").classList.remove("active");
-  document.getElementById("appScreen").classList.add("active");
+function setLanguage(lang){
+  language = lang;
+  localStorage.setItem("language", lang);
+  switchScreen("quiz");
+}
+
+function startApp(initialLevel){
+  level = initialLevel;
+  localStorage.setItem("level", level);
+  switchScreen("app");
   updateUI();
 }
 
-function showTab(tabId){
-  document.querySelectorAll(".tab").forEach(tab=>{
-    tab.classList.remove("active");
-  });
-  document.getElementById(tabId).classList.add("active");
+function switchScreen(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
 }
 
-function ganharXP(){
-  xp += 10;
-  streak += 1;
+function showTab(id){
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
 
-  if(xp >= level * 50){
+function correctAnswer(){
+  xp += 20;
+  streak++;
+  if(xp >= 100){
     xp = 0;
     level++;
-    alert("Subiu de nível!");
   }
-
+  save();
   updateUI();
+}
+
+function wrongAnswer(){
+  alert("Resposta incorreta 😿");
 }
 
 function updateUI(){
   document.getElementById("xp").innerText = xp;
   document.getElementById("level").innerText = level;
+  document.getElementById("profileLevel").innerText = level;
   document.getElementById("streak").innerText = streak;
+  document.getElementById("userLang").innerText = language;
+  document.getElementById("progressBar").style.width = xp + "%";
 }
 
-</script>
+function save(){
+  localStorage.setItem("xp", xp);
+  localStorage.setItem("level", level);
+  localStorage.setItem("streak", streak);
+}
 
+updateUI();
+
+</script>
 </body>
 </html>
