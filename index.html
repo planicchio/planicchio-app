@@ -3,55 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planicchio Ultra</title>
+    <title>Planicchio Ultra Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --p-orange: #ff7a00; --p-light: #fff7ed; --p-dark: #2d2d2d; --p-white: #ffffff; --p-gray: #f0f0f0; --p-vip: linear-gradient(45deg, #ffd700, #ff8c00); }
         [data-theme='dark'] { --p-light: #121212; --p-white: #1e1e1e; --p-dark: #f0f0f0; --p-gray: #333; }
+        
         * { margin:0; padding:0; box-sizing:border-box; font-family:'Nunito', sans-serif; }
-        body { background: var(--p-light); color: var(--p-dark); transition: 0.3s; }
+        body { background: var(--p-light); color: var(--p-dark); transition: 0.3s; overflow-x: hidden; }
+
         .screen { display: none; padding: 20px; padding-bottom: 100px; min-height: 100vh; animation: fadeIn 0.4s; }
         .active { display: block; }
-        @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
-        
-        /* UI ELEMENTS */
+        @keyframes fadeIn { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
+
+        /* HEADER */
         .top-bar { display: flex; align-items: center; justify-content: space-between; padding: 15px; background: var(--p-white); border-radius: 0 0 25px 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
         .xp-bar-container { flex-grow: 1; height: 12px; background: var(--p-gray); border-radius: 10px; margin: 0 15px; overflow: hidden; }
         .xp-bar-fill { height: 100%; background: var(--p-orange); width: 0%; transition: 0.5s; }
-        .card { background: var(--p-white); padding: 20px; border-radius: 24px; box-shadow: 0 6px 20px rgba(0,0,0,0.04); margin-bottom: 20px; }
+
+        /* CARDS */
+        .card { background: var(--p-white); padding: 20px; border-radius: 24px; box-shadow: 0 6px 20px rgba(0,0,0,0.04); margin-bottom: 20px; border-bottom: 4px solid var(--p-gray); }
         .btn-course { background: var(--p-white); border: 2px solid var(--p-gray); padding: 15px; border-radius: 18px; width: 100%; text-align: left; margin-bottom: 10px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 15px; }
         .btn-main { background: var(--p-orange); color: white; border: none; padding: 18px; border-radius: 18px; width: 100%; font-weight: 900; cursor: pointer; box-shadow: 0 4px 0 #d36500; }
-        
-        /* PET & QUIZ */
-        .pet-stage { text-align: center; margin: 20px 0; }
-        .pet-avatar { font-size: 70px; cursor: pointer; }
-        .pet-bubble { background: var(--p-white); padding: 10px; border-radius: 15px; border: 2px solid var(--p-orange); display: inline-block; font-weight: 700; margin-bottom: 10px; }
-        
-        nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--p-white); display: flex; justify-content: space-around; padding: 15px; border-top: 3px solid var(--p-gray); }
-        .nav-item { font-size: 24px; cursor: pointer; color: #ccc; }
-        .nav-item.active-tab { color: var(--p-orange); }
+        .btn-main:active { transform: translateY(2px); box-shadow: 0 2px 0 #d36500; }
 
-        .sos-btn { position: fixed; bottom: 90px; right: 20px; background: #25d366; color: white; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 1000; }
+        /* PET */
+        .pet-stage { text-align: center; margin: 20px 0; }
+        .pet-bubble { background: var(--p-white); padding: 12px; border-radius: 18px; border: 3px solid var(--p-orange); display: inline-block; margin-bottom: 10px; font-weight: 700; position: relative; }
+        .pet-avatar { font-size: 70px; cursor: pointer; display: inline-block; }
+
+        /* NAV */
+        nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--p-white); display: flex; justify-content: space-around; padding: 15px; border-top: 3px solid var(--p-gray); z-index: 1000; }
+        .nav-item { font-size: 24px; cursor: pointer; color: #ccc; transition: 0.3s; }
+        .nav-item.active-tab { color: var(--p-orange); transform: translateY(-3px); }
+
+        .skin-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px; }
+        .skin-item { font-size: 30px; background: var(--p-gray); padding: 10px; border-radius: 12px; cursor: pointer; text-align: center; }
+        
+        #spell-input { width: 100%; padding: 15px; border-radius: 15px; border: 2px solid var(--p-gray); margin-bottom: 10px; font-size: 16px; outline: none; }
     </style>
 </head>
 <body>
 
-    <a href="https://wa.me/393716755981" class="sos-btn">🆘</a>
-
     <div id="screen-intro" class="screen active">
         <div class="pet-stage">
-            <div class="pet-bubble">Escolha seu curso / Choose / Scegli</div><br>
+            <div class="pet-bubble">Scegli il tuo corso! 🇮🇹<br>Choose your course! 🇬🇧<br>Escolha seu curso! 🇧🇷</div><br>
             <div class="pet-avatar">🐱</div>
         </div>
         <div id="course-list"></div>
-    </div>
-
-    <div id="screen-placement" class="screen">
-        <div class="card">
-            <h3>Teste de Nível 📊</h3>
-            <p id="placement-q">Pergunta...</p>
-            <div id="placement-options" style="margin-top:20px;"></div>
-        </div>
     </div>
 
     <div id="screen-app" class="screen">
@@ -63,16 +62,16 @@
 
         <div id="tab-home" class="tab-content">
             <div class="pet-stage">
-                <div class="pet-bubble" id="pet-msg">Ciao! Vamos estudar?</div><br>
+                <div class="pet-bubble" id="pet-msg">Ciao! Pronto?</div><br>
                 <div class="pet-avatar main-pet">🐱</div>
             </div>
             <div class="card">
-                <h3>Missões Diárias</h3>
-                <p id="daily-mission">Aguardando nivelamento...</p>
+                <h3>Missão Diária</h3>
+                <p id="daily-mission">Carregando...</p>
             </div>
-            <div class="card" style="border: 2px solid gold;">
-                <h3 style="color:#d4af37">👑 Área VIP</h3>
-                <p>Aulas com nativos e conversação real.</p>
+            <div class="card" style="border-bottom-color: gold;">
+                <h3 style="color:#b8860b">👑 Área VIP</h3>
+                <p>Nativos & Language Reactor.</p>
                 <button class="btn-main" style="background:var(--p-vip); border:none; margin-top:10px;">DESBLOQUEAR</button>
             </div>
         </div>
@@ -81,82 +80,82 @@
             <div id="exercise-box" class="card"></div>
         </div>
 
-        <div id="tab-extra" class="tab-content" style="display:none;">
-            <h3>Curiosidades & Gírias 💡</h3>
-            <div id="culture-box" class="card"></div>
-            <div id="slang-box" class="card"></div>
+        <div id="tab-profile" class="tab-content" style="display:none;">
+            <h2>Meu Perfil</h2>
+            <div class="card">
+                <p><b>Nível:</b> <span id="prof-lvl">1</span></p>
+                <p><b>Curso:</b> <span id="prof-course">-</span></p>
+                <hr style="margin: 15px 0; opacity: 0.1;">
+                <p>Trocar Pet:</p>
+                <div class="skin-grid" id="skin-selector"></div>
+            </div>
+            <button class="btn-main" onclick="toggleTheme()" style="background:var(--p-dark); margin-bottom:10px;">MODO ESCURO</button>
+            <button class="btn-main" style="background:#ff4b4b;" onclick="location.reload()">SAIR DO CURSO</button>
         </div>
 
         <nav>
             <div class="nav-item active-tab" onclick="changeTab('home', this)">🏠</div>
             <div class="nav-item" onclick="changeTab('learn', this)">🎯</div>
-            <div class="nav-item" onclick="changeTab('extra', this)">💡</div>
             <div class="nav-item" onclick="changeTab('profile', this)">👤</div>
         </nav>
     </div>
 
     <script>
+        // BANCO DE DADOS MASSIVO (Exemplo de estrutura para as 50 frases)
+        const db = {
+            'it-pt': [
+                { q: 'Como se diz "Bom dia"?', o: ['Buongiorno', 'Buonanotte', 'Prego'], a: 'Buongiorno', type: 'choice' },
+                { q: 'Escreva "Gato" em Italiano:', a: 'gatto', type: 'spell' },
+                { q: 'Significado de "Dove il bagno?":', o: ['Onde é o banheiro?', 'Como você está?', 'Quanto custa?'], a: 'Onde é o banheiro?', type: 'choice' }
+            ],
+            'pt-it': [
+                { q: 'Como se diz "Obrigado" em Italiano?', o: ['Grazie', 'Prego', 'Per favore'], a: 'Grazie', type: 'choice' },
+                { q: 'Traduza: "Eu gosto de pizza"', o: ['Mi piace la pizza', 'Mangio pizza', 'Voglio pizza'], a: 'Mi piace la pizza', type: 'choice' }
+            ],
+            'en-it': [
+                { q: 'How to say "Bread"?', o: ['Pane', 'Vino', 'Acqua'], a: 'Pane', type: 'choice' }
+            ],
+            'it-en': [
+                { q: 'What does "Mangiare" mean?', o: ['To eat', 'To drink', 'To sleep'], a: 'To eat', type: 'choice' }
+            ],
+            'pt-en': [
+                { q: 'Como se diz "Cachorro" em Inglês?', o: ['Dog', 'Cat', 'Bird'], a: 'Dog', type: 'choice' }
+            ],
+            'en-pt': [
+                { q: 'Translate "Morning":', o: ['Manhã', 'Noite', 'Tarde'], a: 'Manhã', type: 'choice' }
+            ]
+        };
+
         const courses = [
-            { id: 'it-en', name: 'Italian ➔ English', flag: '🇮🇹➔🇬🇧' },
-            { id: 'it-pt', name: 'Italiano ➔ Português', flag: '🇮🇹➔🇧🇷' },
-            { id: 'pt-it', name: 'Português ➔ Italiano', flag: '🇧🇷➔🇮🇹' },
-            { id: 'pt-en', name: 'Português ➔ Inglês', flag: '🇧🇷➔🇬🇧' },
-            { id: 'en-it', name: 'English ➔ Italian', flag: '🇬🇧➔🇮🇹' },
-            { id: 'en-pt', name: 'English ➔ Português', flag: '🇬🇧➔🇧🇷' }
+            { id: 'it-pt', n: 'Italiano ➔ Português', f: '🇮🇹➔🇧🇷' },
+            { id: 'pt-it', n: 'Português ➔ Italiano', f: '🇧🇷➔🇮🇹' },
+            { id: 'it-en', n: 'Italiano ➔ Inglês', f: '🇮🇹➔🇬🇧' },
+            { id: 'en-it', n: 'Inglês ➔ Italiano', f: '🇬🇧➔🇮🇹' },
+            { id: 'pt-en', n: 'Português ➔ Inglês', f: '🇧🇷➔🇬🇧' },
+            { id: 'en-pt', n: 'Inglês ➔ Português', f: '🇬🇧➔🇧🇷' }
         ];
 
-        const placementTests = {
-            'it-pt': { q: 'Como se diz "Maçã" em Italiano?', options: ['Mela', 'Pane', 'Uva'], correct: 'Mela' },
-            'pt-it': { q: 'O que significa "Buongiorno"?', options: ['Boa noite', 'Bom dia', 'Obrigado'], correct: 'Bom dia' },
-            'en-it': { q: 'Translate "Water":', options: ['Fuoco', 'Acqua', 'Terra'], correct: 'Acqua' }
-        };
-
-        const cultureTips = {
-            'it': "Na Itália, pedir um 'Latte' trará apenas um copo de leite. Peça 'Caffè Latte'!",
-            'en': "No Reino Unido, 'Tea time' é levado muito a sério, geralmente às 17h.",
-            'pt': "O Brasil é o país com o maior número de falantes de japonês fora do Japão!"
-        };
-
-        let state = { xp: 0, lvl: 1, streak: 0, course: '', levelName: 'A1', pet: '🐱' };
-        let curEx = 0;
+        let state = { xp: 0, lvl: 1, course: '', pet: '🐱', curEx: 0 };
 
         window.onload = () => {
             const list = document.getElementById('course-list');
             courses.forEach(c => {
-                list.innerHTML += `<button class="btn-course" onclick="startPlacement('${c.id}')"><span>${c.flag}</span> ${c.name}</button>`;
+                list.innerHTML += `<button class="btn-course" onclick="startCourse('${c.id}')"><span>${c.f}</span> ${c.n}</button>`;
+            });
+
+            const skinGrid = document.getElementById('skin-selector');
+            ['🐱','🐶','🦊','🦁','🐷','🐼','🐰','🐯'].forEach(s => {
+                skinGrid.innerHTML += `<div class="skin-item" onclick="changeSkin('${s}')">${s}</div>`;
             });
         };
 
-        function startPlacement(id) {
+        function startCourse(id) {
             state.course = id;
-            const test = placementTests[id] || placementTests['it-pt'];
             document.getElementById('screen-intro').classList.remove('active');
-            document.getElementById('screen-placement').classList.add('active');
-            document.getElementById('placement-q').innerText = test.q;
-            const opts = document.getElementById('placement-options');
-            opts.innerHTML = '';
-            test.options.forEach(o => {
-                opts.innerHTML += `<button class="btn-main" style="margin-bottom:10px" onclick="finishPlacement('${o}','${test.correct}')">${o}</button>`;
-            });
-        }
-
-        function finishPlacement(chosen, correct) {
-            if(chosen === correct) {
-                state.lvl = 2; state.levelName = 'A2';
-                alert("Ótimo! Você já tem uma base. Nível A2 desbloqueado!");
-            } else {
-                alert("Iniciando do zero. Nível A1!");
-            }
-            document.getElementById('screen-placement').classList.remove('active');
             document.getElementById('screen-app').classList.add('active');
+            document.getElementById('prof-course').innerText = id.toUpperCase();
+            loadExercise();
             updateUI();
-            loadCulture();
-        }
-
-        function loadCulture() {
-            const lang = state.course.split('-')[1];
-            document.getElementById('culture-box').innerHTML = `<h4>Sabia que?</h4><p>${cultureTips[lang] || cultureTips['it']}</p>`;
-            document.getElementById('daily-mission').innerText = `Complete 5 lições de nível ${state.levelName}`;
         }
 
         function changeTab(tabId, el) {
@@ -166,13 +165,57 @@
             el.classList.add('active-tab');
         }
 
+        function loadExercise() {
+            const box = document.getElementById('exercise-box');
+            const data = db[state.course] || db['it-pt'];
+            const ex = data[state.curEx];
+
+            if(!ex) {
+                box.innerHTML = `<h3>🎉 Curso concluído!</h3><button class="btn-main" onclick="state.curEx=0;loadExercise()">REINICIAR</button>`;
+                return;
+            }
+
+            let html = `<h4>Lição ${state.curEx + 1}</h4><p style="margin:20px 0; font-size:18px; font-weight:700;">${ex.q}</p>`;
+            
+            if(ex.type === 'choice') {
+                ex.o.forEach(opt => {
+                    html += `<button class="btn-course" onclick="check('${opt}','${ex.a}')">${opt}</button>`;
+                });
+            } else {
+                html += `<input type="text" id="spell-input" placeholder="Digite a resposta...">
+                         <button class="btn-main" onclick="check(document.getElementById('spell-input').value,'${ex.a}')">VERIFICAR</button>`;
+            }
+            box.innerHTML = html;
+        }
+
+        function check(input, correct) {
+            if(input.toLowerCase().trim() === correct.toLowerCase().trim()) {
+                state.xp += 20;
+                state.curEx++;
+                document.getElementById('pet-msg').innerText = "Bravo! +20 XP";
+            } else {
+                alert("Ops! A resposta correta era: " + correct);
+            }
+            if(state.xp >= 100) { state.xp = 0; state.lvl++; }
+            updateUI();
+            loadExercise();
+        }
+
+        function changeSkin(s) {
+            state.pet = s;
+            document.querySelectorAll('.pet-avatar, .main-pet').forEach(p => p.innerText = s);
+        }
+
         function updateUI() {
             document.getElementById('ui-lvl').innerText = state.lvl;
+            document.getElementById('prof-lvl').innerText = state.lvl;
             document.getElementById('ui-xp-fill').style.width = state.xp + '%';
+            document.getElementById('daily-mission').innerText = `Ganhe mais ${100 - state.xp} XP para o nível ${state.lvl + 1}`;
         }
 
         function toggleTheme() {
-            document.body.setAttribute('data-theme', document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+            const current = document.body.getAttribute('data-theme');
+            document.body.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
         }
     </script>
 </body>
