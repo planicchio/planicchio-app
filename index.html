@@ -7,10 +7,12 @@
 
 <style>
 :root{
-  --orange:#ff8c2b;
-  --orange-dark:#e57200;
-  --bg:#fff4ea;
+  --orange:#ff7a00;
+  --orange-dark:#e86100;
+  --bg:#fff3e8;
+  --card:#ffffff;
 }
+
 *{box-sizing:border-box}
 body{
   margin:0;
@@ -19,28 +21,26 @@ body{
   color:#333;
 }
 
-/* ---------- TELAS ---------- */
 .screen{display:none;min-height:100vh;padding-bottom:90px}
 
-/* ---------- SPLASH ---------- */
 #splash{
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  text-align:center;
   background:linear-gradient(180deg,var(--orange),var(--orange-dark));
   color:white;
+  text-align:center;
 }
 .cat-big{
-  font-size:120px;
-  animation:dance 2s infinite;
+  font-size:110px;
+  animation:bounce 2s infinite;
 }
-@keyframes dance{
-  0%{transform:translateY(0)}
-  50%{transform:translateY(-12px)}
-  100%{transform:translateY(0)}
+@keyframes bounce{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-10px)}
 }
+
 .btn{
   background:white;
   color:var(--orange-dark);
@@ -49,33 +49,26 @@ body{
   border-radius:30px;
   font-weight:700;
   margin-top:20px;
-}
-
-/* ---------- CURSOS ---------- */
-.course-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
-  padding:20px;
-}
-.course-card{
-  background:white;
-  border-radius:18px;
-  padding:16px;
-  text-align:center;
-  font-weight:700;
-  box-shadow:0 6px 14px rgba(0,0,0,.08);
   cursor:pointer;
 }
 
-/* ---------- HOME ---------- */
+.card{
+  background:var(--card);
+  border-radius:20px;
+  padding:16px;
+  margin:16px;
+  box-shadow:0 6px 18px rgba(0,0,0,.08);
+}
+
 .top{
   padding:16px;
 }
+
 .level{
-  font-weight:800;
+  font-weight:900;
   color:var(--orange-dark);
 }
+
 .progress{
   height:10px;
   background:#ffd8b2;
@@ -85,42 +78,23 @@ body{
 .progress span{
   display:block;
   height:100%;
-  width:40%;
   background:var(--orange);
   border-radius:20px;
-}
-.card{
-  background:white;
-  border-radius:20px;
-  padding:16px;
-  margin:14px;
-  box-shadow:0 6px 14px rgba(0,0,0,.08);
+  width:0%;
+  transition:.3s;
 }
 
-/* ---------- MISSÕES ---------- */
 .mission{
   background:white;
-  border-radius:18px;
-  padding:14px;
+  border-radius:14px;
+  padding:12px;
   margin-top:10px;
   cursor:pointer;
 }
-.mission.done{opacity:.5}
-
-/* ---------- PET ---------- */
-.pet{
-  position:fixed;
-  right:10px;
-  bottom:90px;
-  font-size:70px;
-  animation:bounce 2s infinite;
-}
-@keyframes bounce{
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-8px)}
+.mission.done{
+  opacity:.5;
 }
 
-/* ---------- MENU ---------- */
 nav{
   position:fixed;
   bottom:0;
@@ -137,7 +111,28 @@ nav button{
   background:none;
   font-weight:700;
 }
-nav button.active{color:var(--orange-dark)}
+nav button.active{
+  color:var(--orange-dark);
+}
+
+.pet{
+  position:fixed;
+  right:10px;
+  bottom:90px;
+  font-size:70px;
+  animation:float 3s infinite;
+}
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-6px)}
+}
+
+textarea{
+  width:100%;
+  padding:10px;
+  border-radius:12px;
+  border:1px solid #ddd;
+}
 </style>
 </head>
 
@@ -148,101 +143,151 @@ nav button.active{color:var(--orange-dark)}
   <div class="cat-big">🐱</div>
   <h1>Planicchio</h1>
   <p>thinking globally 🌍</p>
-  <button class="btn" onclick="go('courses')">Começar</button>
-</div>
-
-<!-- CURSOS -->
-<div id="courses" class="screen">
-  <h2 style="text-align:center">Escolha seu curso</h2>
-  <div class="course-grid">
-    <div class="course-card" onclick="startQuiz()">🇮🇹 → 🇺🇸 Italiano · Inglês</div>
-    <div class="course-card" onclick="startQuiz()">🇮🇹 → 🇧🇷 Italiano · Português</div>
-    <div class="course-card" onclick="startQuiz()">🇧🇷 → 🇮🇹 Português · Italiano</div>
-    <div class="course-card" onclick="startQuiz()">🇧🇷 → 🇺🇸 Português · Inglês</div>
-    <div class="course-card" onclick="startQuiz()">🇺🇸 → 🇮🇹 Inglês · Italiano</div>
-    <div class="course-card" onclick="startQuiz()">🇺🇸 → 🇧🇷 Inglês · Português</div>
-  </div>
-</div>
-
-<!-- QUIZ -->
-<div id="quiz" class="screen">
-  <h2 style="text-align:center">Vamos descobrir seu nível 👀</h2>
-  <p style="text-align:center"><b>Hello</b> significa:</p>
-  <div style="text-align:center">
-    <button class="btn" onclick="finishQuiz('A1')">Olá</button><br><br>
-    <button class="btn" onclick="finishQuiz('A1')">Tchau</button>
-  </div>
+  <button class="btn" onclick="startApp()">Começar</button>
 </div>
 
 <!-- APP -->
 <div id="app" class="screen">
+
   <div class="top">
-    <div class="level" id="levelText">Nível A1 • 🔥 1 dia</div>
-    <div class="progress"><span></span></div>
+    <div class="level" id="levelText"></div>
+    <div>XP: <span id="xpText"></span></div>
+    <div class="progress"><span id="xpBar"></span></div>
   </div>
 
-  <div class="card">
-    <h3>🔥 Missões de hoje</h3>
-    <div class="mission" onclick="complete(this)">🎮 Jogar minigame</div>
-    <div class="mission" onclick="complete(this)">📖 Completar exercício</div>
-    <div class="mission" onclick="complete(this)">🧠 Aprender 3 palavras</div>
+  <!-- HOME -->
+  <div id="homeTab" class="tab">
+    <div class="card">
+      <h3>🔥 Missões de hoje</h3>
+      <div class="mission" onclick="completeMission(this,20)">🎮 Jogar minigame</div>
+      <div class="mission" onclick="completeMission(this,15)">📖 Fazer exercício</div>
+      <div class="mission" onclick="completeMission(this,10)">🧠 Aprender palavra</div>
+    </div>
   </div>
 
-  <div class="card">
-    <h3>🎮 Minigame</h3>
-    <button class="btn" onclick="openGame()">Jogar</button>
+  <!-- EXERCICIOS -->
+  <div id="exTab" class="tab" style="display:none">
+    <div class="card">
+      <h3>Exercício</h3>
+      <p>Hello significa:</p>
+      <button onclick="exercise(true)">Olá</button>
+      <button onclick="exercise(false)">Tchau</button>
+      <p id="exResult"></p>
+    </div>
   </div>
+
+  <!-- DICAS -->
+  <div id="tipsTab" class="tab" style="display:none">
+    <div class="card">
+      <h3>Dica de hoje</h3>
+      <p>📌 Em inglês, usamos “Hello” para cumprimentar formalmente.</p>
+    </div>
+  </div>
+
+  <!-- DICIONARIO -->
+  <div id="dicTab" class="tab" style="display:none">
+    <div class="card">
+      <h3>Dicionário</h3>
+      <input id="wordInput" placeholder="Digite uma palavra">
+      <button onclick="searchWord()">Buscar</button>
+      <p id="dicResult"></p>
+    </div>
+  </div>
+
+  <!-- PERFIL -->
+  <div id="profileTab" class="tab" style="display:none">
+    <div class="card">
+      <h3>Seu Diário</h3>
+      <textarea id="diary"></textarea>
+      <button onclick="saveDiary()">Salvar</button>
+      <p>🔥 Streak: <span id="streakText"></span> dias</p>
+    </div>
+  </div>
+
 </div>
 
 <div class="pet">🐱</div>
 
 <nav id="menu" style="display:none">
-  <button class="active" onclick="tab('home')">Home</button>
-  <button onclick="tab('ex')">Exercícios</button>
-  <button onclick="tab('tips')">Dicas</button>
-  <button onclick="tab('dic')">Dicionário</button>
-  <button onclick="tab('profile')">Perfil</button>
+  <button class="active" onclick="switchTab('home')">Home</button>
+  <button onclick="switchTab('ex')">Exercícios</button>
+  <button onclick="switchTab('tips')">Dicas</button>
+  <button onclick="switchTab('dic')">Dicionário</button>
+  <button onclick="switchTab('profile')">Perfil</button>
 </nav>
 
-<!-- MINIGAME -->
-<div id="game" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);align-items:center;justify-content:center">
-  <div style="background:white;padding:20px;border-radius:20px;text-align:center">
-    <p><b>Hello</b> significa?</p>
-    <button onclick="answer(true)">Olá</button>
-    <button onclick="answer(false)">Tchau</button>
-    <p id="result"></p>
-    <button onclick="closeGame()">Fechar</button>
-  </div>
-</div>
-
 <script>
-function go(id){
-  document.querySelectorAll('.screen').forEach(s=>s.style.display='none');
-  document.getElementById(id).style.display='block';
+let xp = parseInt(localStorage.getItem("xp")) || 0;
+let level = parseInt(localStorage.getItem("level")) || 1;
+let streak = parseInt(localStorage.getItem("streak")) || 1;
+
+function startApp(){
+  document.getElementById("splash").style.display="none";
+  document.getElementById("app").style.display="block";
+  document.getElementById("menu").style.display="flex";
+  updateUI();
 }
-function startQuiz(){go('quiz')}
-function finishQuiz(level){
-  localStorage.setItem('level',level);
-  document.getElementById('levelText').innerText='Nível '+level+' • 🔥 1 dia';
-  go('app');
-  document.getElementById('menu').style.display='flex';
+
+function updateUI(){
+  document.getElementById("xpText").innerText=xp;
+  document.getElementById("levelText").innerText="Nível "+level;
+  document.getElementById("streakText").innerText=streak;
+  let percent=(xp%100);
+  document.getElementById("xpBar").style.width=percent+"%";
 }
-function tab(t){alert("Em breve: "+t)}
-function complete(el){
-  if(!el.classList.contains('done')){
-    el.classList.add('done');
-    el.innerHTML+=" ✅";
+
+function addXP(amount){
+  xp+=amount;
+  if(xp>=level*100){
+    level++;
+  }
+  localStorage.setItem("xp",xp);
+  localStorage.setItem("level",level);
+  updateUI();
+}
+
+function completeMission(el,points){
+  if(!el.classList.contains("done")){
+    el.classList.add("done");
+    addXP(points);
   }
 }
-function openGame(){
-  document.getElementById('game').style.display='flex';
+
+function exercise(correct){
+  if(correct){
+    document.getElementById("exResult").innerText="😸 Acertou! +20XP";
+    addXP(20);
+  }else{
+    document.getElementById("exResult").innerText="😿 Errou!";
+  }
 }
-function closeGame(){
-  document.getElementById('game').style.display='none';
+
+function switchTab(tab){
+  document.querySelectorAll(".tab").forEach(t=>t.style.display="none");
+  document.getElementById(tab+"Tab").style.display="block";
+  document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+  event.target.classList.add("active");
 }
-function answer(ok){
-  document.getElementById('result').innerText= ok ? "😸 Acertou!" : "😿 Errou!";
+
+function searchWord(){
+  let word=document.getElementById("wordInput").value.toLowerCase();
+  if(word==="hello"){
+    document.getElementById("dicResult").innerText="Hello = Olá";
+    addXP(5);
+  }else{
+    document.getElementById("dicResult").innerText="Palavra não encontrada";
+  }
 }
+
+function saveDiary(){
+  let text=document.getElementById("diary").value;
+  localStorage.setItem("diary",text);
+  localStorage.setItem("streak",++streak);
+  updateUI();
+}
+
+document.getElementById("diary").value=localStorage.getItem("diary")||"";
+updateUI();
 </script>
 
 </body>
