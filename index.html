@@ -3,193 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planicchio Premium v3</title>
+    <title>Planicchio Ultra</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --p-orange: #ff7a00; --p-light: #fff7ed; --p-dark: #2d2d2d;
-            --p-white: #ffffff; --p-gray: #f0f0f0; --p-success: #58cc02;
-            --p-vip: linear-gradient(45deg, #ffd700, #ff8c00);
-        }
-
-        [data-theme='dark'] {
-            --p-light: #121212; --p-white: #1e1e1e; --p-dark: #f0f0f0; --p-gray: #333;
-        }
-
+        :root { --p-orange: #ff7a00; --p-light: #fff7ed; --p-dark: #2d2d2d; --p-white: #ffffff; --p-gray: #f0f0f0; --p-vip: linear-gradient(45deg, #ffd700, #ff8c00); }
+        [data-theme='dark'] { --p-light: #121212; --p-white: #1e1e1e; --p-dark: #f0f0f0; --p-gray: #333; }
         * { margin:0; padding:0; box-sizing:border-box; font-family:'Nunito', sans-serif; }
-        body { background: var(--p-light); color: var(--p-dark); overflow-x: hidden; }
-
-        .screen { display: none; padding: 20px; padding-bottom: 100px; min-height: 100vh; animation: slideUp 0.4s ease; }
+        body { background: var(--p-light); color: var(--p-dark); transition: 0.3s; }
+        .screen { display: none; padding: 20px; padding-bottom: 100px; min-height: 100vh; animation: fadeIn 0.4s; }
         .active { display: block; }
-        @keyframes slideUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
-
-        /* HEADER */
+        @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+        
+        /* UI ELEMENTS */
         .top-bar { display: flex; align-items: center; justify-content: space-between; padding: 15px; background: var(--p-white); border-radius: 0 0 25px 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
-        .lvl-badge { background: var(--p-orange); color: white; padding: 5px 15px; border-radius: 20px; font-weight: 900; }
         .xp-bar-container { flex-grow: 1; height: 12px; background: var(--p-gray); border-radius: 10px; margin: 0 15px; overflow: hidden; }
         .xp-bar-fill { height: 100%; background: var(--p-orange); width: 0%; transition: 0.5s; }
-
-        /* PET */
-        .pet-stage { text-align: center; margin: 20px 0; }
-        .pet-bubble { background: var(--p-white); padding: 12px; border-radius: 18px; border: 3px solid var(--p-orange); display: inline-block; margin-bottom: 15px; position: relative; font-weight: 700; max-width: 80%; }
-        .pet-avatar { font-size: 80px; cursor: pointer; display: inline-block; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1)); }
-
-        /* CARDS */
-        .card { background: var(--p-white); padding: 20px; border-radius: 24px; box-shadow: 0 6px 20px rgba(0,0,0,0.04); margin-bottom: 20px; border-bottom: 5px solid var(--p-gray); }
+        .card { background: var(--p-white); padding: 20px; border-radius: 24px; box-shadow: 0 6px 20px rgba(0,0,0,0.04); margin-bottom: 20px; }
         .btn-course { background: var(--p-white); border: 2px solid var(--p-gray); padding: 15px; border-radius: 18px; width: 100%; text-align: left; margin-bottom: 10px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 15px; }
-        .btn-main { background: var(--p-orange); color: white; border: none; padding: 18px; border-radius: 18px; width: 100%; font-weight: 900; font-size: 16px; cursor: pointer; box-shadow: 0 4px 0 #d36500; }
+        .btn-main { background: var(--p-orange); color: white; border: none; padding: 18px; border-radius: 18px; width: 100%; font-weight: 900; cursor: pointer; box-shadow: 0 4px 0 #d36500; }
         
-        /* FLASHCARDS */
-        .flashcard { width: 100%; height: 150px; perspective: 1000px; cursor: pointer; margin-bottom: 20px; }
-        .flashcard-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; }
-        .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
-        .flashcard-front, .flashcard-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; border-radius: 20px; font-size: 24px; font-weight: 900; border: 3px solid var(--p-orange); background: white; }
-        .flashcard-back { background: var(--p-orange); color: white; transform: rotateY(180deg); }
+        /* PET & QUIZ */
+        .pet-stage { text-align: center; margin: 20px 0; }
+        .pet-avatar { font-size: 70px; cursor: pointer; }
+        .pet-bubble { background: var(--p-white); padding: 10px; border-radius: 15px; border: 2px solid var(--p-orange); display: inline-block; font-weight: 700; margin-bottom: 10px; }
+        
+        nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--p-white); display: flex; justify-content: space-around; padding: 15px; border-top: 3px solid var(--p-gray); }
+        .nav-item { font-size: 24px; cursor: pointer; color: #ccc; }
+        .nav-item.active-tab { color: var(--p-orange); }
 
-        /* NAV */
-        nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--p-white); display: flex; justify-content: space-around; padding: 15px; border-top: 3px solid var(--p-gray); z-index: 1000; }
-        .nav-item { font-size: 24px; cursor: pointer; color: #ccc; transition: 0.3s; }
-        .nav-item.active-tab { color: var(--p-orange); transform: translateY(-5px); }
-
-        .sos-float { position: fixed; bottom: 90px; right: 20px; background: #25d366; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 25px; text-decoration: none; z-index: 900; }
-        .skin-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        .skin-item { font-size: 30px; background: var(--p-gray); padding: 10px; border-radius: 12px; cursor: pointer; text-align: center; }
+        .sos-btn { position: fixed; bottom: 90px; right: 20px; background: #25d366; color: white; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 1000; }
     </style>
 </head>
 <body>
 
-    <a href="https://wa.me/393716755981" class="sos-float">🆘</a>
+    <a href="https://wa.me/393716755981" class="sos-btn">🆘</a>
 
     <div id="screen-intro" class="screen active">
         <div class="pet-stage">
-            <div class="pet-bubble">Ciao! Vamos aprender?</div><br>
+            <div class="pet-bubble">Escolha seu curso / Choose / Scegli</div><br>
             <div class="pet-avatar">🐱</div>
         </div>
         <div id="course-list"></div>
     </div>
 
+    <div id="screen-placement" class="screen">
+        <div class="card">
+            <h3>Teste de Nível 📊</h3>
+            <p id="placement-q">Pergunta...</p>
+            <div id="placement-options" style="margin-top:20px;"></div>
+        </div>
+    </div>
+
     <div id="screen-app" class="screen">
         <div class="top-bar">
-            <div class="lvl-badge">LV <span id="ui-lvl">1</span></div>
+            <div style="font-weight:900; color:var(--p-orange)">LV <span id="ui-lvl">1</span></div>
             <div class="xp-bar-container"><div id="ui-xp-fill" class="xp-bar-fill"></div></div>
-            <div style="font-weight: 900; color: #ff4b4b;">🔥 <span id="ui-streak">0</span></div>
+            <div>🔥 <span id="ui-streak">0</span></div>
         </div>
 
         <div id="tab-home" class="tab-content">
             <div class="pet-stage">
-                <div class="pet-bubble" id="pet-tip">Aperte o play e bons estudos!</div><br>
-                <div class="pet-avatar main-pet-icon">🐱</div>
+                <div class="pet-bubble" id="pet-msg">Ciao! Vamos estudar?</div><br>
+                <div class="pet-avatar main-pet">🐱</div>
             </div>
             <div class="card">
-                <h3>📅 Missão de Hoje</h3>
-                <p>Completar 3 exercícios (+50 XP)</p>
-                <button class="btn-main" onclick="changeTab('learn', document.querySelectorAll('.nav-item')[1])" style="margin-top:10px;">COMEÇAR AGORA</button>
+                <h3>Missões Diárias</h3>
+                <p id="daily-mission">Aguardando nivelamento...</p>
+            </div>
+            <div class="card" style="border: 2px solid gold;">
+                <h3 style="color:#d4af37">👑 Área VIP</h3>
+                <p>Aulas com nativos e conversação real.</p>
+                <button class="btn-main" style="background:var(--p-vip); border:none; margin-top:10px;">DESBLOQUEAR</button>
             </div>
         </div>
 
         <div id="tab-learn" class="tab-content" style="display:none;">
-            <h2>Lições</h2>
-            <div id="quiz-container" class="card"></div>
+            <div id="exercise-box" class="card"></div>
         </div>
 
         <div id="tab-extra" class="tab-content" style="display:none;">
-            <h2>Gírias & Flashcards</h2>
-            <div class="card">
-                <h3>🎴 Flashcard do Dia</h3>
-                <div class="flashcard" onclick="this.classList.toggle('flipped')">
-                    <div class="flashcard-inner">
-                        <div class="flashcard-front" id="flash-front">Mela</div>
-                        <div class="flashcard-back" id="flash-back">Maçã</div>
-                    </div>
-                </div>
-                <button class="btn-main" onclick="nextFlashcard()" style="font-size:12px; padding:10px;">PRÓXIMO FLASHCARD</button>
-            </div>
-
-            <div class="card">
-                <h3>🗣️ Dicionário de Gírias</h3>
-                <div id="slang-list">
-                    </div>
-            </div>
-        </div>
-
-        <div id="tab-profile" class="tab-content" style="display:none;">
-            <h2>Meu Perfil</h2>
-            <div class="card">
-                <p><b>Status:</b> <span id="prof-title" style="color:var(--p-orange)">Novato</span></p>
-                <hr style="margin: 15px 0; opacity: 0.1;">
-                <p>Escolher Pet:</p>
-                <div class="skin-grid" id="skin-selector"></div>
-            </div>
-            <button class="btn-main" onclick="toggleTheme()" style="background: var(--p-dark); margin-bottom: 10px;">MODO ESCURO</button>
-            <button class="btn-main" style="background: #ff4b4b;" onclick="location.reload()">MUDAR CURSO</button>
+            <h3>Curiosidades & Gírias 💡</h3>
+            <div id="culture-box" class="card"></div>
+            <div id="slang-box" class="card"></div>
         </div>
 
         <nav>
             <div class="nav-item active-tab" onclick="changeTab('home', this)">🏠</div>
             <div class="nav-item" onclick="changeTab('learn', this)">🎯</div>
-            <div class="nav-item" onclick="changeTab('extra', this)">📖</div>
+            <div class="nav-item" onclick="changeTab('extra', this)">💡</div>
             <div class="nav-item" onclick="changeTab('profile', this)">👤</div>
         </nav>
     </div>
 
     <script>
-        // BANCO DE DADOS COMPLETO
-        const contentDatabase = {
-            'it-pt': [
-                { type: 'translate', question: 'Como se diz "Maçã"?', options: ['Mela', 'Pera', 'Uva'], answer: 'Mela', audio: 'Mela' },
-                { type: 'spelling', question: 'Escreva "Cão" em Italiano:', answer: 'cane', audio: 'cane' },
-                { type: 'situation', title: 'No Café ☕', question: 'Como pedir um café?', options: ['Un caffè, per favore', 'Ciao bella', 'Grazie'], answer: 'Un caffè, per favore', audio: 'Un caffè, per favore' }
-            ],
-            'pt-it': [
-                { type: 'translate', question: 'Como se diz "Obrigado"?', options: ['Grazie', 'Prego', 'Per favore'], answer: 'Grazie', audio: 'Grazie' }
-            ]
-        };
-
-        const flashcards = [
-            { it: 'Gatto', pt: 'Gato' },
-            { it: 'Cane', pt: 'Cão' },
-            { it: 'Acqua', pt: 'Água' },
-            { it: 'Pane', pt: 'Pão' }
+        const courses = [
+            { id: 'it-en', name: 'Italian ➔ English', flag: '🇮🇹➔🇬🇧' },
+            { id: 'it-pt', name: 'Italiano ➔ Português', flag: '🇮🇹➔🇧🇷' },
+            { id: 'pt-it', name: 'Português ➔ Italiano', flag: '🇧🇷➔🇮🇹' },
+            { id: 'pt-en', name: 'Português ➔ Inglês', flag: '🇧🇷➔🇬🇧' },
+            { id: 'en-it', name: 'English ➔ Italian', flag: '🇬🇧➔🇮🇹' },
+            { id: 'en-pt', name: 'English ➔ Português', flag: '🇬🇧➔🇧🇷' }
         ];
 
-        const slangs = {
-            'it': [
-                { term: 'Che cavolo!', mean: 'Que droga! / Que caramba!' },
-                { term: 'Meno male!', mean: 'Ainda bem!' }
-            ],
-            'en': [
-                { term: 'Chill out', mean: 'Relaxa' },
-                { term: 'My bad', mean: 'Foi mal' }
-            ]
+        const placementTests = {
+            'it-pt': { q: 'Como se diz "Maçã" em Italiano?', options: ['Mela', 'Pane', 'Uva'], correct: 'Mela' },
+            'pt-it': { q: 'O que significa "Buongiorno"?', options: ['Boa noite', 'Bom dia', 'Obrigado'], correct: 'Bom dia' },
+            'en-it': { q: 'Translate "Water":', options: ['Fuoco', 'Acqua', 'Terra'], correct: 'Acqua' }
         };
 
-        let state = { xp: 0, lvl: 1, streak: 0, currentCourse: 'it-pt', theme: 'light' };
-        let currentExerciseIndex = 0;
-        let currentFlashIndex = 0;
+        const cultureTips = {
+            'it': "Na Itália, pedir um 'Latte' trará apenas um copo de leite. Peça 'Caffè Latte'!",
+            'en': "No Reino Unido, 'Tea time' é levado muito a sério, geralmente às 17h.",
+            'pt': "O Brasil é o país com o maior número de falantes de japonês fora do Japão!"
+        };
+
+        let state = { xp: 0, lvl: 1, streak: 0, course: '', levelName: 'A1', pet: '🐱' };
+        let curEx = 0;
 
         window.onload = () => {
-            const courseDiv = document.getElementById('course-list');
-            const courses = [
-                { id: 'it-pt', flag: '🇮🇹 ➔ 🇧🇷', name: 'Ital-Port' },
-                { id: 'pt-it', flag: '🇧🇷 ➔ 🇮🇹', name: 'Port-Ital' },
-                { id: 'it-en', flag: '🇮🇹 ➔ 🇬🇧', name: 'Ital-Eng' }
-            ];
+            const list = document.getElementById('course-list');
             courses.forEach(c => {
-                courseDiv.innerHTML += `<button class="btn-course" onclick="startCourse('${c.id}')"><span>${c.flag}</span><b>${c.name}</b></button>`;
+                list.innerHTML += `<button class="btn-course" onclick="startPlacement('${c.id}')"><span>${c.flag}</span> ${c.name}</button>`;
             });
-
-            const skinGrid = document.getElementById('skin-selector');
-            ['🐱','🐶','🦊','🦁','🐷','🐼'].forEach(s => {
-                skinGrid.innerHTML += `<div class="skin-item" onclick="changeSkin('${s}')">${s}</div>`;
-            });
-
-            updateSlangs();
         };
 
-        function startCourse(id) {
-            state.currentCourse = id;
+        function startPlacement(id) {
+            state.course = id;
+            const test = placementTests[id] || placementTests['it-pt'];
             document.getElementById('screen-intro').classList.remove('active');
+            document.getElementById('screen-placement').classList.add('active');
+            document.getElementById('placement-q').innerText = test.q;
+            const opts = document.getElementById('placement-options');
+            opts.innerHTML = '';
+            test.options.forEach(o => {
+                opts.innerHTML += `<button class="btn-main" style="margin-bottom:10px" onclick="finishPlacement('${o}','${test.correct}')">${o}</button>`;
+            });
+        }
+
+        function finishPlacement(chosen, correct) {
+            if(chosen === correct) {
+                state.lvl = 2; state.levelName = 'A2';
+                alert("Ótimo! Você já tem uma base. Nível A2 desbloqueado!");
+            } else {
+                alert("Iniciando do zero. Nível A1!");
+            }
+            document.getElementById('screen-placement').classList.remove('active');
             document.getElementById('screen-app').classList.add('active');
+            updateUI();
+            loadCulture();
+        }
+
+        function loadCulture() {
+            const lang = state.course.split('-')[1];
+            document.getElementById('culture-box').innerHTML = `<h4>Sabia que?</h4><p>${cultureTips[lang] || cultureTips['it']}</p>`;
+            document.getElementById('daily-mission').innerText = `Complete 5 lições de nível ${state.levelName}`;
         }
 
         function changeTab(tabId, el) {
@@ -197,84 +164,15 @@
             document.getElementById('tab-' + tabId).style.display = 'block';
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-tab'));
             el.classList.add('active-tab');
-            if(tabId === 'learn') loadExercise();
-        }
-
-        function loadExercise() {
-            const container = document.getElementById('quiz-container');
-            const db = contentDatabase[state.currentCourse] || contentDatabase['it-pt'];
-            const ex = db[currentExerciseIndex];
-
-            if(!ex) {
-                container.innerHTML = `<h3>🎉 Parabéns!</h3><button class="btn-main" onclick="currentExerciseIndex=0;loadExercise()">Recomeçar</button>`;
-                return;
-            }
-
-            let html = `<h4>${ex.type.toUpperCase()}</h4><p style="margin:15px 0; font-size:18px;">${ex.question}</p>`;
-            if(ex.options) {
-                ex.options.forEach(o => html += `<button class="btn-course" onclick="checkAnswer('${o}','${ex.answer}')">${o}</button>`);
-            } else {
-                html += `<input type="text" id="spell-in" style="width:100%; padding:10px; margin-bottom:10px;">
-                         <button class="btn-main" onclick="checkAnswer(document.getElementById('spell-in').value,'${ex.answer}')">CONFERIR</button>`;
-            }
-            container.innerHTML = html;
-            if(ex.audio) speak(ex.audio);
-        }
-
-        function checkAnswer(ans, corr) {
-            if(ans.toLowerCase().trim() === corr.toLowerCase().trim()) {
-                state.xp += 25; 
-                currentExerciseIndex++;
-                petTalk("Bravo! +25 XP");
-            } else {
-                alert("Ops! Era: " + corr);
-            }
-            if(state.xp >= 100) { state.xp=0; state.lvl++; }
-            updateUI();
-            loadExercise();
-        }
-
-        function nextFlashcard() {
-            currentFlashIndex = (currentFlashIndex + 1) % flashcards.length;
-            document.querySelector('.flashcard').classList.remove('flipped');
-            setTimeout(() => {
-                document.getElementById('flash-front').innerText = flashcards[currentFlashIndex].it;
-                document.getElementById('flash-back').innerText = flashcards[currentFlashIndex].pt;
-            }, 200);
-        }
-
-        function updateSlangs() {
-            const list = document.getElementById('slang-list');
-            const lang = state.currentCourse.includes('it') ? 'it' : 'en';
-            list.innerHTML = '';
-            slangs[lang].forEach(s => {
-                list.innerHTML += `<div style="margin-bottom:10px;"><b>${s.term}</b>: <small>${s.mean}</small></div>`;
-            });
-        }
-
-        function speak(t) {
-            const m = new SpeechSynthesisUtterance(t);
-            m.lang = state.currentCourse.includes('it') ? 'it-IT' : 'en-US';
-            window.speechSynthesis.speak(m);
-        }
-
-        function petTalk(t) {
-            document.querySelectorAll('.pet-bubble').forEach(b => b.innerText = t);
-        }
-
-        function changeSkin(s) {
-            document.querySelectorAll('.main-pet-icon, .pet-avatar').forEach(p => p.innerText = s);
         }
 
         function updateUI() {
             document.getElementById('ui-lvl').innerText = state.lvl;
             document.getElementById('ui-xp-fill').style.width = state.xp + '%';
-            document.getElementById('prof-title').innerText = state.lvl > 5 ? "Mestre" : "Novato";
         }
 
         function toggleTheme() {
-            state.theme = state.theme === 'light' ? 'dark' : 'light';
-            document.body.setAttribute('data-theme', state.theme);
+            document.body.setAttribute('data-theme', document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
         }
     </script>
 </body>
