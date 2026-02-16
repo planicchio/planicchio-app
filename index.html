@@ -1,256 +1,239 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Planicchio</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planicchio - O seu Pet de Idiomas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff7a00;
+            --secondary: #ff9d42;
+            --bg: #fff7ed;
+            --card-bg: #ffffff;
+            --text: #2d2d2d;
+            --success: #4CAF50;
+            --error: #f44336;
+        }
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:#fff7ed;color:#222;}
+        [data-theme='dark'] {
+            --bg: #1a1a1a;
+            --card-bg: #2d2d2d;
+            --text: #f0f0f0;
+        }
 
-.screen{display:none;padding:25px 20px 90px;}
-.active{display:block;}
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: 0.3s; }
+        body { background: var(--bg); color: var(--text); overflow-x: hidden; }
 
-h1{font-weight:800;color:#ff7a00;margin-bottom:15px;}
-h2{font-weight:600;margin-bottom:10px;}
+        .screen { display: none; padding: 20px; min-height: 100vh; padding-bottom: 100px; }
+        .active { display: block; animation: fadeIn 0.5s; }
 
-button{
-width:100%;
-padding:14px;
-margin:8px 0;
-border:none;
-border-radius:14px;
-background:#ff7a00;
-color:white;
-font-weight:600;
-cursor:pointer;
-transition:.2s;
-}
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-button:hover{transform:scale(1.02);}
+        /* HEADER & PROGRESS */
+        .header-status { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; background: var(--card-bg); padding: 15px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .progress-container { flex-grow: 1; height: 12px; background: #eee; border-radius: 6px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
-.card{
-background:white;
-padding:15px;
-border-radius:18px;
-box-shadow:0 6px 18px rgba(0,0,0,0.08);
-margin-bottom:15px;
-}
+        /* PET INTERATIVO */
+        .pet-container { text-align: center; margin: 20px 0; position: relative; cursor: pointer; }
+        .pet-avatar { font-size: 80px; display: inline-block; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.1)); }
+        .pet-bubble { background: white; padding: 10px 15px; border-radius: 15px; border: 2px solid var(--primary); position: relative; margin-bottom: 10px; font-size: 14px; font-weight: 600; color: #333; }
+        .pet-bubble::after { content: ''; position: absolute; bottom: -10px; left: 50%; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 10px solid var(--primary); transform: translateX(-50%); }
 
-nav{
-position:fixed;
-bottom:0;
-left:0;
-right:0;
-background:white;
-display:flex;
-justify-content:space-around;
-padding:12px 0;
-border-top:3px solid #ff7a00;
-}
+        /* CARDS & GRIDS */
+        .card { background: var(--card-bg); padding: 20px; border-radius: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.06); margin-bottom: 20px; border: 1px solid rgba(255,122,0,0.1); }
+        .grid-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        
+        button { border: none; border-radius: 15px; padding: 15px; font-weight: 800; cursor: pointer; font-size: 14px; }
+        .btn-main { background: var(--primary); color: white; width: 100%; }
+        .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+        .btn-vip { background: linear-gradient(45deg, #ffd700, #ff8c00); color: white; margin-top: 10px; }
 
-nav button{
-background:none;
-color:#ff7a00;
-font-size:20px;
-}
+        /* NAVIGATION */
+        nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--card-bg); display: flex; justify-content: space-around; padding: 15px; border-top: 2px solid var(--primary); z-index: 100; }
+        nav div { font-size: 24px; cursor: pointer; opacity: 0.5; }
+        nav div.active-tab { opacity: 1; transform: scale(1.2); }
 
-.cat{
-font-size:70px;
-text-align:center;
-margin:10px 0 20px;
-}
-
-textarea{
-width:100%;
-height:120px;
-padding:10px;
-border-radius:14px;
-border:1px solid #ddd;
-}
-
-.progress{
-height:10px;
-background:#ffe0c2;
-border-radius:10px;
-margin-top:10px;
-overflow:hidden;
-}
-
-.progress-bar{
-height:100%;
-background:#ff7a00;
-width:0%;
-transition:.3s;
-}
-
-.small{font-size:14px;color:#777;}
-</style>
+        /* WHATSAPP FLOAT */
+        .sos-btn { position: fixed; bottom: 90px; right: 20px; background: #25d366; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; text-decoration: none; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+    </style>
 </head>
 <body>
 
-<!-- SPLASH -->
-<div id="splash" class="screen active">
-  <div class="cat">🐱</div>
-  <h1>Planicchio</h1>
-  <button onclick="goToLanguage()">Começar</button>
-</div>
+    <a href="https://wa.me/393716755981" class="sos-btn" target="_blank">🆘</a>
 
-<!-- IDIOMA -->
-<div id="language" class="screen">
-  <h1>Escolha seu idioma</h1>
-  <button onclick="setLanguage('Italiano')">Italiano</button>
-  <button onclick="setLanguage('Inglês')">Inglês</button>
-  <button onclick="setLanguage('Espanhol')">Espanhol</button>
-</div>
-
-<!-- QUIZ -->
-<div id="quiz" class="screen">
-  <h1>Quiz Rápido</h1>
-  <div class="card">
-    <p>Traduza: <b>Gatto</b></p>
-    <button onclick="startApp(1)">Dog</button>
-    <button onclick="startApp(2)">Cat</button>
-  </div>
-</div>
-
-<!-- APP -->
-<div id="app" class="screen">
-
-  <!-- HOME -->
-  <div id="home" class="tab active">
-    <div class="cat">🐱</div>
-    <h1>Home</h1>
-    <div class="card">
-      <h2>Missão Diária</h2>
-      <p>Complete 3 exercícios hoje</p>
+    <div id="screen-start" class="screen active">
+        <div class="pet-container" onclick="makeSound('meow')">
+            <div class="pet-bubble" id="start-msg">Ciao! Escolha seu curso:</div>
+            <div class="pet-avatar" id="main-pet">🐱</div>
+        </div>
+        
+        <div class="card">
+            <h3>Escolha seu curso / Choose / Scegli</h3>
+            <button class="btn-outline" onclick="initApp('it-en')">🇮🇹 Italian → 🇬🇧 English</button>
+            <button class="btn-outline" onclick="initApp('it-pt')">🇮🇹 Italian → 🇧🇷 Português</button>
+            <button class="btn-outline" onclick="initApp('pt-it')">🇧🇷 Português → 🇮🇹 Italiano</button>
+            <button class="btn-outline" onclick="initApp('en-it')">🇬🇧 English → 🇮🇹 Italiano</button>
+        </div>
     </div>
 
-    <div class="card">
-      <h2>Progresso</h2>
-      <p>Nível <span id="level">1</span></p>
-      <div class="progress"><div id="progressBar" class="progress-bar"></div></div>
-      <p class="small"><span id="xp">0</span>/100 XP</p>
+    <div id="screen-main" class="screen">
+        <div class="header-status">
+            <span id="user-title">🌱 Iniciante</span>
+            <div class="progress-container">
+                <div id="main-progress" class="progress-fill"></div>
+            </div>
+            <span>Nível <b id="ui-level">1</b></span>
+        </div>
+
+        <div id="tab-home" class="tab-content">
+            <div class="pet-container" onclick="makeSound('tip')">
+                <div class="pet-bubble">Não esqueça das missões de hoje!</div>
+                <div class="pet-avatar" id="inter-pet">🐱</div>
+            </div>
+            
+            <div class="card">
+                <h4>🎯 Missões Diárias</h4>
+                <div style="font-size: 13px; margin: 10px 0;">
+                    <p>✅ Completar 1 lição (+20 XP)</p>
+                    <p>⬜ Acertar 3 seguidas (+10 XP)</p>
+                    <p>⬜ Aprender 5 palavras (+30 XP)</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h4>🎮 Mini-Game Rápido</h4>
+                <p>O que é "Buongiorno"? (5s)</p>
+                <div class="grid-options" style="margin-top:10px;">
+                    <button class="btn-outline" onclick="gameAnswer(true)">Bom dia</button>
+                    <button class="btn-outline" onclick="gameAnswer(false)">Boa noite</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-exercises" class="tab-content" style="display:none;">
+            <h2>Exercícios Interativos</h2>
+            <div class="card">
+                <p>Ouça e escreva:</p>
+                <button onclick="speak('Mangio uma mela')">🔊 Ouvir Frase</button>
+                <input type="text" id="exercise-input" style="width:100%; margin-top:10px; padding:10px; border-radius:10px; border:1px solid #ccc;">
+                <button class="btn-main" style="margin-top:10px;" onclick="checkExercise()">Verificar</button>
+            </div>
+            <button class="btn-vip">🔓 Desbloquear modo Conversação Real</button>
+        </div>
+
+        <div id="tab-profile" class="tab-content" style="display:none;">
+            <h2>Seu Perfil</h2>
+            <div class="card">
+                <p>Trocar Pet:</p>
+                <div style="font-size: 30px; display: flex; gap: 15px; margin: 10px 0;">
+                    <span onclick="changePet('🐱')">🐱</span>
+                    <span onclick="changePet('🐶')">🐶</span>
+                    <span onclick="changePet('🦊')">🦊</span>
+                    <span onclick="changePet('🦁')">🦁</span>
+                </div>
+                <button class="btn-outline" onclick="toggleDarkMode()">🌓 Alternar Tema</button>
+                <button class="btn-outline" style="margin-top:10px; color: red; border-color: red;" onclick="location.reload()">Mudar de Curso</button>
+            </div>
+            <button class="btn-vip" onclick="alert('Redirecionando para Pagamento...')">ADQUIRIR PLANICCHIO VIP</button>
+        </div>
+
+        <nav>
+            <div onclick="showTab('home')" class="active-tab">🏠</div>
+            <div onclick="showTab('exercises')">🎯</div>
+            <div onclick="showTab('profile')">👤</div>
+        </nav>
     </div>
 
-    <div class="card">
-      🔥 Streak: <span id="streak">0</span> dias
-    </div>
-  </div>
+    <script>
+        // ESTADO DO APP
+        let state = {
+            xp: 0,
+            level: 1,
+            pet: '🐱',
+            lang: '',
+            darkMode: false
+        };
 
-  <!-- EXERCICIOS -->
-  <div id="exercicios" class="tab">
-    <h1>Exercícios</h1>
-    <div class="card">
-      <p>Traduza: <b>Cane</b></p>
-      <button onclick="correctAnswer()">Dog</button>
-      <button onclick="wrongAnswer()">Cat</button>
-    </div>
-  </div>
+        // SONS (Simulação de áudio)
+        const sounds = {
+            success: new Audio('https://www.soundjay.com/buttons/sounds/button-3.mp3'),
+            error: new Audio('https://www.soundjay.com/buttons/sounds/button-10.mp3'),
+            levelUp: new Audio('https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3')
+        };
 
-  <!-- DICAS -->
-  <div id="dicas" class="tab">
-    <h1>Dicas</h1>
-    <div class="card">Estude 10 minutos por dia.</div>
-    <div class="card">Repita palavras em voz alta.</div>
-  </div>
+        function initApp(lang) {
+            state.lang = lang;
+            document.getElementById('screen-start').classList.remove('active');
+            document.getElementById('screen-main').classList.add('active');
+            updateUI();
+        }
 
-  <!-- DICIONARIO -->
-  <div id="dicionario" class="tab">
-    <h1>Dicionário</h1>
-    <div class="card">Gatto = Cat</div>
-    <div class="card">Cane = Dog</div>
-  </div>
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+            document.getElementById('tab-' + tabName).style.display = 'block';
+            
+            document.querySelectorAll('nav div').forEach(d => d.classList.remove('active-tab'));
+            event.currentTarget.classList.add('active-tab');
+        }
 
-  <!-- PERFIL -->
-  <div id="perfil" class="tab">
-    <h1>Perfil</h1>
-    <div class="card">
-      <p>Idioma: <span id="userLang"></span></p>
-      <p>Nível: <span id="profileLevel"></span></p>
-    </div>
-    <textarea placeholder="Seu diário..."></textarea>
-  </div>
+        function changePet(emoji) {
+            state.pet = emoji;
+            document.querySelectorAll('.pet-avatar').forEach(p => p.innerText = emoji);
+            alert('Pet atualizado!');
+        }
 
-  <!-- MENU -->
-  <nav>
-    <button onclick="showTab('home')">🏠</button>
-    <button onclick="showTab('exercicios')">🎯</button>
-    <button onclick="showTab('dicas')">💡</button>
-    <button onclick="showTab('dicionario')">📖</button>
-    <button onclick="showTab('perfil')">👤</button>
-  </nav>
+        function addXP(amount) {
+            state.xp += amount;
+            if (state.xp >= 100) {
+                state.xp = 0;
+                state.level++;
+                sounds.levelUp.play();
+                alert('PARABÉNS! Você subiu para o nível ' + state.level);
+            }
+            updateUI();
+        }
 
-</div>
+        function updateUI() {
+            document.getElementById('ui-level').innerText = state.level;
+            document.getElementById('main-progress').style.width = state.xp + '%';
+            
+            let title = "Iniciante";
+            if(state.level > 5) title = "Explorador";
+            if(state.level > 10) title = "Mestre do Planicchio";
+            document.getElementById('user-title').innerText = "🌱 " + title;
+        }
 
-<script>
+        function gameAnswer(isCorrect) {
+            if(isCorrect) {
+                sounds.success.play();
+                addXP(20);
+            } else {
+                sounds.error.play();
+            }
+        }
 
-let xp = parseInt(localStorage.getItem("xp")) || 0;
-let level = parseInt(localStorage.getItem("level")) || 1;
-let streak = parseInt(localStorage.getItem("streak")) || 0;
-let language = localStorage.getItem("language") || "";
+        function speak(text) {
+            const msg = new SpeechSynthesisUtterance(text);
+            msg.lang = 'it-IT';
+            window.speechSynthesis.speak(msg);
+        }
 
-function goToLanguage(){
-  switchScreen("language");
-}
+        function toggleDarkMode() {
+            state.darkMode = !state.darkMode;
+            document.body.setAttribute('data-theme', state.darkMode ? 'dark' : 'light');
+        }
 
-function setLanguage(lang){
-  language = lang;
-  localStorage.setItem("language", lang);
-  switchScreen("quiz");
-}
-
-function startApp(initialLevel){
-  level = initialLevel;
-  localStorage.setItem("level", level);
-  switchScreen("app");
-  updateUI();
-}
-
-function switchScreen(id){
-  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-}
-
-function showTab(id){
-  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-}
-
-function correctAnswer(){
-  xp += 20;
-  streak++;
-  if(xp >= 100){
-    xp = 0;
-    level++;
-  }
-  save();
-  updateUI();
-}
-
-function wrongAnswer(){
-  alert("Resposta incorreta 😿");
-}
-
-function updateUI(){
-  document.getElementById("xp").innerText = xp;
-  document.getElementById("level").innerText = level;
-  document.getElementById("profileLevel").innerText = level;
-  document.getElementById("streak").innerText = streak;
-  document.getElementById("userLang").innerText = language;
-  document.getElementById("progressBar").style.width = xp + "%";
-}
-
-function save(){
-  localStorage.setItem("xp", xp);
-  localStorage.setItem("level", level);
-  localStorage.setItem("streak", streak);
-}
-
-updateUI();
-
-</script>
+        function checkExercise() {
+            const val = document.getElementById('exercise-input').value.toLowerCase();
+            if(val.includes('mela')) {
+                gameAnswer(true);
+                document.getElementById('exercise-input').value = '';
+            } else {
+                gameAnswer(false);
+            }
+        }
+    </script>
 </body>
 </html>
