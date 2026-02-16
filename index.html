@@ -12,7 +12,6 @@
   --bg:#fff3e8;
   --card:#ffffff;
 }
-
 *{box-sizing:border-box}
 body{
   margin:0;
@@ -20,9 +19,9 @@ body{
   background:var(--bg);
   color:#333;
 }
-
 .screen{display:none;min-height:100vh;padding-bottom:90px}
 
+/* SPLASH */
 #splash{
   display:flex;
   flex-direction:column;
@@ -40,7 +39,6 @@ body{
   0%,100%{transform:translateY(0)}
   50%{transform:translateY(-10px)}
 }
-
 .btn{
   background:white;
   color:var(--orange-dark);
@@ -52,6 +50,24 @@ body{
   cursor:pointer;
 }
 
+/* COURSE */
+.course-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+  padding:20px;
+}
+.course-card{
+  background:white;
+  border-radius:18px;
+  padding:16px;
+  text-align:center;
+  font-weight:700;
+  box-shadow:0 6px 14px rgba(0,0,0,.08);
+  cursor:pointer;
+}
+
+/* APP */
 .card{
   background:var(--card);
   border-radius:20px;
@@ -59,80 +75,36 @@ body{
   margin:16px;
   box-shadow:0 6px 18px rgba(0,0,0,.08);
 }
-
-.top{
-  padding:16px;
-}
-
-.level{
-  font-weight:900;
-  color:var(--orange-dark);
-}
-
+.top{padding:16px;}
+.level{font-weight:900;color:var(--orange-dark);}
 .progress{
-  height:10px;
-  background:#ffd8b2;
-  border-radius:20px;
-  margin-top:6px;
+  height:10px;background:#ffd8b2;border-radius:20px;margin-top:6px;
 }
 .progress span{
-  display:block;
-  height:100%;
-  background:var(--orange);
-  border-radius:20px;
-  width:0%;
-  transition:.3s;
+  display:block;height:100%;background:var(--orange);
+  border-radius:20px;width:0%;transition:.3s;
 }
-
 .mission{
-  background:white;
-  border-radius:14px;
-  padding:12px;
-  margin-top:10px;
-  cursor:pointer;
+  background:white;border-radius:14px;padding:12px;margin-top:10px;cursor:pointer;
 }
-.mission.done{
-  opacity:.5;
-}
-
+.mission.done{opacity:.5;}
 nav{
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  background:white;
-  display:flex;
-  border-top:1px solid #eee;
+  position:fixed;bottom:0;left:0;right:0;
+  background:white;display:flex;border-top:1px solid #eee;
 }
 nav button{
-  flex:1;
-  padding:12px;
-  border:none;
-  background:none;
-  font-weight:700;
+  flex:1;padding:12px;border:none;background:none;font-weight:700;
 }
-nav button.active{
-  color:var(--orange-dark);
-}
-
+nav button.active{color:var(--orange-dark);}
 .pet{
-  position:fixed;
-  right:10px;
-  bottom:90px;
-  font-size:70px;
+  position:fixed;right:10px;bottom:90px;font-size:70px;
   animation:float 3s infinite;
 }
 @keyframes float{
   0%,100%{transform:translateY(0)}
   50%{transform:translateY(-6px)}
 }
-
-textarea{
-  width:100%;
-  padding:10px;
-  border-radius:12px;
-  border:1px solid #ddd;
-}
+textarea{width:100%;padding:10px;border-radius:12px;border:1px solid #ddd;}
 </style>
 </head>
 
@@ -143,7 +115,26 @@ textarea{
   <div class="cat-big">🐱</div>
   <h1>Planicchio</h1>
   <p>thinking globally 🌍</p>
-  <button class="btn" onclick="startApp()">Começar</button>
+  <button class="btn" onclick="go('courses')">Começar</button>
+</div>
+
+<!-- COURSES -->
+<div id="courses" class="screen">
+  <h2 style="text-align:center">Escolha seu curso</h2>
+  <div class="course-grid">
+    <div class="course-card" onclick="selectCourse()">🇮🇹 → 🇺🇸 Italiano · Inglês</div>
+    <div class="course-card" onclick="selectCourse()">🇧🇷 → 🇮🇹 Português · Italiano</div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div id="quiz" class="screen">
+  <h2 style="text-align:center">Teste rápido 👀</h2>
+  <div class="card">
+    <p><b>Hello</b> significa:</p>
+    <button onclick="finishQuiz(true)">Olá</button>
+    <button onclick="finishQuiz(false)">Tchau</button>
+  </div>
 </div>
 
 <!-- APP -->
@@ -155,49 +146,17 @@ textarea{
     <div class="progress"><span id="xpBar"></span></div>
   </div>
 
-  <!-- HOME -->
   <div id="homeTab" class="tab">
     <div class="card">
-      <h3>🔥 Missões de hoje</h3>
+      <h3>🔥 Missões</h3>
       <div class="mission" onclick="completeMission(this,20)">🎮 Jogar minigame</div>
       <div class="mission" onclick="completeMission(this,15)">📖 Fazer exercício</div>
-      <div class="mission" onclick="completeMission(this,10)">🧠 Aprender palavra</div>
     </div>
   </div>
 
-  <!-- EXERCICIOS -->
-  <div id="exTab" class="tab" style="display:none">
-    <div class="card">
-      <h3>Exercício</h3>
-      <p>Hello significa:</p>
-      <button onclick="exercise(true)">Olá</button>
-      <button onclick="exercise(false)">Tchau</button>
-      <p id="exResult"></p>
-    </div>
-  </div>
-
-  <!-- DICAS -->
-  <div id="tipsTab" class="tab" style="display:none">
-    <div class="card">
-      <h3>Dica de hoje</h3>
-      <p>📌 Em inglês, usamos “Hello” para cumprimentar formalmente.</p>
-    </div>
-  </div>
-
-  <!-- DICIONARIO -->
-  <div id="dicTab" class="tab" style="display:none">
-    <div class="card">
-      <h3>Dicionário</h3>
-      <input id="wordInput" placeholder="Digite uma palavra">
-      <button onclick="searchWord()">Buscar</button>
-      <p id="dicResult"></p>
-    </div>
-  </div>
-
-  <!-- PERFIL -->
   <div id="profileTab" class="tab" style="display:none">
     <div class="card">
-      <h3>Seu Diário</h3>
+      <h3>Diário</h3>
       <textarea id="diary"></textarea>
       <button onclick="saveDiary()">Salvar</button>
       <p>🔥 Streak: <span id="streakText"></span> dias</p>
@@ -210,9 +169,6 @@ textarea{
 
 <nav id="menu" style="display:none">
   <button class="active" onclick="switchTab('home')">Home</button>
-  <button onclick="switchTab('ex')">Exercícios</button>
-  <button onclick="switchTab('tips')">Dicas</button>
-  <button onclick="switchTab('dic')">Dicionário</button>
   <button onclick="switchTab('profile')">Perfil</button>
 </nav>
 
@@ -221,9 +177,26 @@ let xp = parseInt(localStorage.getItem("xp")) || 0;
 let level = parseInt(localStorage.getItem("level")) || 1;
 let streak = parseInt(localStorage.getItem("streak")) || 1;
 
-function startApp(){
-  document.getElementById("splash").style.display="none";
-  document.getElementById("app").style.display="block";
+function go(id){
+  document.querySelectorAll(".screen").forEach(s=>s.style.display="none");
+  document.getElementById(id).style.display="block";
+}
+
+function selectCourse(){
+  go("quiz");
+}
+
+function finishQuiz(correct){
+  if(correct){
+    level=2;
+    xp=50;
+  }else{
+    level=1;
+    xp=0;
+  }
+  localStorage.setItem("xp",xp);
+  localStorage.setItem("level",level);
+  go("app");
   document.getElementById("menu").style.display="flex";
   updateUI();
 }
@@ -232,15 +205,12 @@ function updateUI(){
   document.getElementById("xpText").innerText=xp;
   document.getElementById("levelText").innerText="Nível "+level;
   document.getElementById("streakText").innerText=streak;
-  let percent=(xp%100);
-  document.getElementById("xpBar").style.width=percent+"%";
+  document.getElementById("xpBar").style.width=(xp%100)+"%";
 }
 
 function addXP(amount){
   xp+=amount;
-  if(xp>=level*100){
-    level++;
-  }
+  if(xp>=level*100){level++;}
   localStorage.setItem("xp",xp);
   localStorage.setItem("level",level);
   updateUI();
@@ -253,15 +223,6 @@ function completeMission(el,points){
   }
 }
 
-function exercise(correct){
-  if(correct){
-    document.getElementById("exResult").innerText="😸 Acertou! +20XP";
-    addXP(20);
-  }else{
-    document.getElementById("exResult").innerText="😿 Errou!";
-  }
-}
-
 function switchTab(tab){
   document.querySelectorAll(".tab").forEach(t=>t.style.display="none");
   document.getElementById(tab+"Tab").style.display="block";
@@ -269,20 +230,10 @@ function switchTab(tab){
   event.target.classList.add("active");
 }
 
-function searchWord(){
-  let word=document.getElementById("wordInput").value.toLowerCase();
-  if(word==="hello"){
-    document.getElementById("dicResult").innerText="Hello = Olá";
-    addXP(5);
-  }else{
-    document.getElementById("dicResult").innerText="Palavra não encontrada";
-  }
-}
-
 function saveDiary(){
-  let text=document.getElementById("diary").value;
-  localStorage.setItem("diary",text);
-  localStorage.setItem("streak",++streak);
+  localStorage.setItem("diary",document.getElementById("diary").value);
+  streak++;
+  localStorage.setItem("streak",streak);
   updateUI();
 }
 
