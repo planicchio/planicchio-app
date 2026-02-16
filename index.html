@@ -6,7 +6,27 @@
     <title>Planicchio Premium</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root {
+#spell-input {
+    width: 100%;
+    padding: 15px;
+    border-radius: 15px;
+    border: 2px solid var(--p-gray);
+    margin-bottom: 10px;
+    font-size: 16px;
+    outline: none;
+}
+#spell-input:focus { border-color: var(--p-orange); }
+
+.btn-audio {
+    background: #e1f5fe;
+    color: #03a9f4;
+    border: none;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-bottom: 15px;
+}oot {
             --p-orange: #ff7a00; --p-light: #fff7ed; --p-dark: #2d2d2d;
             --p-white: #ffffff; --p-gray: #f0f0f0; --p-success: #58cc02;
             --p-vip: linear-gradient(45deg, #ffd700, #ff8c00);
@@ -141,6 +161,19 @@
         ];
 
         let state = {
+const contentDatabase = {
+    'it-pt': [
+        { type: 'translate', question: 'Como se diz "Bom dia"?', options: ['Buongiorno', 'Buonanotte', 'Prego'], answer: 'Buongiorno', audio: 'Buongiorno' },
+        { type: 'spelling', question: 'Escreva "Gato" em Italiano:', answer: 'gatto', audio: 'gatto' },
+        { type: 'situation', title: 'No Restaurante 🍝', question: 'Como pedir a conta?', options: ['Il conto, per favore', 'Ciao, bella', 'Dove il bagno?'], answer: 'Il conto, per favore', audio: 'Il conto, per favore' }
+    ],
+    'pt-it': [
+        { type: 'translate', question: 'Como se diz "Obrigado"?', options: ['Grazie', 'Prego', 'Per favore'], answer: 'Grazie', audio: 'Grazie' }
+    ]
+    // Para adicionar mais línguas, basta seguir o padrão acima!
+};
+
+let currentExerciseIndex = 0; // Isso controla em qual questão o aluno está
             xp: 0, lvl: 1, streak: 0,
             skin: '🐱',
             currentCourse: '',
@@ -169,11 +202,67 @@
             updateUI();
         }
 
-        function changeTab(tabId, el) {
-            document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
-            document.getElementById('tab-' + tabId).style.display = 'block';
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-tab'));
-            el.classList.add('active-tab');
+        // SUBSTITUA sua função changeTab por esta:
+function changeTab(tabId, el) {
+    document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+    document.getElementById('tab-' + tabId).style.display = 'block';
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-tab'));
+    el.classList.add('active-tab');
+    
+    // Se clicar no alvo (exercícios), ele carrega a primeira pergunta
+    if (tabId === 'learn') loadExercise();
+}
+
+// COLE estas funções novas em qualquer lugar do seu <script>
+function loadExercise() {
+    const container = document.getElementById('quiz-container');
+    const db = contentDatabase[state.currentCourse] || contentDatabase['it-pt'];
+    const ex = db[currentExerciseIndex];
+
+    if (!ex) {
+        container.innerHTML = `<h3>🎉 Fim das lições!</h3><p>Você detonou!</p>
+                               <button class="btn-main" onclick="currentExerciseIndex=0; loadExercise()">Refazer</button>`;
+        return;
+    }
+
+    let html = `<small style="color:var(--p-orange); font-weight:900;">${ex.type.toUpperCase()}</small>`;
+    if (ex.title) html += `<h3>${ex.title}</h3>`;
+    html += `<p style="font-size:18px; margin:15px 0; font-weight:700;">${ex.question}</p>`;
+
+    if (ex.type === 'translate' || ex.type === 'situation') {
+        ex.options.forEach(opt => {
+            html += `<button class="btn-course" onclick="checkAnswer('${opt}', '${ex.answer}')">${opt}</button>`;
+        });
+    } else if (ex.type === 'spelling') {
+        html += `<input type="text" id="spell-input" placeholder="Sua resposta...">
+                 <button class="btn-main" onclick="checkAnswer(document.getElementById('spell-input').value, '${ex.answer}')">Verificar</button>`;
+    }
+
+    container.innerHTML = html;
+    if (ex.audio) speak(ex.audio); // Faz o pet falar a palavra assim que abre
+}
+
+function checkAnswer(input, correct) {
+    if (input.toLowerCase().trim() === correct.toLowerCase().trim()) {
+        state.xp += 20;
+        currentExerciseIndex++;
+        petSpeak('success'); // O gato dá parabéns
+        // Aqui você pode colocar um som de acerto
+    } else {
+        petSpeak('error'); // O gato fica triste
+        alert("Resposta errada! Tente novamente.");
+    }
+    save();
+    updateUI();
+    loadExercise();
+}
+
+function speak(text) {
+    const msg = new SpeechSynthesisUtterance(text);
+    // Se o curso tiver "it", ele fala italiano, senão fala inglês
+    msg.lang = state.currentCourse.includes('it') ? 'it-IT' : 'en-US';
+    window.speechSynthesis.speak(msg);
+}
         }
 
         function changeSkin(emoji) {
@@ -216,3 +305,4 @@
     </script>
 </body>
 </html>
+
