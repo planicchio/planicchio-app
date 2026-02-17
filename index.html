@@ -1,191 +1,259 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planicchio Pro - Ana</title>
+    <title>Planicchio</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --p-orange: #ff7a00; --p-light: #fff7ed; --p-dark: #2d2d2d; --p-white: #ffffff; --p-gray: #f0f0f0; --p-vip: linear-gradient(45deg, #ffd700, #ff8c00); }
-        [data-theme='dark'] { --p-light: #121212; --p-white: #1e1e1e; --p-dark: #f0f0f0; --p-gray: #333; }
-        * { margin:0; padding:0; box-sizing:border-box; font-family:'Nunito', sans-serif; }
-        body { background: var(--p-light); color: var(--p-dark); transition: 0.3s; }
-
-        /* GATO DESENHADO EM CSS */
-        .cat-css {
-            width: 80px; height: 60px; background: #555; position: relative;
-            border-radius: 50% 50% 40% 40%; margin: 20px auto;
+        :root {
+            --p-orange: #ff7a00;
+            --p-soft-orange: #fff4e6;
+            --p-white: #ffffff;
+            --p-gray: #f4f4f4;
+            --p-text: #2d2d2d;
+            --p-vip: linear-gradient(45deg, #ffd700, #ffa500);
         }
-        .cat-css::before, .cat-css::after { /* Orelhas */
-            content: ''; position: absolute; top: -10px; width: 0; height: 0;
-            border-left: 15px solid transparent; border-right: 15px solid transparent; border-bottom: 25px solid #555;
-        }
-        .cat-css::before { left: 5px; transform: rotate(-20deg); }
-        .cat-css::after { right: 5px; transform: rotate(20deg); }
-        .cat-eyes { position: absolute; top: 20px; width: 100%; display: flex; justify-content: space-around; }
-        .eye { width: 12px; height: 12px; background: #90ee90; border-radius: 50%; }
 
-        .screen { display: none; padding: 20px; padding-bottom: 100px; min-height: 100vh; animation: fadeIn 0.4s; }
+        [data-theme='dark'] {
+            --p-white: #1a1a1a; --p-gray: #2d2d2d; --p-text: #f4f4f4; --p-soft-orange: #2d1a05;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Nunito', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--p-white); color: var(--p-text); overflow-x: hidden; }
+
+        /* GATO LARANJA REALISTA CSS */
+        .pet-container { cursor: pointer; transition: 0.3s; position: relative; width: 100px; margin: 0 auto; }
+        .cat-orange {
+            width: 80px; height: 70px; background: #ff9500; border-radius: 50% 50% 45% 45%;
+            position: relative; border: 3px solid #e68600;
+        }
+        .cat-orange::before, .cat-orange::after { /* Orelhas */
+            content: ''; position: absolute; top: -12px; width: 0; height: 0;
+            border-left: 12px solid transparent; border-right: 12px solid transparent; border-bottom: 20px solid #ff9500;
+        }
+        .cat-orange::before { left: 5px; transform: rotate(-15deg); }
+        .cat-orange::after { right: 5px; transform: rotate(15deg); }
+        .cat-face { position: absolute; top: 25px; width: 100%; display: flex; justify-content: center; gap: 15px; }
+        .cat-eye { width: 10px; height: 10px; background: #000; border-radius: 50%; position: relative; }
+        .cat-eye::after { content: ''; position: absolute; top: 2px; left: 2px; width: 3px; height: 3px; background: #fff; border-radius: 50%; }
+        .cat-nose { width: 8px; height: 5px; background: #ffb3b3; border-radius: 50%; position: absolute; top: 40px; left: 50%; transform: translateX(-50%); }
+        .cat-mouth { width: 12px; height: 6px; border-bottom: 2px solid #000; border-radius: 0 0 10px 10px; position: absolute; top: 45px; left: 50%; transform: translateX(-50%); }
+        
+        .dance { animation: danceAnim 0.6s ease infinite; }
+        @keyframes danceAnim { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-10px) rotate(10deg); } }
+
+        /* LAYOUT CORE */
+        .screen { display: none; padding: 20px; padding-bottom: 120px; animation: slideUp 0.4s ease-out; }
         .active { display: block; }
-        @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .top-bar { display: flex; align-items: center; justify-content: space-between; padding: 15px; background: var(--p-white); border-radius: 0 0 25px 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        .xp-bar-container { flex-grow: 1; height: 12px; background: var(--p-gray); border-radius: 10px; margin: 0 15px; overflow: hidden; }
-        .xp-bar-fill { height: 100%; background: var(--p-orange); width: 0%; transition: 0.5s; }
+        .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 20px; background: var(--p-white); position: sticky; top:0; z-index:100; }
+        .streak-badge { background: var(--p-soft-orange); color: var(--p-orange); padding: 5px 15px; border-radius: 20px; font-weight: 900; }
 
-        .card { background: var(--p-white); padding: 20px; border-radius: 24px; box-shadow: 0 6px 20px rgba(0,0,0,0.04); margin-bottom: 20px; border-bottom: 4px solid var(--p-gray); }
-        .btn-course { background: var(--p-white); border: 2px solid var(--p-gray); padding: 15px; border-radius: 18px; width: 100%; text-align: left; margin-bottom: 10px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 15px; }
-        .btn-main { background: var(--p-orange); color: white; border: none; padding: 18px; border-radius: 18px; width: 100%; font-weight: 900; cursor: pointer; box-shadow: 0 4px 0 #d36500; }
+        .card { background: var(--p-gray); padding: 20px; border-radius: 28px; margin-bottom: 15px; border: none; transition: 0.3s; }
+        .card:active { transform: scale(0.98); }
         
-        .pet-bubble { background: var(--p-white); padding: 12px; border-radius: 18px; border: 3px solid var(--p-orange); display: inline-block; font-weight: 700; position: relative; margin-bottom: 10px; }
-        
-        nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--p-white); display: flex; justify-content: space-around; padding: 15px; border-top: 3px solid var(--p-gray); z-index: 1000; }
-        .nav-item { font-size: 24px; cursor: pointer; color: #ccc; text-align: center; }
-        .nav-item span { display: block; font-size: 10px; font-weight: 900; }
-        .nav-item.active-tab { color: var(--p-orange); }
+        .btn-main { background: var(--p-orange); color: white; border: none; padding: 18px; border-radius: 20px; width: 100%; font-weight: 900; font-size: 16px; cursor: pointer; box-shadow: 0 6px 0 #d36500; margin-top: 10px; }
+        .btn-main:active { box-shadow: 0 2px 0 #d36500; transform: translateY(4px); }
 
-        input#writing-input { width: 100%; padding: 15px; border-radius: 15px; border: 2px solid var(--p-orange); margin: 10px 0; font-size: 16px; }
+        /* BOTTOM NAV */
+        nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--p-white); display: flex; justify-content: space-around; padding: 15px; border-top: 2px solid var(--p-gray); box-shadow: 0 -5px 20px rgba(0,0,0,0.03); }
+        .nav-item { font-size: 24px; cursor: pointer; color: #bbb; display: flex; flex-direction: column; align-items: center; }
+        .nav-item span { font-size: 10px; font-weight: 800; margin-top: 4px; }
+        .active-tab { color: var(--p-orange) !important; }
+
+        /* XP BAR */
+        .lvl-container { margin: 20px 0; }
+        .xp-bg { background: var(--p-gray); height: 14px; border-radius: 10px; overflow: hidden; }
+        .xp-fill { background: var(--p-orange); height: 100%; width: 30%; transition: 0.8s; }
+
+        .vip-lock { background: var(--p-vip); color: white; padding: 5px 10px; border-radius: 8px; font-size: 10px; margin-left: 5px; }
+        input { width: 100%; padding: 15px; border-radius: 15px; border: 2px solid var(--p-gray); outline: none; margin-bottom: 10px; }
     </style>
 </head>
-<body data-theme="light">
+<body>
 
-    <div id="screen-intro" class="screen active">
-        <div class="pet-stage">
-            <div class="cat-css"><div class="cat-eyes"><div class="eye"></div><div class="eye"></div></div></div>
-            <div class="pet-bubble">Hi Ana! Select your course:</div>
-        </div>
+    <div id="screen-courses" class="screen active">
+        <h1 style="text-align:center; font-weight:900; margin-top:40px;">Planicchio</h1>
+        <p style="text-align:center; color:#888; margin-bottom:30px;">Choose your vibe</p>
         <div id="course-list"></div>
     </div>
 
+    <div id="screen-quizz" class="screen">
+        <div class="card">
+            <h2 id="q-title">Nivelamento</h2>
+            <p id="q-text" style="margin:20px 0;"></p>
+            <div id="q-options"></div>
+        </div>
+    </div>
+
     <div id="screen-app" class="screen">
-        <div class="top-bar">
-            <div style="font-weight:900; color:var(--p-orange)">LV <span id="ui-lvl">1</span></div>
-            <div class="xp-bar-container"><div id="ui-xp-fill" class="xp-bar-fill"></div></div>
-            <div id="ui-streak">🔥 0</div>
+        <div class="top-nav">
+            <div class="streak-badge">🔥 <span id="val-streak">0</span></div>
+            <div style="font-weight:900; color:var(--p-orange)" id="user-title">Viajante</div>
         </div>
 
         <div id="tab-home" class="tab-content">
-            <div class="pet-stage">
-                <div class="pet-bubble" id="pet-msg">Welcome, Ana! Shall we learn?</div>
-                <div class="cat-css"><div class="cat-eyes"><div class="eye"></div><div class="eye"></div></div></div>
+            <div class="lvl-container">
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-weight:900;">
+                    <span>Nível <span id="val-lvl">1</span></span>
+                    <span style="color:#888;"><span id="val-xp">0</span>/100 XP</span>
+                </div>
+                <div class="xp-bg"><div class="xp-fill" id="fill-xp"></div></div>
             </div>
-            <div class="card" id="card-tips">
-                <h3>Daily Tip 💡</h3>
-                <p id="culture-text">Loading culture...</p>
+            
+            <div class="card">
+                <h3>Missões de Hoje 🚀</h3>
+                <p>• Praticar 5 minutos (+20xp)</p>
+                <p>• Acertar 3 seguidas (+50xp)</p>
+            </div>
+
+            <div class="card">
+                <h3>Minigames 🕹️</h3>
+                <div style="display:flex; gap:10px; margin-top:10px;">
+                    <button class="btn-main" style="font-size:12px; padding:10px;">Speed Words</button>
+                    <button class="btn-main" style="font-size:12px; padding:10px; background:#58cc02; box-shadow:0 4px 0 #3d8b02;">Memory</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-tips" class="tab-content" style="display:none;">
+            <h2>Curiosidades 🇮🇹</h2>
+            <div class="card" style="margin-top:20px;">
+                <p><b>☕ Café na Itália:</b> Você sabia que pedir um "Latte" na Itália te trará apenas um copo de leite branco?</p>
+            </div>
+            <div class="card">
+                <p><b>🍕 Pizza Real:</b> A pizza Margherita foi criada para honrar a rainha da Itália com as cores da bandeira.</p>
+            </div>
+        </div>
+
+        <div id="tab-dict" class="tab-content" style="display:none;">
+            <input type="text" placeholder="Pesquisar palavra...">
+            <div class="card" style="opacity:0.6">
+                <h3>Flashcards <span class="vip-lock">VIP</span></h3>
+                <p>Desbloqueie para memorização rápida.</p>
+            </div>
+        </div>
+
+        <div id="tab-comm" class="tab-content" style="display:none;">
+            <h2>Fórum 🤝</h2>
+            <div class="card">
+                <p><b>@GenZ_Learn:</b> Alguém sabe a diferença entre "Ciao" e "Salve"?</p>
+            </div>
+            <div class="card" style="border: 2px solid gold;">
+                <h3 style="color:gold">Nativos & IA <span class="vip-lock">VIP</span></h3>
+                <button class="btn-main" style="background:var(--p-vip); border:none;">Falar com Nativo</button>
             </div>
         </div>
 
         <div id="tab-learn" class="tab-content" style="display:none;">
-            <div id="exercise-box" class="card"></div>
-        </div>
-
-        <div id="tab-extra" class="tab-content" style="display:none;">
-            <h3>Slangs & Dictionary</h3>
-            <div id="slang-box" class="card"></div>
+            <div id="exercise-area"></div>
         </div>
 
         <div id="tab-profile" class="tab-content" style="display:none;">
-            <h3>Ana's Profile</h3>
             <div class="card">
-                <button class="btn-main" onclick="toggleTheme()">Toggle Dark Mode</button>
-                <button class="btn-main" style="background:#ff4b4b; margin-top:10px;" onclick="location.reload()">Change Course</button>
+                <h3>Configurações</h3>
+                <button class="btn-main" style="background:var(--p-text);" onclick="toggleTheme()">Modo Escuro</button>
+                <button class="btn-main" style="background:#555;" onclick="openDiary()">Diário de Estudos</button>
+                <button class="btn-main" style="background:#ff4b4b;" onclick="location.reload()">Mudar Curso</button>
+            </div>
+        </div>
+
+        <div class="pet-stage" style="margin-top:40px;">
+            <div class="pet-bubble" id="pet-speech">Olá! Vamos aprender?</div>
+            <div class="pet-container" onclick="petDance()">
+                <div class="cat-orange" id="main-cat">
+                    <div class="cat-face">
+                        <div class="cat-eye"></div>
+                        <div class="cat-eye"></div>
+                    </div>
+                    <div class="cat-nose"></div>
+                    <div class="cat-mouth"></div>
+                </div>
             </div>
         </div>
 
         <nav>
             <div class="nav-item active-tab" onclick="changeTab('home', this)">🏠<span>HOME</span></div>
+            <div class="nav-item" onclick="changeTab('tips', this)">💡<span>DICAS</span></div>
+            <div class="nav-item" onclick="changeTab('dict', this)">📖<span>DICT</span></div>
+            <div class="nav-item" onclick="changeTab('comm', this)">🤝<span>SOCIAL</span></div>
             <div class="nav-item" onclick="changeTab('learn', this)">🎯<span>LEARN</span></div>
-            <div class="nav-item" onclick="changeTab('extra', this)">📖<span>EXTRA</span></div>
             <div class="nav-item" onclick="changeTab('profile', this)">👤<span>ME</span></div>
         </nav>
     </div>
 
     <script>
-        const content = {
-            'it-en': {
-                ui: { welcome: "Welcome, Ana!", tip: "Daily Tip", mission: "Study Italian!", home: "HOME", learn: "LEARN", extra: "EXTRA", me: "ME" },
-                culture: [
-                    "In Italy, 'Pepperoni' is bell peppers. If you want spicy sausage, ask for 'Salame Piccante'!",
-                    "Italians never drink Cappuccino after 11 AM. It's strictly a breakfast drink!",
-                    "When greeting, Italians often kiss both cheeks starting with the left."
-                ],
-                exercises: [
-                    { q: "How do you say 'Good Morning'?", o: ["Buongiorno", "Buonasera", "Ciao"], a: "Buongiorno", type: "choice", audio: "Buongiorno" },
-                    { q: "Translate: 'The cat is on the table'", o: ["Il gatto è sul tavolo", "Il cane corre", "La mela è rossa"], a: "Il gatto è sul tavolo", type: "choice", audio: "Il gatto è sul tavolo" },
-                    { q: "Write 'Water' in Italian:", a: "acqua", type: "write", audio: "acqua" },
-                    { q: "What is 'Apple'?", o: ["Mela", "Pera", "Arancia"], a: "Mela", type: "choice", audio: "Mela" }
-                ],
-                slangs: ["In bocca al lupo! (Good luck)", "Che cavolo! (What the heck!)", "Meno male! (Thank goodness!)"]
-            }
+        const courses = [
+            { id: 'it-en', n: 'Italiano ➔ Inglês', f: '🇮🇹' },
+            { id: 'en-it', n: 'Inglês ➔ Italiano', f: '🇬🇧' },
+            { id: 'it-pt', n: 'Italiano ➔ Português', f: '🇮🇹' },
+            { id: 'pt-it', n: 'Português ➔ Italiano', f: '🇧🇷' },
+            { id: 'pt-en', n: 'Português ➔ Inglês', f: '🇧🇷' },
+            { id: 'en-pt', n: 'Inglês ➔ Português', f: '🇬🇧' }
+        ];
+
+        const quizData = [
+            { q: "Como se diz 'Obrigado' em Italiano?", o: ["Grazie", "Prego", "Ciao"], a: "Grazie" },
+            { q: "Qual o plural de 'Ragazzo'?", o: ["Ragazzi", "Ragazzos", "Ragazza"], a: "Ragazzi" }
+        ];
+
+        const exercises = {
+            'it-en': [
+                { type: 'audio', q: 'Traduza o áudio: "Buongiorno"', a: 'Good morning', audio: 'Buongiorno' },
+                { type: 'write', q: 'Escreva "Água" em Italiano', a: 'acqua' }
+            ]
         };
 
-        let state = { course: 'it-en', xp: 0, lvl: 1, curEx: 0 };
+        let state = { xp: 0, lvl: 1, streak: 0, title: 'Viajante', course: '', quizzStep: 0, score: 0 };
 
         window.onload = () => {
             const list = document.getElementById('course-list');
-            list.innerHTML = `<button class="btn-course" onclick="start('it-en')"><span>🇮🇹➔🇬🇧</span> Italian to English</button>
-                              <button class="btn-course" onclick="alert('Focusing on IT-EN for now!')"><span>🇧🇷➔🇮🇹</span> Português para Italiano</button>`;
+            courses.forEach(c => {
+                list.innerHTML += `<button class="btn-course" onclick="startQuizz('${c.id}')"><span>${c.f}</span> ${c.n}</button>`;
+            });
         };
 
-        function start(id) {
+        function startQuizz(id) {
             state.course = id;
-            document.getElementById('screen-intro').classList.remove('active');
+            document.getElementById('screen-courses').classList.remove('active');
+            document.getElementById('screen-quizz').classList.add('active');
+            loadQuizz();
+        }
+
+        function loadQuizz() {
+            const q = quizData[state.quizzStep];
+            if(!q) { finishQuizz(); return; }
+            document.getElementById('q-text').innerText = q.q;
+            const opts = document.getElementById('q-options');
+            opts.innerHTML = '';
+            q.o.forEach(o => {
+                opts.innerHTML += `<button class="btn-main" style="margin-bottom:10px" onclick="nextQuizz('${o}','${q.a}')">${o}</button>`;
+            });
+        }
+
+        function nextQuizz(o, a) {
+            if(o === a) state.score++;
+            state.quizzStep++;
+            loadQuizz();
+        }
+
+        function finishQuizz() {
+            if(state.score >= 2) { state.lvl = 3; state.title = "Explorador"; }
+            document.getElementById('screen-quizz').classList.remove('active');
             document.getElementById('screen-app').classList.add('active');
-            setupUI();
+            updateUI();
             loadExercise();
         }
 
-        function setupUI() {
-            const data = content[state.course];
-            document.getElementById('culture-text').innerText = data.culture[Math.floor(Math.random()*data.culture.length)];
-            document.getElementById('pet-msg').innerText = data.ui.welcome;
-            
-            let slangHtml = "";
-            data.slangs.forEach(s => slangHtml += `<p>• ${s}</p>`);
-            document.getElementById('slang-box').innerHTML = slangHtml;
-        }
-
-        function loadExercise() {
-            const box = document.getElementById('exercise-box');
-            const ex = content[state.course].exercises[state.curEx];
-
-            if(!ex) {
-                box.innerHTML = "<h3>Great job, Ana!</h3><p>You finished the focus module.</p>";
-                return;
-            }
-
-            let html = `<h4>Exercise ${state.curEx + 1}</h4><p style="font-size:18px; margin:15px 0;">${ex.q}</p>`;
-            
-            if(ex.type === 'choice') {
-                ex.o.forEach(opt => html += `<button class="btn-course" onclick="check('${opt}','${ex.a}')">${opt}</button>`);
-            } else {
-                html += `<input type="text" id="writing-input" placeholder="Type here...">
-                         <button class="btn-main" onclick="check(document.getElementById('writing-input').value,'${ex.a}')">Check</button>`;
-            }
-            box.innerHTML = html;
-            playAudio(ex.audio);
-        }
-
-        function check(val, correct) {
-            if(val.toLowerCase().trim() === correct.toLowerCase().trim()) {
-                state.xp += 25; state.curEx++;
-                document.getElementById('pet-msg').innerText = "Correct! +25 XP";
-            } else {
-                alert("Incorrect! The answer was: " + correct);
-            }
-            if(state.xp >= 100) { state.xp = 0; state.lvl++; }
-            updateUI(); loadExercise();
-        }
-
-        function playAudio(txt) {
-            const msg = new SpeechSynthesisUtterance(txt);
-            msg.lang = 'it-IT';
-            window.speechSynthesis.speak(msg);
-        }
-
-        function updateUI() {
-            document.getElementById('ui-lvl').innerText = state.lvl;
-            document.getElementById('ui-xp-fill').style.width = state.xp + '%';
+        function petDance() {
+            const cat = document.getElementById('main-cat');
+            const speech = document.getElementById('pet-speech');
+            cat.classList.add('dance');
+            const phrases = ["Slay! ✨", "No cap, você tá indo bem!", "Bora focar!", "Hype total!"];
+            speech.innerText = phrases[Math.floor(Math.random()*phrases.length)];
+            setTimeout(() => cat.classList.remove('dance'), 1000);
         }
 
         function changeTab(tabId, el) {
@@ -195,10 +263,33 @@
             el.classList.add('active-tab');
         }
 
+        function loadExercise() {
+            const area = document.getElementById('exercise-area');
+            const ex = exercises['it-en'][0]; // Simplificado para exemplo
+            area.innerHTML = `<div class="card"><h3>Exercício</h3><p>${ex.q}</p>
+            <input type="text" id="ex-in"><button class="btn-main" onclick="checkEx()">CONFERIR</button></div>`;
+        }
+
+        function checkEx() {
+            petDance();
+            state.xp += 20;
+            if(state.xp >= 100) { state.xp = 0; state.lvl++; }
+            updateUI();
+        }
+
+        function updateUI() {
+            document.getElementById('val-lvl').innerText = state.lvl;
+            document.getElementById('val-xp').innerText = state.xp;
+            document.getElementById('fill-xp').style.width = state.xp + '%';
+            document.getElementById('user-title').innerText = state.lvl > 2 ? "Explorador" : "Viajante";
+        }
+
         function toggleTheme() {
             const b = document.body;
             b.setAttribute('data-theme', b.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
         }
+
+        function openDiary() { alert("Diário de Estudos aberto! Anote aqui suas lições."); }
     </script>
 </body>
 </html>
