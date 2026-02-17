@@ -8,76 +8,73 @@
     <style>
         :root {
             --p-orange: #ff7a00;
-            --p-light-orange: #fff4e6;
+            --p-deep: #e66a00;
+            --p-soft: #fff4e6;
             --p-white: #ffffff;
             --p-text: #2d2d2d;
             --p-gray: #f0f0f0;
+            --p-vip: linear-gradient(45deg, #ffd700, #ffa500);
         }
 
         * { margin:0; padding:0; box-sizing:border-box; font-family:'Nunito', sans-serif; }
-        body { background: var(--p-white); color: var(--p-text); transition: 0.3s; }
+        body { background: var(--p-white); color: var(--p-text); overflow-x: hidden; }
 
-        /* GATO CSS - DESIGN LARANJA */
-        .cat-design {
-            width: 80px; height: 65px; background: #ff9500; border-radius: 50% 50% 40% 40%;
-            position: relative; border: 3px solid #fff; margin: 0 auto;
-        }
-        .cat-design::before, .cat-design::after { 
-            content: ''; position: absolute; top: -12px; width: 0; height: 0;
-            border-left: 12px solid transparent; border-right: 12px solid transparent; border-bottom: 20px solid #ff9500;
-        }
-        .cat-design::before { left: 5px; transform: rotate(-15deg); }
-        .cat-design::after { right: 5px; transform: rotate(15deg); }
-        .eyes { display: flex; justify-content: space-around; padding-top: 25px; }
-        .eye { width: 10px; height: 10px; background: #2d2d2d; border-radius: 50%; }
+        /* GATO LARANJA DETALHADO CSS */
+        .cat-box { width: 80px; height: 70px; background: #ff9500; border-radius: 50% 50% 40% 40%; position: relative; border: 3px solid #fff; }
+        .cat-ear { width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-bottom: 22px solid #ff9500; position: absolute; top: -12px; }
+        .ear-l { left: 5px; transform: rotate(-20deg); }
+        .ear-r { right: 5px; transform: rotate(20deg); }
+        .cat-eye { width: 10px; height: 10px; background: #000; border-radius: 50%; position: absolute; top: 25px; }
+        .eye-l { left: 20px; } .eye-r { right: 45px; }
+        .cat-nose { width: 8px; height: 5px; background: #ffb3b3; border-radius: 50%; position: absolute; top: 40px; left: 35px; }
+        .cat-whisker { width: 20px; height: 2px; background: rgba(255,255,255,0.5); position: absolute; }
+        .w-l { left: -5px; top: 45px; transform: rotate(10deg); }
+        .w-r { right: -5px; top: 45px; transform: rotate(-10deg); }
 
-        /* ANIMAÇÃO DANÇA */
-        .dance { animation: danceAnim 0.8s infinite alternate; }
-        @keyframes danceAnim { from { transform: translateY(0) rotate(0); } to { transform: translateY(-20px) rotate(5deg); } }
+        .dance { animation: danceAnim 0.6s infinite alternate; }
+        @keyframes danceAnim { from { transform: translateY(0); } to { transform: translateY(-15px); } }
 
         /* TELAS */
-        .screen { display: none; min-height: 100vh; padding: 20px; animation: fadeIn 0.4s; }
-        .active { display: flex; flex-direction: column; }
+        .screen { display: none; min-height: 100vh; padding: 20px; padding-bottom: 120px; }
+        .active { display: block; animation: fadeIn 0.3s; }
+        .screen-orange { background: var(--p-orange); display: flex; flex-direction: column; align-items: center; justify-content: center; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .screen-orange { background: var(--p-orange); color: white; justify-content: center; align-items: center; }
-
-        /* BOTOES E CARDS */
-        .btn-course {
-            background: white; color: var(--p-orange); border: none; padding: 18px;
-            border-radius: 25px; width: 100%; max-width: 350px; margin-bottom: 12px;
-            font-weight: 900; font-size: 18px; cursor: pointer; box-shadow: 0 5px 0 rgba(0,0,0,0.1);
-        }
-        .card { background: var(--p-light-orange); border-radius: 30px; padding: 20px; margin-bottom: 15px; }
-        .btn-main { background: var(--p-orange); color: white; border: none; padding: 18px; border-radius: 20px; width: 100%; font-weight: 900; box-shadow: 0 4px 0 #d36500; cursor: pointer; }
+        /* BOTÕES E CARDS */
+        .btn-course { background: #fff; color: var(--p-orange); border: none; padding: 20px; border-radius: 25px; width: 100%; max-width: 350px; margin-bottom: 15px; font-weight: 900; font-size: 18px; cursor: pointer; box-shadow: 0 5px 0 rgba(0,0,0,0.1); }
+        .btn-main { background: var(--p-orange); color: white; border: none; padding: 18px; border-radius: 20px; width: 100%; font-weight: 900; box-shadow: 0 5px 0 #d36500; cursor: pointer; margin-top: 10px; }
+        .card { background: var(--p-soft); border-radius: 30px; padding: 25px; margin-bottom: 20px; }
 
         /* PET FLUTUANTE */
-        #pet-fixed {
-            position: fixed; bottom: 100px; right: 20px; z-index: 1000;
-            display: none; flex-direction: column; align-items: flex-end;
-        }
+        #floating-pet { position: fixed; bottom: 100px; right: 20px; z-index: 1000; display: none; flex-direction: column; align-items: flex-end; }
         .bubble { background: white; border: 2px solid var(--p-orange); padding: 8px 12px; border-radius: 15px; font-size: 12px; font-weight: 800; margin-bottom: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
-        /* NAV */
-        nav { position: fixed; bottom: 0; left: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px; border-top: 2px solid var(--p-gray); }
-        .nav-item { color: #ccc; text-align: center; cursor: pointer; font-size: 20px; }
-        .nav-item span { display: block; font-size: 10px; font-weight: 900; }
+        /* BARRA DE NAVEGAÇÃO (5 ABAS) */
+        nav { position: fixed; bottom: 0; left: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px 5px; border-top: 3px solid var(--p-gray); }
+        .nav-item { color: #ccc; text-align: center; cursor: pointer; flex: 1; }
+        .nav-item span { display: block; font-size: 9px; font-weight: 900; margin-top: 4px; }
         .nav-active { color: var(--p-orange); }
 
-        /* DIARIO */
-        #diary-area { width: 100%; height: 150px; border-radius: 20px; border: 2px solid var(--p-orange); padding: 15px; margin: 10px 0; font-size: 16px; }
+        /* EXERCICIOS E INPUTS */
+        input, textarea { width: 100%; padding: 15px; border-radius: 15px; border: 2px solid var(--p-orange); margin-top: 10px; font-size: 16px; outline: none; }
+        .vip-lock { background: var(--p-vip); color: white; padding: 2px 8px; border-radius: 5px; font-size: 9px; vertical-align: middle; }
     </style>
 </head>
 <body>
 
     <div id="screen-intro" class="screen screen-orange active">
-        <div class="cat-design dance"><div class="eyes"><div class="eye"></div><div class="eye"></div></div></div>
-        <h1 style="font-size: 40px; font-weight: 900; margin: 20px 0;">Planicchio</h1>
+        <div class="cat-box dance">
+            <div class="cat-ear ear-l"></div><div class="cat-ear ear-r"></div>
+            <div class="cat-eye eye-l"></div><div class="cat-eye eye-r"></div>
+            <div class="cat-nose"></div>
+            <div class="cat-whisker w-l"></div><div class="cat-whisker w-r"></div>
+        </div>
+        <h1 style="color:white; font-size: 40px; font-weight: 900; margin: 25px 0;">Planicchio</h1>
         <div id="course-list" style="width: 100%; display: flex; flex-direction: column; align-items: center;"></div>
     </div>
 
     <div id="screen-quiz" class="screen" style="background: white;">
-        <div class="card" style="text-align: center;">
+        <div class="card" style="text-align: center; border: 3px solid var(--p-orange);">
             <h2 id="quiz-title">Nivelamento</h2>
             <p id="quiz-q" style="font-size: 20px; margin: 20px 0; font-weight: 700;"></p>
             <div id="quiz-options"></div>
@@ -85,59 +82,94 @@
     </div>
 
     <div id="screen-app" class="screen">
+        
         <div id="tab-home" class="tab-content">
-            <h2 style="font-weight: 900; color: var(--p-orange);">Planicchio</h2>
-            <div class="card" style="margin-top: 20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h2 style="font-weight:900; color:var(--p-orange);">Planicchio</h2>
+                <div style="background:var(--p-orange); color:white; padding:5px 15px; border-radius:20px; font-weight:900;">🔥 0</div>
+            </div>
+            <div class="card" style="margin-top:20px;">
                 <h3 id="user-rank">Nômade [A1]</h3>
-                <div style="background: #fff; height: 15px; border-radius: 10px; margin: 10px 0; overflow: hidden;">
-                    <div id="xp-fill" style="background: var(--p-orange); width: 0%; height: 100%; transition: 0.5s;"></div>
+                <div style="background:#fff; height:12px; border-radius:10px; margin:10px 0; overflow:hidden;">
+                    <div id="xp-fill" style="background:var(--p-orange); width:20%; height:100%;"></div>
                 </div>
-                <p style="font-weight: 800; font-size: 12px;">XP: <span id="xp-val">0</span>/100</p>
+                <p style="font-size:12px; font-weight:800;">XP: <span id="xp-val">20</span>/100</p>
             </div>
             <div class="card">
-                <h4 id="txt-missao">Missões Diárias</h4>
-                <p>✨ Complete 1 lição de comida (+20 XP)</p>
+                <h4 id="txt-mission">Missões Semanais</h4>
+                <p>🎯 Praticar Conversação (+50 XP)</p>
+            </div>
+            <h4 style="margin-bottom:10px;">Minigames 🕹️</h4>
+            <div style="display:flex; gap:10px;">
+                <button class="btn-main" style="flex:1; background:#58cc02; box-shadow:0 5px 0 #3d8b02;">Speed</button>
+                <button class="btn-main" style="flex:1;">Memory</button>
+            </div>
+        </div>
+
+        <div id="tab-tips" class="tab-content" style="display:none;">
+            <h2 id="txt-tips-title">Dicas & Curiosidades 🇮🇹</h2>
+            <div class="card" style="margin-top:20px;">
+                <p><b>Cappuccino:</b> Nunca peça um após as 11h na Itália, ou vão saber que você é turista! ☕</p>
+            </div>
+            <div class="card">
+                <p><b>Gesto:</b> O famoso gesto das mãos juntas 🤌 significa "O que você quer?" ou "Que porcaria é essa?".</p>
+            </div>
+        </div>
+
+        <div id="tab-dict" class="tab-content" style="display:none;">
+            <h2 id="txt-dict-title">Dicionário</h2>
+            <input type="text" placeholder="Pesquisar palavra...">
+            <div class="card" style="margin-top:20px; border: 2px dashed var(--p-orange);">
+                <h4>Flashcards <span class="vip-lock">VIP</span></h4>
+                <p>Memorização espaçada para membros Gold.</p>
+            </div>
+        </div>
+
+        <div id="tab-comm" class="tab-content" style="display:none;">
+            <h2 id="txt-comm-title">Comunidade</h2>
+            <div class="card">
+                <p><b>@Lucas:</b> Galera, o curso de Italiano tá incrível! 🤌</p>
+            </div>
+            <div class="card" style="background: var(--p-vip); color:white;">
+                <h4>Conversar com Nativo <span class="vip-lock" style="background:white; color:orange">VIP</span></h4>
+                <p>Pratique com IA e nativos em tempo real.</p>
             </div>
         </div>
 
         <div id="tab-learn" class="tab-content" style="display:none;">
-            <h2 id="txt-praticar">Praticar</h2>
-            <div id="ex-box" class="card" style="background: white; border: 3px solid var(--p-orange); margin-top: 20px;"></div>
-        </div>
-
-        <div id="tab-diary" class="tab-content" style="display:none;">
-            <h2>Meu Diário 📓</h2>
-            <textarea id="diary-area" placeholder="Anote o que aprendeu..."></textarea>
-            <button class="btn-main" onclick="saveNote()">Salvar no Diário</button>
-            <div id="saved-notes" style="margin-top: 20px; font-size: 14px; color: #666;"></div>
+            <h2 id="txt-learn-title">Praticar</h2>
+            <div id="ex-area" class="card" style="background:white; border:3px solid var(--p-orange); margin-top:20px;"></div>
         </div>
 
         <div id="tab-profile" class="tab-content" style="display:none;">
             <h2>Perfil</h2>
             <div class="card">
-                <label>Nome:</label>
-                <input type="text" id="user-name" placeholder="Seu nome" style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd; margin-bottom:10px;">
-                <label>Pet:</label>
-                <select id="pet-color" style="width:100%; padding:10px; border-radius:10px;">
-                    <option value="#ff9500">Gato Laranja</option>
-                    <option value="#888">Gato Cinza</option>
-                </select>
+                <label>Mudar Nome:</label>
+                <input type="text" id="in-name" placeholder="Ana">
+                <label style="display:block; margin-top:10px;">Diário de Estudos:</label>
+                <textarea id="diary-box" placeholder="Escreva suas notas aqui..."></textarea>
+                <button class="btn-main" onclick="alert('Notas salvas!')">Salvar Diário</button>
             </div>
-            <button class="btn-main" onclick="toggleDark()" style="background: #2d2d2d;">Modo Escuro</button>
+            <button class="btn-main" style="background:#2d2d2d;" onclick="toggleDark()">Modo Escuro</button>
         </div>
 
         <nav>
             <div class="nav-item nav-active" onclick="changeTab('home', this)">🏠<span>HOME</span></div>
-            <div class="nav-item" onclick="changeTab('learn', this)">🎯<span>APRENDER</span></div>
-            <div class="nav-item" onclick="changeTab('diary', this)">📓<span>NOTAS</span></div>
+            <div class="nav-item" onclick="changeTab('tips', this)">💡<span>DICAS</span></div>
+            <div class="nav-item" onclick="changeTab('dict', this)">📖<span>DICT</span></div>
+            <div class="nav-item" onclick="changeTab('comm', this)">🤝<span>SOCIAL</span></div>
+            <div class="nav-item" onclick="changeTab('learn', this)">🎯<span>LEARN</span></div>
             <div class="nav-item" onclick="changeTab('profile', this)">👤<span>PERFIL</span></div>
         </nav>
     </div>
 
-    <div id="pet-fixed">
-        <div class="bubble" id="pet-talk">Slay! ✨</div>
-        <div class="cat-design" style="width: 50px; height: 40px; border-width: 2px;">
-            <div class="eyes" style="padding-top: 15px;"><div class="eye" style="width:6px; height:6px;"></div><div class="eye" style="width:6px; height:6px;"></div></div>
+    <div id="floating-pet">
+        <div class="bubble" id="pet-msg">Ciao!</div>
+        <div class="cat-box" style="width: 50px; height: 45px; border-width: 2px;">
+            <div class="cat-ear ear-l" style="top:-8px; border-bottom-width:12px;"></div>
+            <div class="cat-ear ear-r" style="top:-8px; border-bottom-width:12px;"></div>
+            <div class="cat-eye eye-l" style="width:6px; height:6px; top:15px; left:12px;"></div>
+            <div class="cat-eye eye-r" style="width:6px; height:6px; top:15px; right:12px;"></div>
         </div>
     </div>
 
@@ -151,72 +183,74 @@
             { id: 'en-pt', n: 'Inglês ➔ Português', f: '🇬🇧' }
         ];
 
-        const langData = {
-            'it-en': { title: 'Nivelamento', q: 'Come si dice "Hi"?', o: ['Hi', 'Bye', 'Water'], a: 'Hi', home: 'HOME', learn: 'LEARN', diary: 'DIARY', profile: 'ME', talk: 'Let\'s go!' },
-            'en-it': { title: 'Placement', q: 'Translate: "Good Morning"', o: ['Buongiorno', 'Buonasera', 'Ciao'], a: 'Buongiorno', home: 'HOME', learn: 'PRACTICE', diary: 'NOTES', profile: 'PROFILE', talk: 'Amazing!' }
+        const translations = {
+            'it-en': { 
+                quiz_q: 'Translate: "Buongiorno"', quiz_o: ['Good Morning', 'Good Night', 'Bye'], quiz_a: 'Good Morning',
+                rank: 'Nomad [A1]', pet: 'Slay! ✨', tips: 'Tips & Culture', dict: 'Dictionary', comm: 'Community', learn: 'Practice'
+            }
         };
 
         const ranks = ["Nômade [A1]", "Viajante [A2]", "Explorador [B1]", "Piloto [B2]", "Mestre [C1]", "Poliglota [C2]"];
 
-        let state = { course: '', score: 0, xp: 0, name: 'Ana' };
+        let state = { course: '', score: 0, xp: 20 };
 
         window.onload = () => {
             const list = document.getElementById('course-list');
             courses.forEach(c => {
-                list.innerHTML += `<button class="btn-course" onclick="initQuiz('${c.id}')">${c.f} ${c.n}</button>`;
+                list.innerHTML += `<button class="btn-course" onclick="startQuiz('${c.id}')">${c.f} ${c.n}</button>`;
             });
         };
 
-        function initQuiz(id) {
+        function startQuiz(id) {
             state.course = id;
             document.getElementById('screen-intro').classList.remove('active');
             document.getElementById('screen-quiz').classList.add('active');
-            const data = langData[id] || langData['it-en'];
-            document.getElementById('quiz-q').innerText = data.q;
+            const t = translations[id] || translations['it-en'];
+            document.getElementById('quiz-q').innerText = t.quiz_q;
             const optDiv = document.getElementById('quiz-options');
             optDiv.innerHTML = '';
-            data.o.forEach(o => {
-                optDiv.innerHTML += `<button class="btn-main" style="margin-bottom:10px" onclick="finishQuiz('${o}','${data.a}')">${o}</button>`;
+            t.quiz_o.forEach(o => {
+                optDiv.innerHTML += `<button class="btn-main" style="margin-bottom:10px" onclick="goApp('${o}','${t.quiz_a}')">${o}</button>`;
             });
         }
 
-        function finishQuiz(o, a) {
-            if(o === a) state.score = 3; // Pula nivel
+        function goApp(o, a) {
+            if(o === a) state.score = 2;
             document.getElementById('screen-quiz').classList.remove('active');
             document.getElementById('screen-app').classList.add('active');
-            document.getElementById('pet-fixed').style.display = 'flex';
-            translateInterface();
-            updateUI();
-            loadExercise();
+            document.getElementById('floating-pet').style.display = 'flex';
+            updateLang();
+            loadEx();
         }
 
-        function translateInterface() {
-            const d = langData[state.course] || langData['it-en'];
-            const navs = document.querySelectorAll('.nav-item span');
-            navs[0].innerText = d.home; navs[1].innerText = d.learn;
-            navs[2].innerText = d.diary; navs[3].innerText = d.profile;
-            document.getElementById('pet-talk').innerText = d.talk;
+        function updateLang() {
+            const t = translations[state.course] || translations['it-en'];
+            document.getElementById('txt-tips-title').innerText = t.tips;
+            document.getElementById('txt-dict-title').innerText = t.dict;
+            document.getElementById('txt-comm-title').innerText = t.comm;
+            document.getElementById('txt-learn-title').innerText = t.learn;
+            document.getElementById('user-rank').innerText = ranks[state.score];
+            document.getElementById('pet-msg').innerText = t.pet;
         }
 
-        function loadExercise() {
-            const box = document.getElementById('ex-box');
-            box.innerHTML = `<h4>Traduca: "La mela"</h4>
-            <button class="btn-course" style="border:1px solid #ddd; color:#2d2d2d" onclick="addXp()">The Apple</button>
-            <button class="btn-course" style="border:1px solid #ddd; color:#2d2d2d" onclick="alert('Try again!')">The Pear</button>`;
+        function loadEx() {
+            const area = document.getElementById('ex-area');
+            area.innerHTML = `<h4>Escreva em Italiano: "A água"</h4>
+            <input type="text" id="write-in" placeholder="Sua resposta...">
+            <button class="btn-main" onclick="checkEx()">Conferir</button>`;
         }
 
-        function addXp() {
-            state.xp += 25;
-            document.getElementById('pet-talk').innerText = "Perfect! 🔥";
-            if(state.xp >= 100) { state.xp = 0; state.score++; }
-            updateUI();
-            alert("Mandou bem! +25 XP");
+        function checkEx() {
+            const val = document.getElementById('write-in').value.toLowerCase();
+            if(val === 'l\'acqua' || val === 'lacqua' || val === 'acqua') {
+                alert('Correct! +20 XP');
+                state.xp += 20; updateUI();
+            } else { alert('Incorrect! Era: L\'acqua'); }
         }
 
         function updateUI() {
             document.getElementById('xp-fill').style.width = state.xp + '%';
             document.getElementById('xp-val').innerText = state.xp;
-            document.getElementById('user-rank').innerText = ranks[state.score] || ranks[0];
         }
 
         function changeTab(tabId, el) {
@@ -226,16 +260,8 @@
             el.classList.add('nav-active');
         }
 
-        function saveNote() {
-            const note = document.getElementById('diary-area').value;
-            document.getElementById('saved-notes').innerHTML += `<p>• ${note}</p>`;
-            document.getElementById('diary-area').value = '';
-            alert("Nota salva!");
-        }
-
         function toggleDark() {
-            document.body.style.background = document.body.style.background === 'rgb(45, 45, 45)' ? 'white' : '#2d2d2d';
-            document.body.style.color = document.body.style.color === 'white' ? '#2d2d2d' : 'white';
+            document.body.style.filter = document.body.style.filter === 'invert(1)' ? 'none' : 'invert(1)';
         }
     </script>
 </body>
