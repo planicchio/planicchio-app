@@ -12,16 +12,14 @@
         * { margin:0; padding:0; box-sizing:border-box; font-family:'Nunito', sans-serif; }
         body { background: var(--p-white); color: var(--p-text); transition: 0.3s; }
 
-        /* --- PETS CORRIGIDOS (OLHOS VISÍVEIS) --- */
+        /* --- PETS (FIXED) --- */
         .pet-canvas { width: 60px; height: 50px; position: relative; margin: 0 auto; }
-        .pet-body { width: 100%; height: 100%; border-radius: 50% 50% 40% 40%; position: relative; border: 2px solid #fff; z-index: 1; }
-        .pet-ear { position: absolute; width: 15px; height: 15px; top: -8px; z-index: 0; }
-        
-        /* Olho com brilho para ser visível em qualquer cor */
-        .pet-eye { width: 10px; height: 10px; background: white; border-radius: 50%; position: absolute; top: 15px; border: 1px solid #000; z-index: 10; }
+        .pet-body { width: 100%; height: 100%; border-radius: 50% 50% 40% 40%; position: relative; border: 2px solid #fff; z-index: 2; }
+        .pet-ear { position: absolute; width: 15px; height: 15px; top: -8px; z-index: 1; }
+        .pet-eye { width: 10px; height: 10px; background: white; border-radius: 50%; position: absolute; top: 15px; border: 1.5px solid #000; z-index: 10; }
         .pet-eye::after { content: ''; width: 4px; height: 4px; background: black; border-radius: 50%; position: absolute; top: 2px; left: 2px; }
         .eye-l { left: 12px; } .eye-r { right: 12px; }
-        .pet-nose { width: 8px; height: 5px; background: #ffb3b3; border-radius: 50%; position: absolute; top: 28px; left: 26px; z-index: 10; border: 1px solid rgba(0,0,0,0.1); }
+        .pet-nose { width: 8px; height: 5px; background: #ffb3b3; border-radius: 50%; position: absolute; top: 28px; left: 26px; z-index: 10; border: 1px solid rgba(0,0,0,0.2); }
 
         .cat .pet-body { background: #ff9500; }
         .cat .ear-l { left: 5px; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 15px solid #ff9500; transform: rotate(-20deg); }
@@ -30,14 +28,13 @@
         .dog .ear-l { left: -5px; width: 14px; height: 22px; background: #8b4513; border-radius: 10px; top: 5px; }
         .dog .ear-r { right: -5px; width: 14px; height: 22px; background: #8b4513; border-radius: 10px; top: 5px; }
 
-        /* --- INTERFACE --- */
+        /* --- UI --- */
         .screen { display: none; min-height: 100vh; padding: 20px; flex-direction: column; }
         .active { display: flex; animation: fadeIn 0.4s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .btn-course { background: white; color: var(--p-orange); border: none; padding: 18px; border-radius: 20px; width: 100%; margin-bottom: 10px; font-weight: 900; box-shadow: 0 4px 0 rgba(0,0,0,0.1); cursor: pointer; }
+        .btn-course { background: white; color: var(--p-orange); border: none; padding: 18px; border-radius: 20px; width: 100%; margin-bottom: 10px; font-weight: 900; box-shadow: 0 4px 0 rgba(0,0,0,0.1); cursor: pointer; text-align: center; }
         .btn-main { background: var(--p-orange); color: white; border: none; padding: 15px; border-radius: 15px; width: 100%; font-weight: 900; cursor: pointer; box-shadow: 0 4px 0 #d36500; margin-top: 10px; }
-        .card { background: var(--p-soft); border-radius: 25px; padding: 20px; margin-bottom: 15px; }
+        .card { background: var(--p-soft); border-radius: 25px; padding: 20px; margin-bottom: 15px; border-left: 5px solid var(--p-orange); }
         
         nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--p-white); display: flex; justify-content: space-around; padding: 10px; border-top: 2px solid #eee; }
         .nav-item { text-align: center; color: #ccc; cursor: pointer; flex: 1; font-size: 22px; }
@@ -45,7 +42,7 @@
         .nav-active { color: var(--p-orange); }
 
         #floating-pet { position: fixed; bottom: 85px; right: 15px; z-index: 200; display: none; align-items: center; }
-        .bubble { background: white; border: 2px solid var(--p-orange); padding: 5px 10px; border-radius: 15px; font-size: 11px; font-weight: 800; margin-right: 5px; color: #000; }
+        .bubble { background: white; border: 2px solid var(--p-orange); padding: 5px 10px; border-radius: 15px; font-size: 11px; font-weight: 800; margin-right: 5px; color: #000; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
@@ -72,18 +69,18 @@
 
     <div id="screen-app" class="screen">
         <div id="tab-home" class="tab-content">
-            <h2 id="ui-h-title">...</h2>
+            <h2 id="ui-h-title"></h2>
             <div class="card" style="margin-top:10px;">
-                <h3 id="ui-rank">A1</h3>
-                <div style="background:#fff; height:8px; border-radius:10px; margin:10px 0; overflow:hidden;"><div id="xp-bar" style="background:var(--p-orange); width:15%; height:100%;"></div></div>
+                <h3 id="ui-rank"></h3>
+                <div style="background:#ddd; height:8px; border-radius:10px; margin:10px 0; overflow:hidden;"><div id="xp-bar" style="background:var(--p-orange); width:20%; height:100%;"></div></div>
             </div>
             <div class="card">
-                <h4 id="ui-miss-d">Missões Diárias</h4>
-                <p>✅ <span id="ui-d1">...</span></p>
+                <h4 id="ui-miss-d"></h4>
+                <p>✅ <span id="ui-d1"></span></p>
             </div>
             <div class="card" style="background:#e6f7ff;">
-                <h4 id="ui-miss-w">Missões Semanais</h4>
-                <p>🏆 <span id="ui-w1">...</span></p>
+                <h4 id="ui-miss-w"></h4>
+                <p>🏆 <span id="ui-w1"></span></p>
             </div>
             <div style="display:flex; gap:10px;">
                 <button class="btn-main" style="background:#58cc02; box-shadow:0 4px 0 #3d8b02; flex:1;">Speed</button>
@@ -92,38 +89,39 @@
         </div>
 
         <div id="tab-tips" class="tab-content" style="display:none;">
-            <h2 id="ui-t-title">...</h2>
+            <h2 id="ui-t-title"></h2>
             <div id="content-area" style="margin-top:15px;"></div>
         </div>
 
         <div id="tab-dict" class="tab-content" style="display:none;">
-            <h2 id="ui-d-title">...</h2>
+            <h2 id="ui-d-title"></h2>
             <input type="text" id="dict-in" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; margin-top:10px;">
+            <div id="dict-results" style="margin-top:20px;"></div>
         </div>
 
         <div id="tab-social" class="tab-content" style="display:none;">
-            <h2 id="ui-s-title">...</h2>
-            <div class="card" style="margin-top:15px;"><p>Community Feed...</p></div>
+            <h2 id="ui-s-title"></h2>
+            <div class="card" style="margin-top:15px;"><p id="ui-social-txt"></p></div>
         </div>
 
         <div id="tab-profile" class="tab-content" style="display:none;">
-            <h2 id="ui-p-title">...</h2>
+            <h2 id="ui-p-title"></h2>
             <div class="card">
-                <label id="ui-name-l">...</label><input type="text" value="Ana" style="width:100%; padding:8px; margin-bottom:10px;">
-                <label id="ui-pet-l">...</label>
-                <select id="pet-select" onchange="updatePetUI()" style="width:100%; padding:8px; margin-bottom:10px;">
+                <label id="ui-name-l"></label><input type="text" value="Ana" style="width:100%; padding:8px; margin-bottom:10px; border-radius:8px; border:1px solid #ddd;">
+                <label id="ui-pet-l"></label>
+                <select id="pet-select" onchange="updatePetUI()" style="width:100%; padding:8px; margin-bottom:10px; border-radius:8px;">
                     <option value="cat">Cat / Gatto / Gato</option>
                     <option value="dog">Dog / Cane / Cão</option>
                 </select>
-                <button class="btn-main" id="ui-save-btn">...</button>
-                <button class="btn-main" style="background:#444;" onclick="toggleDark()">Dark Mode</button>
-                <button class="btn-main" style="background:#666;" onclick="location.reload()">Change Course</button>
+                <button class="btn-main" id="ui-save-btn"></button>
+                <button class="btn-main" style="background:#444;" onclick="toggleDark()" id="ui-dark-btn">Dark Mode</button>
+                <button class="btn-main" style="background:#666;" onclick="location.reload()" id="ui-reset-btn">Change Course</button>
             </div>
         </div>
 
         <nav>
             <div class="nav-item nav-active" onclick="changeTab('home', this)">🏠<span id="nv-1"></span></div>
-            <div class="nav-item" onclick="changeTab('tips', this)">💡<span id="nv-2"></span></div>
+            <div class="nav-item" onclick="changeTab('tips', this)">🎯<span id="nv-2"></span></div>
             <div class="nav-item" onclick="changeTab('dict', this)">📖<span id="nv-3"></span></div>
             <div class="nav-item" onclick="changeTab('social', this)">🤝<span id="nv-4"></span></div>
             <div class="nav-item" onclick="changeTab('profile', this)">👤<span id="nv-5"></span></div>
@@ -131,7 +129,7 @@
     </div>
 
     <div id="floating-pet">
-        <div class="bubble" id="pet-msg">...</div>
+        <div class="bubble" id="pet-msg"></div>
         <div id="pet-render" class="pet-canvas cat">
             <div class="pet-ear ear-l"></div><div class="pet-ear ear-r"></div>
             <div class="pet-body">
@@ -143,51 +141,54 @@
 
     <script>
         const translations = {
-            'pt-it': {
+            'pt': {
                 nv: ['INÍCIO', 'ESTUDO', 'DICIO', 'SOCIAL', 'EU'],
-                ui: { h:'Início', t:'Estudo', d:'Dicionário', s:'Social', p:'Perfil', r:'Nômade A1', md:'Missões Diárias', d1:'Pratique 5 min', mw:'Semanais', w1:'Estude 3 dias', name:'Nome:', pet:'Pet:', save:'Salvar', qz:'Nivelamento' },
+                ui: { h:'Início', t:'Estudo', d:'Dicionário', s:'Social', p:'Perfil', r:'Nômade A1', md:'Missões Diárias', d1:'Pratique 5 min', mw:'Semanais', w1:'Estude 3 dias', name:'Nome:', pet:'Pet:', save:'Salvar', qz:'Nivelamento', dark:'Modo Escuro', reset:'Mudar Curso', soc:'Comunidade Planicchio' },
                 pet: 'Bora!',
-                quiz: [{q:"Oi em Italiano?", o:["Ciao", "Hi"], a:"Ciao"}],
-                content: ["Buongiorno = Bom dia", "Grazie = Obrigado", "Prego = De nada"]
+                quiz: {q:"Como se diz 'Obrigado' em Italiano?", o:["Grazie", "Prego"], a:"Grazie"},
+                lessons: ["Buongiorno = Bom dia", "Grazie = Obrigado", "Prego = De nada", "Um, Dois, Três = Uno, Due, Tre", "Água = Acqua"]
             },
-            'it-en': {
+            'it': {
+                nv: ['HOME', 'STUDIO', 'DIZION.', 'SOCIAL', 'IO'],
+                ui: { h:'Inizio', t:'Studio', d:'Dizionario', s:'Sociale', p:'Profilo', r:'Nomade A1', md:'Missioni Giorni', d1:'Pratica 5 min', mw:'Settimanali', w1:'Studia 3 giorni', name:'Nome:', pet:'Pet:', save:'Salva', qz:'Livellamento', dark:'Modo Oscuro', reset:'Cambia Corso', soc:'Comunità Planicchio' },
+                pet: 'Andiamo!',
+                quiz: {q:"Come si dice 'Apple' in Inglese?", o:["Apple", "Banana"], a:"Apple"},
+                lessons: ["Apple = Mela", "Bread = Pane", "Water = Acqua", "One, Two, Three = Uno, Due, Tre", "Good morning = Buongiorno"]
+            },
+            'en': {
                 nv: ['HOME', 'STUDY', 'DICT', 'SOCIAL', 'ME'],
-                ui: { h:'Home', t:'Study', d:'Dictionary', s:'Social', p:'Profile', r:'Nomad A1', md:'Daily Tasks', d1:'5 min practice', mw:'Weekly', w1:'3 days streak', name:'Name:', pet:'Pet:', save:'Save', qz:'Leveling' },
+                ui: { h:'Home', t:'Study', d:'Dictionary', s:'Social', p:'Profile', r:'Nomad A1', md:'Daily Tasks', d1:'5 min practice', mw:'Weekly', w1:'3 days streak', name:'Name:', pet:'Pet:', save:'Save', qz:'Placement', dark:'Dark Mode', reset:'Change Course', soc:'Planicchio Community' },
                 pet: 'Let\'s go!',
-                quiz: [{q:"'Apple' in Italian?", o:["Mela", "Apple"], a:"Mela"}],
-                content: ["Apple = Mela", "Bread = Pane", "Water = Acqua"]
-            },
-            'en-it': {
-                nv: ['HOME', 'STUDY', 'DICT', 'SOCIAL', 'PROFILE'],
-                ui: { h:'Home', t:'Study', d:'Dictionary', s:'Social', p:'Profile', r:'Nomad A1', md:'Daily Tasks', d1:'5 min practice', mw:'Weekly', w1:'3 days streak', name:'Name:', pet:'Pet:', save:'Save', qz:'Leveling' },
-                pet: 'Ready?',
-                quiz: [{q:"'Thank you'?", o:["Grazie", "Prego"], a:"Grazie"}],
-                content: ["Hello = Ciao", "Please = Per favore", "Coffee = Caffè"]
+                quiz: {q:"How to say 'Thank you' in Italian?", o:["Grazie", "Prego"], a:"Grazie"},
+                lessons: ["Hello = Ciao", "Please = Per favore", "Coffee = Caffè", "One, Two, Three = Uno, Due, Tre", "Wine = Vino"]
             }
         };
 
-        let currentLang = 'pt-it';
+        let currentData = translations['pt'];
 
         function startFlow(id) {
-            currentLang = translations[id] ? id : 'it-en';
+            // Define a língua da INTERFACE com base na língua de ORIGEM (primeira parte do ID)
+            const origin = id.split('-')[0]; 
+            currentData = translations[origin] || translations['en'];
+            
             document.getElementById('screen-intro').style.display = 'none';
             document.getElementById('screen-quiz').classList.add('active');
-            const q = translations[currentLang].quiz[0];
-            document.getElementById('qz-title').innerText = translations[currentLang].ui.qz;
-            document.getElementById('qz-question').innerText = q.q;
+            
+            document.getElementById('qz-title').innerText = currentData.ui.qz;
+            document.getElementById('qz-question').innerText = currentData.quiz.q;
             const opts = document.getElementById('qz-options');
             opts.innerHTML = '';
-            q.o.forEach(o => opts.innerHTML += `<button class="btn-course" onclick="enterApp()">${o}</button>`);
+            currentData.quiz.o.forEach(o => opts.innerHTML += `<button class="btn-course" onclick="enterApp()">${o}</button>`);
         }
 
         function enterApp() {
             document.getElementById('screen-quiz').classList.remove('active');
             document.getElementById('screen-app').classList.add('active');
             document.getElementById('floating-pet').style.display = 'flex';
-            const d = translations[currentLang];
-            // Nav
+            
+            const d = currentData;
             for(let i=1; i<=5; i++) document.getElementById(`nv-${i}`).innerText = d.nv[i-1];
-            // UI
+            
             document.getElementById('ui-h-title').innerText = d.ui.h;
             document.getElementById('ui-t-title').innerText = d.ui.t;
             document.getElementById('ui-d-title').innerText = d.ui.d;
@@ -201,12 +202,14 @@
             document.getElementById('ui-name-l').innerText = d.ui.name;
             document.getElementById('ui-pet-l').innerText = d.ui.pet;
             document.getElementById('ui-save-btn').innerText = d.ui.save;
+            document.getElementById('ui-dark-btn').innerText = d.ui.dark;
+            document.getElementById('ui-reset-btn').innerText = d.ui.reset;
+            document.getElementById('ui-social-txt').innerText = d.ui.soc;
             document.getElementById('pet-msg').innerText = d.pet;
             
-            // Content
             const area = document.getElementById('content-area');
             area.innerHTML = '';
-            d.content.forEach(c => area.innerHTML += `<div class="card">${c}</div>`);
+            d.lessons.forEach(l => area.innerHTML += `<div class="card">${l}</div>`);
         }
 
         function changeTab(id, el) {
