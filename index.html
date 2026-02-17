@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planicchio Ultra Pro</title>
+    <title>Planicchio Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --p-orange: #ff7a00; --p-light: #fff7ed; --p-dark: #2d2d2d; --p-white: #ffffff; --p-gray: #f0f0f0; --p-vip: linear-gradient(45deg, #ffd700, #ff8c00); }
         [data-theme='dark'] { --p-light: #121212; --p-white: #1e1e1e; --p-dark: #f0f0f0; --p-gray: #333; }
-        
         * { margin:0; padding:0; box-sizing:border-box; font-family:'Nunito', sans-serif; }
         body { background: var(--p-light); color: var(--p-dark); transition: 0.3s; overflow-x: hidden; }
 
@@ -16,41 +15,45 @@
         .active { display: block; }
         @keyframes fadeIn { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
 
-        /* HEADER */
+        /* UI */
         .top-bar { display: flex; align-items: center; justify-content: space-between; padding: 15px; background: var(--p-white); border-radius: 0 0 25px 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
         .xp-bar-container { flex-grow: 1; height: 12px; background: var(--p-gray); border-radius: 10px; margin: 0 15px; overflow: hidden; }
         .xp-bar-fill { height: 100%; background: var(--p-orange); width: 0%; transition: 0.5s; }
-
-        /* CARDS */
         .card { background: var(--p-white); padding: 20px; border-radius: 24px; box-shadow: 0 6px 20px rgba(0,0,0,0.04); margin-bottom: 20px; border-bottom: 4px solid var(--p-gray); }
         .btn-course { background: var(--p-white); border: 2px solid var(--p-gray); padding: 15px; border-radius: 18px; width: 100%; text-align: left; margin-bottom: 10px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 15px; }
         .btn-main { background: var(--p-orange); color: white; border: none; padding: 18px; border-radius: 18px; width: 100%; font-weight: 900; cursor: pointer; box-shadow: 0 4px 0 #d36500; }
-        .btn-main:active { transform: translateY(2px); box-shadow: 0 2px 0 #d36500; }
-
+        
         /* PET */
         .pet-stage { text-align: center; margin: 20px 0; }
-        .pet-bubble { background: var(--p-white); padding: 12px; border-radius: 18px; border: 3px solid var(--p-orange); display: inline-block; margin-bottom: 10px; font-weight: 700; position: relative; }
-        .pet-avatar { font-size: 70px; cursor: pointer; display: inline-block; }
+        .pet-bubble { background: var(--p-white); padding: 12px; border-radius: 18px; border: 3px solid var(--p-orange); display: inline-block; font-weight: 700; position: relative; }
+        .pet-avatar { font-size: 70px; cursor: pointer; }
 
-        /* NAV */
+        /* NAV - 5 ITENS */
         nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--p-white); display: flex; justify-content: space-around; padding: 15px; border-top: 3px solid var(--p-gray); z-index: 1000; }
-        .nav-item { font-size: 24px; cursor: pointer; color: #ccc; transition: 0.3s; }
+        .nav-item { font-size: 22px; cursor: pointer; color: #ccc; transition: 0.3s; text-align: center; }
+        .nav-item span { display: block; font-size: 10px; font-weight: 900; }
         .nav-item.active-tab { color: var(--p-orange); transform: translateY(-3px); }
 
-        .skin-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px; }
+        .skin-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
         .skin-item { font-size: 30px; background: var(--p-gray); padding: 10px; border-radius: 12px; cursor: pointer; text-align: center; }
-        
-        #spell-input { width: 100%; padding: 15px; border-radius: 15px; border: 2px solid var(--p-gray); margin-bottom: 10px; font-size: 16px; outline: none; }
     </style>
 </head>
 <body>
 
     <div id="screen-intro" class="screen active">
         <div class="pet-stage">
-            <div class="pet-bubble">Scegli il tuo corso! 🇮🇹<br>Choose your course! 🇬🇧<br>Escolha seu curso! 🇧🇷</div><br>
+            <div class="pet-bubble">Benvenuti! Scegli il tuo curso.<br>Welcome! Choose your course.</div><br>
             <div class="pet-avatar">🐱</div>
         </div>
         <div id="course-list"></div>
+    </div>
+
+    <div id="screen-placement" class="screen">
+        <div class="card">
+            <h2 id="placement-title">Nivelamento</h2>
+            <p id="placement-q" style="margin: 20px 0; font-size: 18px;">Pergunta...</p>
+            <div id="placement-options"></div>
+        </div>
     </div>
 
     <div id="screen-app" class="screen">
@@ -62,17 +65,17 @@
 
         <div id="tab-home" class="tab-content">
             <div class="pet-stage">
-                <div class="pet-bubble" id="pet-msg">Ciao! Pronto?</div><br>
+                <div class="pet-bubble" id="pet-msg">Ciao!</div><br>
                 <div class="pet-avatar main-pet">🐱</div>
             </div>
             <div class="card">
-                <h3>Missão Diária</h3>
-                <p id="daily-mission">Carregando...</p>
+                <h3 id="txt-mission-title">Missões</h3>
+                <p id="ui-mission-desc">Complete lições para subir de nível.</p>
             </div>
-            <div class="card" style="border-bottom-color: gold;">
-                <h3 style="color:#b8860b">👑 Área VIP</h3>
-                <p>Nativos & Language Reactor.</p>
-                <button class="btn-main" style="background:var(--p-vip); border:none; margin-top:10px;">DESBLOQUEAR</button>
+            <div class="card" style="border-bottom: 4px solid gold;">
+                <h3 style="color:#b8860b">👑 VIP Planicchio</h3>
+                <p id="txt-vip-desc">Aulas com nativos desbloqueadas.</p>
+                <button class="btn-main" style="background:var(--p-vip); border:none;">VIP</button>
             </div>
         </div>
 
@@ -80,67 +83,84 @@
             <div id="exercise-box" class="card"></div>
         </div>
 
-        <div id="tab-profile" class="tab-content" style="display:none;">
-            <h2>Meu Perfil</h2>
+        <div id="tab-slangs" class="tab-content" style="display:none;">
+            <h2 id="txt-slang-title">Dicionário & Gírias</h2>
+            <div id="slang-list" class="card"></div>
+        </div>
+
+        <div id="tab-community" class="tab-content" style="display:none;">
+            <h2 id="txt-comm-title">Comunidade</h2>
             <div class="card">
-                <p><b>Nível:</b> <span id="prof-lvl">1</span></p>
-                <p><b>Curso:</b> <span id="prof-course">-</span></p>
-                <hr style="margin: 15px 0; opacity: 0.1;">
-                <p>Trocar Pet:</p>
+                <p>💬 <b>Marco:</b> Buongiorno a tutti!</p>
+                <p>💬 <b>Sora:</b> Hello guys!</p>
+                <hr style="margin:10px 0; opacity:0.1">
+                <button class="btn-main" style="font-size:14px; padding:10px;">Postar Mensagem</button>
+            </div>
+        </div>
+
+        <div id="tab-profile" class="tab-content" style="display:none;">
+            <h2 id="txt-profile-title">Perfil</h2>
+            <div class="card">
+                <p><b id="txt-p-lvl">Nível</b>: <span id="prof-lvl">1</span></p>
                 <div class="skin-grid" id="skin-selector"></div>
             </div>
-            <button class="btn-main" onclick="toggleTheme()" style="background:var(--p-dark); margin-bottom:10px;">MODO ESCURO</button>
-            <button class="btn-main" style="background:#ff4b4b;" onclick="location.reload()">SAIR DO CURSO</button>
+            <button class="btn-main" onclick="toggleTheme()" style="background:var(--p-dark); margin-bottom:10px;">Dark Mode</button>
+            <button class="btn-main" style="background:#ff4b4b;" onclick="location.reload()">Reset</button>
         </div>
 
         <nav>
-            <div class="nav-item active-tab" onclick="changeTab('home', this)">🏠</div>
-            <div class="nav-item" onclick="changeTab('learn', this)">🎯</div>
-            <div class="nav-item" onclick="changeTab('profile', this)">👤</div>
+            <div class="nav-item active-tab" onclick="changeTab('home', this)">🏠<span>HOME</span></div>
+            <div class="nav-item" onclick="changeTab('learn', this)">🎯<span>LEARN</span></div>
+            <div class="nav-item" onclick="changeTab('slangs', this)">📖<span>SLANGS</span></div>
+            <div class="nav-item" onclick="changeTab('community', this)">🤝<span>SOCIAL</span></div>
+            <div class="nav-item" onclick="changeTab('profile', this)">👤<span>PROFILO</span></div>
         </nav>
     </div>
 
     <script>
-        // BANCO DE DADOS MASSIVO (Exemplo de estrutura para as 50 frases)
+        // TRADUÇÕES DE INTERFACE (Layout Totalmente Traduzido)
+        const uiI18n = {
+            'it-pt': { mission: 'Missioni', vip: 'Lezioni con madrelingua', profile: 'Profilo', learn: 'Esercizi', level: 'Livello', home: 'Inizio', slangs: 'Gergo', social: 'Comunità' },
+            'pt-it': { mission: 'Missões', vip: 'Aulas com Nativos', profile: 'Perfil', learn: 'Aprender', level: 'Nível', home: 'Início', slangs: 'Gírias', social: 'Comunidade' },
+            'en-it': { mission: 'Daily Quests', vip: 'Native Lessons', profile: 'Profile', learn: 'Learn', level: 'Level', home: 'Home', slangs: 'Slangs', social: 'Social' }
+            // Adicionar para os outros 3 pares...
+        };
+
         const db = {
             'it-pt': [
-                { q: 'Como se diz "Bom dia"?', o: ['Buongiorno', 'Buonanotte', 'Prego'], a: 'Buongiorno', type: 'choice' },
-                { q: 'Escreva "Gato" em Italiano:', a: 'gatto', type: 'spell' },
-                { q: 'Significado de "Dove il bagno?":', o: ['Onde é o banheiro?', 'Como você está?', 'Quanto custa?'], a: 'Onde é o banheiro?', type: 'choice' }
+                { q: 'Traduci: "La colazione è pronta"', o: ['O café da manhã está pronto', 'O jantar está servido', 'A casa é grande'], a: 'O café da manhã está pronto' },
+                { q: 'Scrivi "Libro" in Portoghese:', a: 'livro', type: 'spell' }
             ],
             'pt-it': [
-                { q: 'Como se diz "Obrigado" em Italiano?', o: ['Grazie', 'Prego', 'Per favore'], a: 'Grazie', type: 'choice' },
-                { q: 'Traduza: "Eu gosto de pizza"', o: ['Mi piace la pizza', 'Mangio pizza', 'Voglio pizza'], a: 'Mi piace la pizza', type: 'choice' }
-            ],
-            'en-it': [
-                { q: 'How to say "Bread"?', o: ['Pane', 'Vino', 'Acqua'], a: 'Pane', type: 'choice' }
-            ],
-            'it-en': [
-                { q: 'What does "Mangiare" mean?', o: ['To eat', 'To drink', 'To sleep'], a: 'To eat', type: 'choice' }
-            ],
-            'pt-en': [
-                { q: 'Como se diz "Cachorro" em Inglês?', o: ['Dog', 'Cat', 'Bird'], a: 'Dog', type: 'choice' }
-            ],
-            'en-pt': [
-                { q: 'Translate "Morning":', o: ['Manhã', 'Noite', 'Tarde'], a: 'Manhã', type: 'choice' }
+                { q: 'Como se diz "Janela" em Italiano?', o: ['Finestra', 'Porta', 'Tetto'], a: 'Finestra' },
+                { q: 'Traduca: "Eu bebo água"', o: ['Bevo acqua', 'Mangio pane', 'Vado a casa'], a: 'Bevo acqua' }
             ]
         };
 
-        const courses = [
-            { id: 'it-pt', n: 'Italiano ➔ Português', f: '🇮🇹➔🇧🇷' },
-            { id: 'pt-it', n: 'Português ➔ Italiano', f: '🇧🇷➔🇮🇹' },
-            { id: 'it-en', n: 'Italiano ➔ Inglês', f: '🇮🇹➔🇬🇧' },
-            { id: 'en-it', n: 'Inglês ➔ Italiano', f: '🇬🇧➔🇮🇹' },
-            { id: 'pt-en', n: 'Português ➔ Inglês', f: '🇧🇷➔🇬🇧' },
-            { id: 'en-pt', n: 'Inglês ➔ Português', f: '🇬🇧➔🇧🇷' }
-        ];
+        const placements = {
+            'pt-it': [
+                { q: 'O que significa "Prego"?', o: ['De nada', 'Por favor', 'Prego de metal'], a: 'De nada' },
+                { q: 'Como se diz "Tchau" (informal)?', o: ['Addio', 'Ciao', 'Salve'], a: 'Ciao' }
+            ],
+            'it-pt': [
+                { q: 'Cosa significa "Frango"?', o: ['Pollo', 'Manzo', 'Pesce'], a: 'Pollo' }
+            ]
+        };
 
-        let state = { xp: 0, lvl: 1, course: '', pet: '🐱', curEx: 0 };
+        let state = { xp: 0, lvl: 1, course: 'pt-it', pet: '🐱', curEx: 0, placementStep: 0 };
 
         window.onload = () => {
             const list = document.getElementById('course-list');
+            const courses = [
+                { id: 'it-pt', n: 'Italiano ➔ Português', f: '🇮🇹➔🇧🇷' },
+                { id: 'pt-it', n: 'Português ➔ Italiano', f: '🇧🇷➔🇮🇹' },
+                { id: 'it-en', n: 'Italiano ➔ English', f: '🇮🇹➔🇬🇧' },
+                { id: 'en-it', n: 'English ➔ Italiano', f: '🇬🇧➔🇮🇹' },
+                { id: 'pt-en', n: 'Português ➔ English', f: '🇧🇷➔🇬🇧' },
+                { id: 'en-pt', n: 'English ➔ Português', f: '🇬🇧➔🇧🇷' }
+            ];
             courses.forEach(c => {
-                list.innerHTML += `<button class="btn-course" onclick="startCourse('${c.id}')"><span>${c.f}</span> ${c.n}</button>`;
+                list.innerHTML += `<button class="btn-course" onclick="startPlacement('${c.id}')"><span>${c.f}</span> ${c.n}</button>`;
             });
 
             const skinGrid = document.getElementById('skin-selector');
@@ -149,13 +169,79 @@
             });
         };
 
-        function startCourse(id) {
+        function startPlacement(id) {
             state.course = id;
+            state.placementStep = 0;
             document.getElementById('screen-intro').classList.remove('active');
+            document.getElementById('screen-placement').classList.add('active');
+            showPlacementQuestion();
+        }
+
+        function showPlacementQuestion() {
+            const data = placements[state.course] || placements['pt-it'];
+            const q = data[state.placementStep];
+            if(!q) { finishPlacement(); return; }
+
+            document.getElementById('placement-q').innerText = q.q;
+            const optDiv = document.getElementById('placement-options');
+            optDiv.innerHTML = '';
+            q.o.forEach(o => {
+                optDiv.innerHTML += `<button class="btn-main" style="margin-bottom:10px" onclick="nextPlacement('${o}','${q.a}')">${o}</button>`;
+            });
+        }
+
+        function nextPlacement(ans, corr) {
+            if(ans === corr) state.xp += 50;
+            state.placementStep++;
+            showPlacementQuestion();
+        }
+
+        function finishPlacement() {
+            if(state.xp >= 100) { state.lvl = 3; state.xp = 0; alert("Wow! Nível Intermediário!"); }
+            document.getElementById('screen-placement').classList.remove('active');
             document.getElementById('screen-app').classList.add('active');
-            document.getElementById('prof-course').innerText = id.toUpperCase();
-            loadExercise();
+            translateLayout();
             updateUI();
+            loadExercise();
+        }
+
+        function translateLayout() {
+            const lang = state.course;
+            const t = uiI18n[lang] || uiI18n['pt-it'];
+            document.getElementById('txt-mission-title').innerText = t.mission;
+            document.getElementById('txt-vip-desc').innerText = t.vip;
+            document.getElementById('txt-profile-title').innerText = t.profile;
+            document.getElementById('txt-slang-title').innerText = t.slangs;
+            document.getElementById('txt-comm-title').innerText = t.social;
+            document.getElementById('txt-p-lvl').innerText = t.level;
+            
+            // Traduzir Navbar
+            const navs = document.querySelectorAll('.nav-item span');
+            navs[0].innerText = t.home; navs[1].innerText = t.learn; navs[2].innerText = t.slangs; 
+            navs[3].innerText = t.social; navs[4].innerText = t.profile;
+        }
+
+        function loadExercise() {
+            const box = document.getElementById('exercise-box');
+            const data = db[state.course] || db['pt-it'];
+            const ex = data[state.curEx];
+            if(!ex) { box.innerHTML = "🎉 Fine!"; return; }
+            
+            let html = `<p style="font-size:20px; font-weight:900; margin-bottom:20px;">${ex.q}</p>`;
+            if(ex.type === 'spell') {
+                html += `<input type="text" id="sp-in" style="width:100%; padding:10px; border-radius:10px; margin-bottom:10px;">
+                         <button class="btn-main" onclick="check(document.getElementById('sp-in').value,'${ex.a}')">OK</button>`;
+            } else {
+                ex.o.forEach(o => html += `<button class="btn-course" onclick="check('${o}','${ex.a}')">${o}</button>`);
+            }
+            box.innerHTML = html;
+        }
+
+        function check(i, a) {
+            if(i.toLowerCase().trim() === a.toLowerCase().trim()) { state.xp += 20; state.curEx++; }
+            else { alert("Errado! Resposta: " + a); }
+            if(state.xp >= 100) { state.xp = 0; state.lvl++; }
+            updateUI(); loadExercise();
         }
 
         function changeTab(tabId, el) {
@@ -165,58 +251,14 @@
             el.classList.add('active-tab');
         }
 
-        function loadExercise() {
-            const box = document.getElementById('exercise-box');
-            const data = db[state.course] || db['it-pt'];
-            const ex = data[state.curEx];
-
-            if(!ex) {
-                box.innerHTML = `<h3>🎉 Curso concluído!</h3><button class="btn-main" onclick="state.curEx=0;loadExercise()">REINICIAR</button>`;
-                return;
-            }
-
-            let html = `<h4>Lição ${state.curEx + 1}</h4><p style="margin:20px 0; font-size:18px; font-weight:700;">${ex.q}</p>`;
-            
-            if(ex.type === 'choice') {
-                ex.o.forEach(opt => {
-                    html += `<button class="btn-course" onclick="check('${opt}','${ex.a}')">${opt}</button>`;
-                });
-            } else {
-                html += `<input type="text" id="spell-input" placeholder="Digite a resposta...">
-                         <button class="btn-main" onclick="check(document.getElementById('spell-input').value,'${ex.a}')">VERIFICAR</button>`;
-            }
-            box.innerHTML = html;
-        }
-
-        function check(input, correct) {
-            if(input.toLowerCase().trim() === correct.toLowerCase().trim()) {
-                state.xp += 20;
-                state.curEx++;
-                document.getElementById('pet-msg').innerText = "Bravo! +20 XP";
-            } else {
-                alert("Ops! A resposta correta era: " + correct);
-            }
-            if(state.xp >= 100) { state.xp = 0; state.lvl++; }
-            updateUI();
-            loadExercise();
-        }
-
-        function changeSkin(s) {
-            state.pet = s;
-            document.querySelectorAll('.pet-avatar, .main-pet').forEach(p => p.innerText = s);
-        }
-
         function updateUI() {
             document.getElementById('ui-lvl').innerText = state.lvl;
             document.getElementById('prof-lvl').innerText = state.lvl;
             document.getElementById('ui-xp-fill').style.width = state.xp + '%';
-            document.getElementById('daily-mission').innerText = `Ganhe mais ${100 - state.xp} XP para o nível ${state.lvl + 1}`;
         }
 
-        function toggleTheme() {
-            const current = document.body.getAttribute('data-theme');
-            document.body.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
-        }
+        function changeSkin(s) { document.querySelectorAll('.pet-avatar, .main-pet').forEach(p => p.innerText = s); }
+        function toggleTheme() { document.body.setAttribute('data-theme', document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); }
     </script>
 </body>
 </html>
